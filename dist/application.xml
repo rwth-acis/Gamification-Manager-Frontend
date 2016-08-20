@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- generated on Sat Aug 20 2016 14:39:50 -->
+<!-- generated on Sat Aug 20 2016 15:20:36 -->
 <Module>
   <ModulePrefs
     title="Gamification Manager Application"
@@ -35,15 +35,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script src="http://CAE-Gamified.github.io/Gamification-Framework-Frontend/manager/js/lib/jquery.js"></script>
-    <script src="http://CAE-Gamified.github.io/Gamification-Framework-Frontend/manager/js/lib/bootstrap.js"></script>
-    <script src="http://CAE-Gamified.github.io/Gamification-Framework-Frontend/manager/js/lib/iwc.js"></script>
-    <script src="http://CAE-Gamified.github.io/Gamification-Framework-Frontend/manager/js/lib/las2peerWidgetLibrary.js"></script>
-    <script src="http://CAE-Gamified.github.io/Gamification-Framework-Frontend/manager/js/lib/oidc-widget.js"></script>
-    <script src="http://CAE-Gamified.github.io/Gamification-Framework-Frontend/manager/js/lib/gamificationelements.js"></script>
-    <link rel="stylesheet" href="http://CAE-Gamified.github.io/Gamification-Framework-Frontend/manager/css/bootstrap.css">
-    <link rel="stylesheet" href="http://CAE-Gamified.github.io/Gamification-Framework-Frontend/manager/css/style.css">
-    <script src="http://CAE-Gamified.github.io/Gamification-Framework-Frontend/manager/js/application.js"></script>
+    <script src="http://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/jquery.js"></script>
+    <script src="http://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/bootstrap.js"></script>
+    <script src="http://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/iwc.js"></script>
+    <script src="http://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/las2peerWidgetLibrary.js"></script>
+    <script src="http://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/oidc-widget.js"></script>
+    <script src="http://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/gamificationelements.js"></script>
+    <link rel="stylesheet" href="http://rwth-acis.github.io/Gamification-Manager-Frontend/css/bootstrap.css">
+    <link rel="stylesheet" href="http://rwth-acis.github.io/Gamification-Manager-Frontend/css/style.css">
+    <script src="http://rwth-acis.github.io/Gamification-Manager-Frontend/js/application.js"></script>
 </head>
 <body>
 <div class="container-fluid">
@@ -245,7 +245,7 @@
 
 <div id="modalspinner" style="display: none">
     <div class="center">
-        <img alt="" src="http://CAE-Gamified.github.io/Gamification-Framework-Frontend/manager/img/loader.svg" />
+        <img alt="" src="http://rwth-acis.github.io/Gamification-Manager-Frontend/img/loader.svg" />
     </div>
 </div> 
     </body>
