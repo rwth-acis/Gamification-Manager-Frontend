@@ -15,7 +15,6 @@ var init = function() {
       sendIntentFetchAppIdCallback(appId,intent.data);
     }
   };
-  client = new Las2peerWidgetLibrary("<%= grunt.config('endPointServiceURL') %>", iwcCallback);
   notification = new gadgets.MiniMessage("GAMEAPP");
 
   getApplicationsData();
@@ -61,6 +60,7 @@ function signinCallback(result) {
     if(result === "success"){
       memberId = oidc_userinfo.preferred_username;
       console.log(oidc_userinfo);
+      client = new Las2peerWidgetLibrary("<%= grunt.config('endPointServiceURL') %>", iwcCallback);
       checkAndRegisterUserAgent();
     } else {
       console.log(result);
