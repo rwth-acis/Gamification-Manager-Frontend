@@ -31,7 +31,7 @@ var init = function() {
   };
   client = new Las2peerWidgetLibrary("http://127.0.0.1:8081/", iwcCallback);
   notification = new gadgets.MiniMessage("GAMEPOINT");
-  pointModule.init();
+  
 
   $('button#refreshbutton').on('click', function() {
     sendIntentFetchAppId("point");

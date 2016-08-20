@@ -31,7 +31,7 @@ var init = function() {
   };
   client = new Las2peerWidgetLibrary("<%= grunt.config('endPointServiceURL') %>", iwcCallback);
   notification = new gadgets.MiniMessage("GAMEPOINT");
-  pointModule.init();
+  
 
   $('button#refreshbutton').on('click', function() {
     sendIntentFetchAppId("point");
