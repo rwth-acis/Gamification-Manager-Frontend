@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- generated on Sat Aug 20 2016 15:56:50 -->
+<!-- generated on Sat Aug 20 2016 20:50:25 -->
 <Module>
   <ModulePrefs
     title="Gamification Manager Point"
     description=""
     author="Muhammad Abduh Arifin"
     author_email="arifin@dbis.rwth-aachen.de"
-    width="200"
+    width="400"
     height="200" scrolling="true">
 
     <Require feature="opensocial-0.8" ></Require>

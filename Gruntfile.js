@@ -103,7 +103,7 @@ module.exports = function (grunt) {
                                 title: "Gamification Manager Application",
                                 description: "",
                                 width: "560",
-                                height: "410",
+                                height: "430",
                                 table_height: "360",
                             },
                             bodyPartial: '_application_widget.tpl'
@@ -138,7 +138,7 @@ module.exports = function (grunt) {
                             meta: {
                                 title: "Gamification Manager Point",
                                 description: "",
-                                width: "200",
+                                width: "400",
                                 height: "200"
                             },
                             bodyPartial: '_point_widget.tpl'
