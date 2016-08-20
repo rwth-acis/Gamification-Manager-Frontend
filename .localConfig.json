@@ -1,0 +1,5 @@
+{
+    "baseUrl" : "http://rwth-acis.github.io/Gamification-Manager-Frontend",
+    "roleSandboxUrl": "http://127.0.0.1:8073",
+    "endPointServiceURL": "http://127.0.0.1:8081/"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "gamification-front-end",
+  "version": "0.0.1",
+  "authors": [
+    "Muhammad Abduh Arifin <arifin@dbis.rwth-aachen.de>"
+  ],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iwc": "http://dbis.rwth-aachen.de/gadgets/iwc/lib/iwc.js",
+    "bootstrap": "~3.2.0",
+    "jquery": "~2.0.3",
+    "lodash": "~2.4.1"
+  }
+}
