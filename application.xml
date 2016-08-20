@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- generated on Sat Aug 20 2016 15:56:50 -->
+<!-- generated on Sat Aug 20 2016 20:50:25 -->
 <Module>
   <ModulePrefs
     title="Gamification Manager Application"
@@ -7,7 +7,7 @@
     author="Muhammad Abduh Arifin"
     author_email="arifin@dbis.rwth-aachen.de"
     width="560"
-    height="410" scrolling="true">
+    height="430" scrolling="true">
 
     <Require feature="opensocial-0.8" ></Require>
     <Require feature="openapp" ></Require>
