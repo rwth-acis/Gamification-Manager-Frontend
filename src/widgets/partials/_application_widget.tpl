@@ -3,6 +3,11 @@
 <body>
 <div class="container-fluid">
   <div class="row">
+    <div class="container" id="login-text">
+  <h4>
+    Loading...
+  </h4>
+  </div>
     <!-- Tabs Container -->
     <div class="container-fluid text-center" style="height:<%= meta.table_height %>px; overflow: auto;">
       <!-- Tabs Application -->

@@ -61,12 +61,33 @@ function signinCallback(result) {
     if(result === "success"){
       memberId = oidc_userinfo.preferred_username;
       console.log(oidc_userinfo);
-      init();
+      checkAndRegisterUserAgent();
     } else {
       console.log(result);
       console.log(window.localStorage["access_token"]);
     }
+    if(result === "success"){
+      $("#login-text").find("h4").html("Welcome " + memberId + "!");
+    } else {
+      $("#login-text").find("h4").html("You are not authenticated, try to login using Open ID Learning Layers.");
+    }
 }
+
+function checkAndRegisterUserAgent(){
+  client.sendRequest("POST",
+        "gamification/applications/validation",
+        "",
+        "application/json",
+        {},
+        function(data,type){
+          init();
+      },
+        function(error) {
+              $('#appselection').before('<div class="alert alert-danger">Error connecting web services</div>');
+          }
+      );
+}
+
 
 $(document).ready(function() {});
 
@@ -186,20 +207,6 @@ var useAuthentication = function(rurl){
   }
 
 
-function checkAndRegisterUserAgent(){
-  client.sendRequest("POST",
-        "gamification/applications/validation",
-        "",
-        "application/json",
-        {},
-        function(data,type){
-          getApplicationsData();
-      },
-        function(error) {
-              $('#appselection').before('<div class="alert alert-danger">Error connecting web services</div>');
-          }
-      );
-}
 
     
     
