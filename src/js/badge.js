@@ -1,38 +1,7 @@
-/*
- * Copyright (c) 2015 Advanced Community Information Systems (ACIS) Group, Chair
- * of Computer Science 5 (Databases & Information Systems), RWTH Aachen
- * University, Germany All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice,
- * this list of conditions and the following disclaimer in the documentation
- * and/or other materials provided with the distribution.
- *
- * Neither the name of the ACIS Group nor the names of its contributors may be
- * used to endorse or promote products derived from this software without
- * specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- */
 
- // global variables
-var client, appId, notification;
-    
+var client, appId, memberId, notification;
+var oidc_userinfo;
+var iwcCallback;
 function setAppIDContext(appId_){
   appId = appId_;
   //$('#app-id-text').html(appId);
@@ -41,14 +10,14 @@ function setAppIDContext(appId_){
   badgeModule.init();
 }
 
-var init = function() {
-  var iwcCallback = function(intent) {
+var initIWC = function(){
+  iwcCallback = function(intent) {
     console.log(intent);
     if(intent.action == "REFRESH_APPID"){
-      
+
       setAppIDContext(intent.data);
       console.log(appId);
-    }    
+    }
     if(intent.action == "FETCH_APPID_CALLBACK"){
       var data = JSON.parse(intent.data);
       if(data.receiver == "badge"){
@@ -60,34 +29,76 @@ var init = function() {
         }
       }
     }
+    if(intent.action == "LOGIN"){
+      var data = JSON.parse(intent.data);
+      if(data.status == 200){
+        oidc_userinfo = data.member;
+        loggedIn(oidc_userinfo.preferred_username);
+      }
+      else if(data.status == 401){
+            $("table#list_badges").find("tbody").empty();
+            var newRow = "<tr class='text-center'><td colspan='8'>You are not logged in</td>";
+            $("table#list_badges").find("tbody").append(newRow);
+      }
+    }
+    if(intent.action == "FETCH_LOGIN_CALLBACK"){
+      var data = JSON.parse(intent.data);
+      if(data.receiver == "badge"){
+        if(data.status == 200){
+          oidc_userinfo = data.member;
+            loggedIn(oidc_userinfo.preferred_username);
+        }
+      }
+    }
   };
   client = new Las2peerWidgetLibrary("<%= grunt.config('endPointServiceURL') %>", iwcCallback);
+
+};
+
+var loggedIn = function(mId){
+  memberId = mId;
+  init();
+  client = new Las2peerWidgetLibrary("<%= grunt.config('endPointServiceURL') %>", iwcCallback);
+
+  $("table#list_badges").find("tbody").empty();
+  var newRow = "<tr class='text-center'><td colspan='8'>Hello "+memberId+"</td>";
+  $("table#list_badges").find("tbody").append(newRow);
+}
+
+var init = function() {
+
   notification = new gadgets.MiniMessage("GAMEBADGE");
 
   $('button#refreshbutton').on('click', function() {
-    sendIntentFetchAppId("badge");
-  });
-}
-
-
-function signinCallback(result) {
-    if(result === "success"){
-      memberId = oidc_userinfo.preferred_username;
-        
-        console.log(oidc_userinfo);
-        init();
-
-    } else {
-
-
-        console.log(result);
-        console.log(window.localStorage["access_token"]);
-
+    if(memberId){
+      sendIntentFetchAppId("badge");
     }
-}
+    else{
+      initIWC();
+      sendIntentFetchLogin("badge");
+    }
+  });
+};
+
+
+// function signinCallback(result) {
+//     if(result === "success"){
+//       memberId = oidc_userinfo.preferred_username;
+//
+//         console.log(oidc_userinfo);
+//         init();
+//
+//     } else {
+//
+//
+//         console.log(result);
+//         console.log(window.localStorage["access_token"]);
+//
+//     }
+// }
 
 var useAuthentication = function(rurl){
-    if(rurl.indexOf("\?") > 0){ 
+    if(rurl.indexOf("\?") > 0){
       rurl += "&access_token=" + window.localStorage["access_token"];
     } else {
       rurl += "?access_token=" + window.localStorage["access_token"];
@@ -102,15 +113,21 @@ function sendIntentFetchAppId(sender){
   );
 }
 
-$(document).ready(function() {
-  
+function sendIntentFetchLogin(sender){
+  client.sendIntent(
+    "FETCH_LOGIN",
+    sender
+  );
+}
 
+$(document).ready(function() {
+  initIWC();
 });
 
 
 
 var badgeModule = (function() {
-  
+
   var badgeAccess;
   var modalInputId;
   var modalInputName;
@@ -136,9 +153,14 @@ var badgeModule = (function() {
   };
 
   function renderBadgeTable(data){
+    $("table#list_badges").find("tbody").empty();
     if(data.rows.length < 1){
-        var newRow = "<tr class='text-center'><td colspan='8'>No data Found ! </td>";
+        var newRow = "<tr class='text-center'><td colspan='8'>No data Found !</td>";
         $("table#list_badges").find("tbody").append(newRow);
+     }
+     else if(data.message){
+       var newRow = "<tr class='text-center'><td colspan='8'>"+data.message+"</td>";
+       $("table#list_badges").find("tbody").append(newRow);
      }
      else{
         for(var i = 0; i < data.rows.length; i++){
@@ -153,14 +175,14 @@ var badgeModule = (function() {
       newRow += "<td class='bmessageclass''>" + badge.notificationMessage + "</td>";
       newRow += "<td class='text-center'>" + "<button type='button' class='btn btn-xs btn-warning bupdclass'>Edit</button></td> ";
       newRow += "<td class='text-center'>" +"<button type='button' class='btn btn-xs btn-danger bdelclass'>Delete</button></td>";
-        
+
         $("table#list_badges").find("tbody").append(newRow);
       }
     }
   }
   var loadTable = function(){
 
-    $("table#list_badges").find("tbody").empty();
+    //$("table#list_badges").find("tbody").empty();
     badgeAccess.getBadgesData(
       appId,
       notification,
@@ -222,11 +244,11 @@ var badgeModule = (function() {
         $(modalInputName).val('');
         $(modalInputDescription).val('');
         $(modalImage).prop('src','');
-        $(modalImage).prop('required',true);            
+        $(modalImage).prop('required',true);
       $(modalNotifCheck).prop('checked',false);
       $(modalNotifMessageInput).val('');
         $("#modalbadgediv").modal('toggle');
-      
+
     });
   };
 
@@ -256,8 +278,8 @@ var badgeModule = (function() {
       if(submitButtonText=='Submit'){
         badgeAccess.createNewBadge(
           appId,
-          formData, 
-          notification, 
+          formData,
+          notification,
           function(data,type){
             $("#modalbadgediv").modal('toggle');
             loadTable();
@@ -269,8 +291,8 @@ var badgeModule = (function() {
       else{
         badgeAccess.updateBadge(
           appId,
-          formData, 
-          notification, 
+          formData,
+          notification,
           function(data,type){
             $("#modalbadgediv").modal('toggle');
             loadTable();
@@ -279,7 +301,7 @@ var badgeModule = (function() {
           badgeid
         );
       }
-      
+
       return false;
     });
   };

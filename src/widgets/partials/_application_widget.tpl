@@ -1,3 +1,5 @@
+<script src="<%= grunt.config('baseUrl') %>/js/lib/oidc-widget.js"></script>
+<script src="<%= grunt.config('baseUrl') %>/js/lib/gamificationelements.js"></script>
 <script src="<%= grunt.config('baseUrl') %>/js/application.js"></script>
 </head>
 <body>
@@ -26,7 +28,7 @@
                     <th>Description</th>
                     <th>Community Type</th>
                 </thead>
-                
+
                 <tbody id='globalappstbody'>
                 </tbody>
               </table>
@@ -41,11 +43,11 @@
                     <th>Select</th>
                     <th>App ID</th>
                     <th>Description</th>
-                    <th>Community Type</th>               
+                    <th>Community Type</th>
                     <th>Remove</th>
                     <th>Delete</th>
                 </thead>
-                  
+
                 <tbody id='registeredappstbody'>
                 </tbody>
 
@@ -92,7 +94,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" value="Open" >Open</button>
-      </div> 
+      </div>
     </div>
   </div>
 </div>
@@ -109,7 +111,7 @@
       </div>
       <div class="modal-footer">
         <button id='' type="button" class="btn btn-primary" onclick='deleteApplicationAlertHandler()' value="Delete" >Delete</button>
-      </div> 
+      </div>
     </div>
   </div>
 </div>
@@ -126,7 +128,7 @@
       </div>
       <div class="modal-footer">
         <button id='' type="button" class="btn btn-primary" onclick='removeApplicationAlertHandler()' value="Remove" >Remove</button>
-      </div> 
+      </div>
     </div>
   </div>
 </div>
@@ -158,7 +160,7 @@
               <textarea class="form-control" rows="3" maxlength="50" id="createnewapp_appdesc" name="appdesc" placeholder="This is the application description"></textarea>
             </div>
           </div>
-          <div class="form-group">        
+          <div class="form-group">
               <div class="col-sm-offset-2 col-sm-10">
                   <button type="submit" class="btn btn-primary" value="Create" >Create</button>
                 </div>
@@ -188,9 +190,9 @@
                   <th></th>
                   <th></th>
               </thead>
-              
+
               <tbody id='registeredappssettingstbody'>
-            
+
               </tbody>
 
             </table>

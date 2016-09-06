@@ -1,7 +1,8 @@
 
  // global variables
-var client, appId, notification;
-    
+var client, appId, memberId, notification;
+var oidc_userinfo;
+var iwcCallback;
 function setAppIDContext(appId_){
   appId = appId_;
   //$('#app-id-text').html(appId);
@@ -10,8 +11,8 @@ function setAppIDContext(appId_){
   achievementModule.init();
 }
 
-var init = function() {
-  var iwcCallback = function(intent) {
+var initIWC = function(){
+  iwcCallback = function(intent) {
     console.log(intent);
     if(intent.action == "REFRESH_APPID"){
       setAppIDContext(intent.data);
@@ -28,35 +29,77 @@ var init = function() {
         }
       }
     }
+    if(intent.action == "LOGIN"){
+      var data = JSON.parse(intent.data);
+      if(data.status == 200){
+        oidc_userinfo = data.member;
+        loggedIn(oidc_userinfo.preferred_username);
+
+      }
+      else if(data.status == 401){
+          $("table#list_achievements").find("tbody").empty();
+          var newRow = "<tr class='text-center'><td colspan='9'>You are not logged in</td>";
+          $("table#list_achievements").find("tbody").append(newRow);
+      }
+    }
+    if(intent.action == "FETCH_LOGIN_CALLBACK"){
+      var data = JSON.parse(intent.data);
+      if(data.receiver == "achievement"){
+        if(data.status == 200){
+          oidc_userinfo = data.member;
+            loggedIn(oidc_userinfo.preferred_username);
+        }
+      }
+    }
   };
   client = new Las2peerWidgetLibrary("<%= grunt.config('endPointServiceURL') %>", iwcCallback);
+
+};
+
+var loggedIn = function(mId){
+  memberId = mId;
+  init();
+  client = new Las2peerWidgetLibrary("<%= grunt.config('endPointServiceURL') %>", iwcCallback);
+  $("table#list_achievements").find("tbody").empty();
+  var newRow = "<tr class='text-center'><td colspan='9'>Hello "+memberId+"</td>";
+  $("table#list_achievements").find("tbody").append(newRow);
+}
+
+var init = function() {
+
   notification = new gadgets.MiniMessage("GAMEACHIEVEMENT");
 
   $('button#refreshbutton').on('click', function() {
-    sendIntentFetchAppId("achievement");
+    if(memberId){
+      sendIntentFetchAppId("achievement");
+    }
+    else{
+      initIWC();
+      sendIntentFetchLogin("achievement");
+    }
   });
 
 }
 
 
-function signinCallback(result) {
-    if(result === "success"){
-      memberId = oidc_userinfo.preferred_username;
-        
-        console.log(oidc_userinfo);
-        init();
-
-    } else {
-
-
-        console.log(result);
-        console.log(window.localStorage["access_token"]);
-
-    }
-}
+// function signinCallback(result) {
+//     if(result === "success"){
+//       memberId = oidc_userinfo.preferred_username;
+//
+//         console.log(oidc_userinfo);
+//         init();
+//
+//     } else {
+//
+//
+//         console.log(result);
+//         console.log(window.localStorage["access_token"]);
+//
+//     }
+// }
 
 var useAuthentication = function(rurl){
-    if(rurl.indexOf("\?") > 0){ 
+    if(rurl.indexOf("\?") > 0){
       rurl += "&access_token=" + window.localStorage["access_token"];
     } else {
       rurl += "?access_token=" + window.localStorage["access_token"];
@@ -71,14 +114,20 @@ function sendIntentFetchAppId(sender){
   );
 }
 
-$(document).ready(function() {
-  
+function sendIntentFetchLogin(sender){
+  client.sendIntent(
+    "FETCH_LOGIN",
+    sender
+  );
+}
 
+$(document).ready(function() {
+  initIWC();
 });
 
 
 var achievementModule = (function() {
-  
+
   var achievementAccess,badgeAccess;
   var modalSubmitButton;
   var modalInputId;
@@ -110,8 +159,14 @@ var achievementModule = (function() {
   };
 
   function renderAchievementTable(data){
+
+    $("table#list_achievements").find("tbody").empty();
     if(data.rows.length < 1){
       var newRow = "<tr class='text-center'><td colspan='9'>No data Found ! </td>";
+      $("table#list_achievements").find("tbody").append(newRow);
+    }
+    else if(data.message){
+      var newRow = "<tr class='text-center'><td colspan='9'>"+data.message+"</td>";
       $("table#list_achievements").find("tbody").append(newRow);
     }
     else{
@@ -121,13 +176,17 @@ var achievementModule = (function() {
         newRow += "<td class='text-center nameclass'>" + achievement.name + "</td>";
         newRow += "<td class='descclass'>" + achievement.description + "</td>";
         newRow += "<td class='pointvalueclass'>" + achievement.pointValue + "</td>";
-        newRow += "<td class='badgeidclass'> <a href='#' class='show-badge' id='"+ achievement.badgeId +"' data-row-badgeid='" + achievement.badgeId + "' >"+achievement.badgeId+"</a></td>";
-        
+        if(achievement.badgeId == null){
+          newRow += "<td class='badgeidclass'> </td>";  
+        }
+        else{
+          newRow += "<td class='badgeidclass'> <a href='#' class='show-badge' id='"+ achievement.badgeId +"' data-row-badgeid='" + achievement.badgeId + "' >"+achievement.badgeId+"</a></td>";
+        }
         newRow += "<td class='text-center usenotifclass''>" + achievement.useNotification + "</td>";
         newRow += "<td class='messageclass''>" + achievement.notificationMessage + "</td>";
         newRow += "<td class='text-center'>" + "<button type='button' class='btn btn-xs btn-warning updclass'>Edit</button></td> ";
         newRow += "<td class='text-center'>" +"<button type='button' class='btn btn-xs btn-danger delclass'>Delete</button></td>";
-        
+
         $("table#list_achievements").find("tbody").append(newRow);
       }
     }
@@ -135,7 +194,7 @@ var achievementModule = (function() {
 
   var loadTable = function(){
 
-    $("table#list_achievements").find("tbody").empty();
+    //$("table#list_achievements").find("tbody").empty();
     achievementAccess.getAchievementsData(
       appId,
       notification,
@@ -145,7 +204,7 @@ var achievementModule = (function() {
           renderAchievementTable(data);
 
           $("table#list_achievements").find(".show-badge").popover({
-              html : true, 
+              html : true,
               content: function() {
                 return $("#badge-popover-content").html();
               },
@@ -158,7 +217,7 @@ var achievementModule = (function() {
           $("table#list_achievements").find(".show-badge").on("click", function(event){
             // Get badge data with id
             event.preventDefault();
-            // Get id of the selected element to be attached with popover 
+            // Get id of the selected element to be attached with popover
             var idelement = "#" + $(event.target).data("row-badgeid");
             badgeAccess.getBadgeDataWithId(
               appId,
@@ -206,7 +265,7 @@ var achievementModule = (function() {
                 if(selectedAchievement.useNotification){
                   $(modalNotifMessageInput).prop('readonly',false);
                 }
-              
+
                 $("#modalachievementdiv").modal('toggle');
               }
           });
@@ -247,7 +306,7 @@ var achievementModule = (function() {
     $(modalNotifCheck).prop('checked',false);
     $(modalNotifMessageInput).val('');
       $("#modalachievementdiv").modal('toggle');
-      
+
     });
   };
 
@@ -277,8 +336,8 @@ var achievementModule = (function() {
       if(submitButtonText=='Submit'){
         achievementAccess.createNewAchievement(
           appId,
-          formData, 
-          notification, 
+          formData,
+          notification,
           function(data,type){
             $("#modalachievementdiv").modal('toggle');
             loadTable();
@@ -290,8 +349,8 @@ var achievementModule = (function() {
       else{
         achievementAccess.updateAchievement(
           appId,
-          formData, 
-          notification, 
+          formData,
+          notification,
           function(data,type){
             $("#modalachievementdiv").modal('toggle');
             loadTable();
@@ -300,7 +359,7 @@ var achievementModule = (function() {
           achievementId
         );
       }
-      
+
       return false;
     });
   };
@@ -321,7 +380,7 @@ var achievementModule = (function() {
             newRow += "<td class='bdescclass'>" + badge.description + "</td>";
             newRow += "<td><img class='text-center badgeimage badgeimagemini' src='"+ badgeAccess.getBadgeImage(appId,badge.id) +"' alt='your image' /></td>";
             newRow += "<td class='text-center'>" +"<button type='button' class='btn btn-xs btn-success badgeselectclass'>Select</button></td>";
-            
+
             $("table#list_badges_a").find("tbody").append(newRow);
           }
           $("table#list_badges_a").find(".badgeselectclass").on("click", function(event){

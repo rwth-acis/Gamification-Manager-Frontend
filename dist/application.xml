@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- generated on Sat Aug 20 2016 20:50:25 -->
+<!-- generated on Tue Sep 06 2016 17:48:46 -->
 <Module>
   <ModulePrefs
     title="Gamification Manager Application"
@@ -15,7 +15,7 @@
 	  <Require feature="settitle"/>
       <Require feature="minimessage" />
 	<OAuth>
-      <Service name="openapp" 
+      <Service name="openapp"
         xmlns:openapp="http://www.role-project.eu/xml/openapp/opensocialext/"
         openapp:service="http://purl.org/role/terms/spaceService"
         openapp:permitReadAppend="http://purl.org/role/terms/data">
@@ -24,7 +24,7 @@
         <Access method="" url=""></Access>
       </Service>
     </OAuth>
-	
+
   </ModulePrefs>
   <Content type="html">
     <![CDATA[
@@ -35,15 +35,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script src="http://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/jquery.js"></script>
-    <script src="http://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/bootstrap.js"></script>
-    <script src="http://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/iwc.js"></script>
-    <script src="http://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/las2peerWidgetLibrary.js"></script>
-    <script src="http://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/oidc-widget.js"></script>
-    <script src="http://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/gamificationelements.js"></script>
-    <link rel="stylesheet" href="http://rwth-acis.github.io/Gamification-Manager-Frontend/css/bootstrap.css">
-    <link rel="stylesheet" href="http://rwth-acis.github.io/Gamification-Manager-Frontend/css/style.css">
-    <script src="http://rwth-acis.github.io/Gamification-Manager-Frontend/js/application.js"></script>
+    <script src="https://dl.dropboxusercontent.com/u/57683747/widget/js/lib/jquery.js"></script>
+    <script src="https://dl.dropboxusercontent.com/u/57683747/widget/js/lib/bootstrap.js"></script>
+    <script src="https://dl.dropboxusercontent.com/u/57683747/widget/js/lib/iwc.js"></script>
+    <script src="https://dl.dropboxusercontent.com/u/57683747/widget/js/lib/las2peerWidgetLibrary.js"></script>
+    <link rel="stylesheet" href="https://dl.dropboxusercontent.com/u/57683747/widget/css/bootstrap.css">
+    <link rel="stylesheet" href="https://dl.dropboxusercontent.com/u/57683747/widget/css/style.css">
+    <script src="https://dl.dropboxusercontent.com/u/57683747/widget/js/lib/oidc-widget.js"></script>
+<script src="https://dl.dropboxusercontent.com/u/57683747/widget/js/lib/gamificationelements.js"></script>
+<script src="https://dl.dropboxusercontent.com/u/57683747/widget/js/application.js"></script>
 </head>
 <body>
 <div class="container-fluid">
@@ -71,7 +71,7 @@
                     <th>Description</th>
                     <th>Community Type</th>
                 </thead>
-                
+
                 <tbody id='globalappstbody'>
                 </tbody>
               </table>
@@ -86,11 +86,11 @@
                     <th>Select</th>
                     <th>App ID</th>
                     <th>Description</th>
-                    <th>Community Type</th>               
+                    <th>Community Type</th>
                     <th>Remove</th>
                     <th>Delete</th>
                 </thead>
-                  
+
                 <tbody id='registeredappstbody'>
                 </tbody>
 
@@ -137,7 +137,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" value="Open" >Open</button>
-      </div> 
+      </div>
     </div>
   </div>
 </div>
@@ -154,7 +154,7 @@
       </div>
       <div class="modal-footer">
         <button id='' type="button" class="btn btn-primary" onclick='deleteApplicationAlertHandler()' value="Delete" >Delete</button>
-      </div> 
+      </div>
     </div>
   </div>
 </div>
@@ -171,7 +171,7 @@
       </div>
       <div class="modal-footer">
         <button id='' type="button" class="btn btn-primary" onclick='removeApplicationAlertHandler()' value="Remove" >Remove</button>
-      </div> 
+      </div>
     </div>
   </div>
 </div>
@@ -203,7 +203,7 @@
               <textarea class="form-control" rows="3" maxlength="50" id="createnewapp_appdesc" name="appdesc" placeholder="This is the application description"></textarea>
             </div>
           </div>
-          <div class="form-group">        
+          <div class="form-group">
               <div class="col-sm-offset-2 col-sm-10">
                   <button type="submit" class="btn btn-primary" value="Create" >Create</button>
                 </div>
@@ -233,9 +233,9 @@
                   <th></th>
                   <th></th>
               </thead>
-              
+
               <tbody id='registeredappssettingstbody'>
-            
+
               </tbody>
 
             </table>
@@ -250,9 +250,9 @@
 
 <div id="modalspinner" style="display: none">
     <div class="center">
-        <img alt="" src="http://rwth-acis.github.io/Gamification-Manager-Frontend/img/loader.svg" />
+        <img alt="" src="https://dl.dropboxusercontent.com/u/57683747/widget/img/loader.svg" />
     </div>
-</div> 
+</div>
     </body>
     </html>
     ]]>

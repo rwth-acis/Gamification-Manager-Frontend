@@ -1,7 +1,9 @@
 
  // global variables
-var client, appId, notification;
-    
+var client, appId, memberId, notification;
+var oidc_userinfo;
+var iwcCallback;
+
 function setAppIDContext(appId_){
   appId = appId_;
   //$('#app-id-text').html(appId);
@@ -9,12 +11,11 @@ function setAppIDContext(appId_){
 
   questModule.init();
 }
-
-var init = function() {
-  var iwcCallback = function(intent) {
+var initIWC = function(){
+   iwcCallback = function(intent) {
     console.log(intent);
     if(intent.action == "REFRESH_APPID"){
-      
+
       setAppIDContext(intent.data);
     }
     if(intent.action == "FETCH_APPID_CALLBACK"){
@@ -28,30 +29,73 @@ var init = function() {
         }
       }
     }
+    if(intent.action == "LOGIN"){
+      var data = JSON.parse(intent.data);
+      if(data.status == 200){
+          oidc_userinfo = data.member;
+          loggedIn(oidc_userinfo.preferred_username);
+
+      }
+      else if(data.status == 401){
+        $("table#list_quests").find("tbody").empty();
+        var newRow = "<tr class='text-center'><td colspan='14'>You are not logged in</td>";
+        $("table#list_quests").find("tbody").append(newRow);
+      }
+    }
+    if(intent.action == "FETCH_LOGIN_CALLBACK"){
+      var data = JSON.parse(intent.data);
+      if(data.receiver == "quest"){
+        if(data.status == 200){
+          oidc_userinfo = data.member;
+            loggedIn(oidc_userinfo.preferred_username);
+        }
+      }
+    }
   };
-  client = new Las2peerWidgetLibrary("http://127.0.0.1:8081/", iwcCallback);
+  client = new Las2peerWidgetLibrary("http://192.168.56.20:8081/", iwcCallback);
+
+};
+
+var loggedIn = function(mId){
+  memberId = mId;
+  init();
+  client = new Las2peerWidgetLibrary("http://192.168.56.20:8081/", iwcCallback);
+
+  $("table#list_quests").find("tbody").empty();
+  var newRow = "<tr class='text-center'><td colspan='14'>Hello "+memberId+"</td>";
+  $("table#list_quests").find("tbody").append(newRow);
+}
+
+var init = function() {
+
   notification = new gadgets.MiniMessage("GAMEQUEST");
 
   $('button#refreshbutton').on('click', function() {
-    sendIntentFetchAppId("quest");
+    if(memberId){
+      sendIntentFetchAppId("quest");
+    }
+    else{
+      initIWC();
+      sendIntentFetchLogin("quest");
+    }
   });
 }
 
 
-function signinCallback(result) {
-    if(result === "success"){
-      memberId = oidc_userinfo.preferred_username;
-        
-        console.log(oidc_userinfo);
-        init();
-
-    } else {
-      miniMessageAlert(notification,"Sign in failed!. "+ result,"danger");
-    }
-}
+// function signinCallback(result) {
+//     if(result === "success"){
+//       memberId = oidc_userinfo.preferred_username;
+//
+//         console.log(oidc_userinfo);
+//         init();
+//
+//     } else {
+//       miniMessageAlert(notification,"Sign in failed!. "+ result,"danger");
+//     }
+// }
 
 var useAuthentication = function(rurl){
-    if(rurl.indexOf("\?") > 0){ 
+    if(rurl.indexOf("\?") > 0){
       rurl += "&access_token=" + window.localStorage["access_token"];
     } else {
       rurl += "?access_token=" + window.localStorage["access_token"];
@@ -66,15 +110,21 @@ function sendIntentFetchAppId(sender){
   );
 }
 
-$(document).ready(function() {
-  
+function sendIntentFetchLogin(sender){
+  client.sendIntent(
+    "FETCH_LOGIN",
+    sender
+  );
+}
 
+$(document).ready(function() {
+  initIWC();
 });
 
 
 
 var questModule = (function() {
-  
+
   var questAccess, achievementAccess, actionAccess, badgeAccess;
   var questCollection;
   var modalInputQuestId;
@@ -117,9 +167,15 @@ var questModule = (function() {
   };
 
   function renderQuestTable(data){
+
+    $("table#list_quests").find("tbody").empty();
     if(data.rows.length < 1){
-        var newRow = "<tr><td colspan='14'>No data Found ! </td>";
+        var newRow = "<tr class='text-center'><td colspan='14'>No data Found !</td>";
         $("table#list_quests").find("tbody").append(newRow);
+     }
+     else if(data.message){
+       var newRow = "<tr class='text-center'><td colspan='14'>"+data.message+"</td>";
+       $("table#list_quests").find("tbody").append(newRow);
      }
      else{
           for(var i = 0; i < data.rows.length; i++){
@@ -142,7 +198,7 @@ var questModule = (function() {
             newRow += "<td class='actionidsclass'>";
 
             var htmlelement = "<ul class='list-group'>";
-            for (i = 0; i < quest.actionIds.length; i++) { 
+            for (i = 0; i < quest.actionIds.length; i++) {
                htmlelement += "<li class='list-group-item'><span class='badge'>"+quest.actionIds[i].times+"</span>"+quest.actionIds[i].actionId +"</li>"
             }
             htmlelement += "</ul>";
@@ -154,7 +210,7 @@ var questModule = (function() {
             newRow += "<td class='messageclass''>" + quest.notificationMessage + "</td>";
             newRow += "<td class='text-center'>" + "<button type='button' class='btn btn-xs btn-warning updclass'>Edit</button></td> ";
             newRow += "<td class='text-center'>" +"<button type='button' class='btn btn-xs btn-danger delclass'>Delete</button></td>";
-            
+
             $("table#list_quests").find("tbody").append(newRow);
           }
      }
@@ -163,7 +219,7 @@ var questModule = (function() {
 
   var loadTable = function(){
 
-    $("table#list_quests").find("tbody").empty();
+    //$("table#list_quests").find("tbody").empty();
     questAccess.getQuestsData(
       appId,
       notification,
@@ -261,7 +317,7 @@ var questModule = (function() {
       $(modalNotifCheck).prop('checked',false);
       $(modalNotifMessageInput).val('');
         $("#modalquestdiv").modal('toggle');
-      
+
     });
   };
 
@@ -311,7 +367,7 @@ var questModule = (function() {
               $(modalNotifMessageInput).prop('readonly', true);
           }
       });
-  
+
       // Check boxes in modal
     // check box for point flag
     $('input[type="checkbox"]#quest_point_check').click(function(){
@@ -334,7 +390,7 @@ var questModule = (function() {
       // Enable input text
       // Show panel completed
               $(modalInputQuestQuestCompleted).prop('readonly', false);
-              
+
             $('#panel_quest_completed').collapse("show");
           }
 
@@ -350,7 +406,7 @@ var questModule = (function() {
         }
       }
       $('#quest_completed_list').append(htmlelement);
-      
+
       // Enable event listener
       $('#quest_completed_list').find('a').on('click', function (e) {
 
@@ -359,7 +415,7 @@ var questModule = (function() {
           $(modalInputQuestQuestCompleted).val(target);
             $('#panel_quest_completed').collapse("hide");
       });
-      
+
       });
   };
 
@@ -421,11 +477,11 @@ var questModule = (function() {
       }
       for(var i = 0;i < list.length; i++) {
 
-          
+
           var action = $(list[i]).prop('id');
           var times = $(list[i]).find('span#times').text();
 
-          actionids.questactionids.push({ 
+          actionids.questactionids.push({
               action : action,
               times  : parseInt(times)
           });
@@ -457,18 +513,18 @@ var questModule = (function() {
         questnotificationcheck:questnotifflag,
         questnotificationmessage:questnotifmessage
        }
-       
+
 
       var questid = $("#modalquestdiv").find("#quest_id").val();
-        
+
       var submitButtonText = $("button#modalquestsubmit").html();
 
 
       if(submitButtonText=='Submit'){
         questAccess.createNewQuest(
           appId,
-          content, 
-          notification, 
+          content,
+          notification,
           function(data,type){
             $("#modalquestdiv").modal('toggle');
             loadTable();
@@ -480,8 +536,8 @@ var questModule = (function() {
       else{
         questAccess.updateQuest(
           appId,
-          content, 
-          notification, 
+          content,
+          notification,
           function(data,type){
             $("#modalquestdiv").modal('toggle');
             loadTable();
@@ -513,14 +569,14 @@ var questModule = (function() {
               newRow += "<td class='descclass'>" + achievement.description + "</td>";
               newRow += "<td class='pointvalueclass'>" + achievement.pointValue + "</td>";
               newRow += "<td class='badgeidclass'> <a href='#' class='show-badge' id='"+ achievement.badgeId +"' data-row-badgeid='" + achievement.badgeId + "' >"+achievement.badgeId+"</a></td>";
-              
+
               newRow += "<td class='text-center'>" + "<button type='button' class='btn btn-xs btn-warning selectclass'>Select</button></td> ";
-              
+
               $("table#list_achievements_a").find("tbody").append(newRow);
             }
 
             $("table#list_achievements_a").find(".show-badge").popover({
-                html : true, 
+                html : true,
                 content: function() {
                   return $("#badge-popover-content").html();
                 },
@@ -533,7 +589,7 @@ var questModule = (function() {
             $("table#list_achievements_a").find(".show-badge").on("click", function(event){
               // Get badge data with id
               event.preventDefault();
-              // Get id of the selected element to be attached with popover 
+              // Get id of the selected element to be attached with popover
               var idelement = "#" + $(event.target).data("row-badgeid");
               badgeAccess.getBadgeDataWithId(
                 appId,
@@ -564,10 +620,10 @@ var questModule = (function() {
 
             $("table#list_achievements_a").find(".selectclass").on("click", function(event){
               var selectedAchievementId =  $(event.target).parent().parent().find(".idclass")[0].textContent;
-              
+
               $("#modalquestdiv").find("#panel_achievement").collapse('toggle')
-              $("#modalquestdiv").find("#quest_achievement_id").val(selectedAchievementId);   
-                
+              $("#modalquestdiv").find("#quest_achievement_id").val(selectedAchievementId);
+
             });
 
         },
@@ -575,12 +631,12 @@ var questModule = (function() {
           console.log(error);
         }
       );
-      
+
     });
 
 
     $("#modalquestdiv").find("#select_action").on("click", function(e){
-      
+
       $("table#list_actions_a").find("tbody").empty();
       actionAccess.getActionsData(
         appId,
@@ -592,7 +648,7 @@ var questModule = (function() {
             var newRow = "<tr><td class='text-center idclass'>" + action.id + "</td>";
             newRow += "<td class='text-center'><input type=\"number\" class=\"form-control\" value=\"1\" id=\""+action.id+"\" ></td>";
             newRow += "<td class='text-center'><button type=\"button\" class=\"btn btn-xs btn-default selectclass\" data-row-id=\"" + action.id + "\">select</button></td> ";
-              
+
               $("table#list_actions_a").find("tbody").append(newRow);
             }
 

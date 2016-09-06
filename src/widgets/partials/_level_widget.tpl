@@ -1,3 +1,4 @@
+<script src="<%= grunt.config('baseUrl') %>/js/lib/gamificationelements.js"></script>
 <script src="<%= grunt.config('baseUrl') %>/js/level.js"></script>
 
 </head>
@@ -16,15 +17,15 @@
 							<th>Message</th>
 							<th>Edit/Delete</th>
 					</thead>
-								
+
 					<tbody>
-						
+
 					</tbody>
 
 				</table>
 			</div>
 			 <div class="container-fluid">
-			     <button id="addnewlevel" type="button" class="btn btn-success"><span class=" glyphicon glyphicon-plus"></button> 
+			     <button id="addnewlevel" type="button" class="btn btn-success"><span class=" glyphicon glyphicon-plus"></button>
 			    <button id="refreshbutton" type="button" class="btn btn-info pull-right"> <span class=" glyphicon glyphicon-refresh"></button>
 			</div>
 		</div>
@@ -34,7 +35,7 @@
 </div>
 
            <!-- /.container-fluid -->
-<div class="modal fade" id="modalleveldiv" role="dialog">
+<div class="modal" id="modalleveldiv" role="dialog">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -51,7 +52,7 @@
 							  Level number should be integer to identify the status of player
 							</small>
 						</div>
-						
+
 					</div>
 					<div class="form-group">
 						<label class="col-sm-2 control-label">Level Name:</label>
@@ -66,9 +67,9 @@
 					  		<input type="number" class="form-control" placeholder="0" id="level_point_value" name="levelpointvalue" value="0">
 						</div>
 					</div>
-		
 
-					<div class="form-group">								
+
+					<div class="form-group">
 						<label class="col-sm-2 control-label">Notification :</label>
 						<div class="col-sm-10">
 						  	<div class="input-group">
@@ -79,7 +80,7 @@
 						    </div>
 						</div>
 					</div>
-					<div class="form-group">        
+					<div class="form-group">
 				    	<div class="col-sm-offset-2 col-sm-10">
 				        	<button id="modallevelsubmit" type="submit" class="btn btn-primary" value="" ></button>
 				    	</div>

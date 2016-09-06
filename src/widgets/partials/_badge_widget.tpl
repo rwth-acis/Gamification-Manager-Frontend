@@ -1,3 +1,4 @@
+<script src="<%= grunt.config('baseUrl') %>/js/lib/gamificationelements.js"></script>
 <script src="<%= grunt.config('baseUrl') %>/js/badge.js"></script>
 </head>
 <body>
@@ -17,18 +18,18 @@
 							<th>Edit</th>
 							<th>Delete</th>
 					</thead>
-								
+
 					<tbody>
-						
+
 					</tbody>
 
 				</table>
 			</div>
 			 <div class="container-fluid">
-			     <button id="addnewbadge" type="button" class="btn btn-success"><span class=" glyphicon glyphicon-plus"></button> 
+			     <button id="addnewbadge" type="button" class="btn btn-success"><span class=" glyphicon glyphicon-plus"></button>
 			    <button id="refreshbutton" type="button" class="btn btn-info pull-right"> <span class=" glyphicon glyphicon-refresh"></button>
 			</div>
-			
+
 
 		</div>
 		<div class="col-md-0">
@@ -36,10 +37,10 @@
 	</div>
 </div>
             <!-- /.container-fluid -->
-<div class="modal fade" id="modalbadgediv" role="dialog">
+<div class="modal" id="modalbadgediv" role="dialog">
     <div class="modal-dialog modal-lg">
     	<div class="modal-content">
-    	
+
         	<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
 				<h4 class="modal-title">Add a New Badge</h4>
@@ -72,7 +73,7 @@
 					 	<input type='file' onchange="badgeModule.showImageOnChange(this)" name="badgeimageinput" accept='image/*'/><br>
 					  </div>
 					</div>
-					<div class="form-group">								
+					<div class="form-group">
 						<label class="col-sm-2 control-label">Notification</label>
 						<div class="col-sm-10">
 						  	<div class="input-group">
@@ -83,7 +84,7 @@
 						    </div>
 						</div>
 					</div>
-					<div class="form-group">        
+					<div class="form-group">
 				      <div class="col-sm-offset-2 col-sm-10">
 				        <button id="modalbadgesubmit" type="submit" class="btn btn-primary" value="Submit" >Submit</button>
 				      </div>

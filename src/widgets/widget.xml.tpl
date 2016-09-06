@@ -15,7 +15,7 @@
 	  <Require feature="settitle"/>
       <Require feature="minimessage" />
 	<OAuth>
-      <Service name="openapp" 
+      <Service name="openapp"
         xmlns:openapp="http://www.role-project.eu/xml/openapp/opensocialext/"
         openapp:service="http://purl.org/role/terms/spaceService"
         openapp:permitReadAppend="http://purl.org/role/terms/data">
@@ -24,7 +24,7 @@
         <Access method="" url=""></Access>
       </Service>
     </OAuth>
-	
+
   </ModulePrefs>
   <Content type="html">
     <![CDATA[
@@ -39,11 +39,9 @@
     <script src="<%= grunt.config('baseUrl') %>/js/lib/bootstrap.js"></script>
     <script src="<%= grunt.config('baseUrl') %>/js/lib/iwc.js"></script>
     <script src="<%= grunt.config('baseUrl') %>/js/lib/las2peerWidgetLibrary.js"></script>
-    <script src="<%= grunt.config('baseUrl') %>/js/lib/oidc-widget.js"></script>
-    <script src="<%= grunt.config('baseUrl') %>/js/lib/gamificationelements.js"></script>
     <link rel="stylesheet" href="<%= grunt.config('baseUrl') %>/css/bootstrap.css">
     <link rel="stylesheet" href="<%= grunt.config('baseUrl') %>/css/style.css">
-    <%= partial(bodyPartial,null) %> 
+    <%= partial(bodyPartial,null) %>
     </body>
     </html>
     ]]>

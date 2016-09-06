@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- generated on Sat Aug 20 2016 20:50:25 -->
+<!-- generated on Tue Sep 06 2016 17:48:46 -->
 <Module>
   <ModulePrefs
     title="Gamification Manager Point"
@@ -15,7 +15,7 @@
 	  <Require feature="settitle"/>
       <Require feature="minimessage" />
 	<OAuth>
-      <Service name="openapp" 
+      <Service name="openapp"
         xmlns:openapp="http://www.role-project.eu/xml/openapp/opensocialext/"
         openapp:service="http://purl.org/role/terms/spaceService"
         openapp:permitReadAppend="http://purl.org/role/terms/data">
@@ -24,7 +24,7 @@
         <Access method="" url=""></Access>
       </Service>
     </OAuth>
-	
+
   </ModulePrefs>
   <Content type="html">
     <![CDATA[
@@ -35,15 +35,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script src="http://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/jquery.js"></script>
-    <script src="http://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/bootstrap.js"></script>
-    <script src="http://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/iwc.js"></script>
-    <script src="http://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/las2peerWidgetLibrary.js"></script>
-    <script src="http://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/oidc-widget.js"></script>
-    <script src="http://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/gamificationelements.js"></script>
-    <link rel="stylesheet" href="http://rwth-acis.github.io/Gamification-Manager-Frontend/css/bootstrap.css">
-    <link rel="stylesheet" href="http://rwth-acis.github.io/Gamification-Manager-Frontend/css/style.css">
-    <script src="http://rwth-acis.github.io/Gamification-Manager-Frontend/js/point.js"></script>
+    <script src="https://dl.dropboxusercontent.com/u/57683747/widget/js/lib/jquery.js"></script>
+    <script src="https://dl.dropboxusercontent.com/u/57683747/widget/js/lib/bootstrap.js"></script>
+    <script src="https://dl.dropboxusercontent.com/u/57683747/widget/js/lib/iwc.js"></script>
+    <script src="https://dl.dropboxusercontent.com/u/57683747/widget/js/lib/las2peerWidgetLibrary.js"></script>
+    <link rel="stylesheet" href="https://dl.dropboxusercontent.com/u/57683747/widget/css/bootstrap.css">
+    <link rel="stylesheet" href="https://dl.dropboxusercontent.com/u/57683747/widget/css/style.css">
+    <script src="https://dl.dropboxusercontent.com/u/57683747/widget/js/lib/gamificationelements.js"></script>
+<script src="https://dl.dropboxusercontent.com/u/57683747/widget/js/point.js"></script>
 
 
 </head>
@@ -54,7 +53,7 @@
 		 	<div class="panel panel-default">
 				<div class="panel-heading"><b>Point Unit Name</b></div>
 				      <div class="panel-body">
-							  			
+
 				      	 <form id="point_id_container">
 				      	 		<b><h4 class="form-control-static text-center" id="level_point_id_static"></h4></b>
 							    <br>
@@ -63,20 +62,20 @@
 							  			<div class="input-group">
 							      			<input type="text" class="form-control" placeholder="Unit name" id="level_point_id" name="levelpointid">
 											<span class="input-group-btn">
-							      				<button class="btn btn-secondary" type="button" id="select_point" data-toggle="collapse" data-target="#panel_point" aria-expanded="false" aria-controls="panel_point">Submit</button>		
+							      				<button class="btn btn-secondary" type="button" id="select_point" data-toggle="collapse" data-target="#panel_point" aria-expanded="false" aria-controls="panel_point">Submit</button>
 							    			</span>
-							      
+
 						    			</div>
 								  	</div>
-								</div> 
-						</form> 
+								</div>
+						</form>
 			      </div>
 			</div>
 
 	</div>
 	<div class="col-md-0">
 	</div>
-</div> 
+</div>
     </body>
     </html>
     ]]>

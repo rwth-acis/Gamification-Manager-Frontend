@@ -1,3 +1,4 @@
+<script src="<%= grunt.config('baseUrl') %>/js/lib/gamificationelements.js"></script>
 <script src="<%= grunt.config('baseUrl') %>/js/achievement.js"></script>
 
 </head>
@@ -20,15 +21,15 @@
 							<th>Edit</th>
 							<th>Delete</th>
 					</thead>
-								
+
 					<tbody>
-						
+
 					</tbody>
 
 				</table>
 			</div>
 			<div class="container-fluid">
-			     <button id="addnewachievement" type="button" class="btn btn-success"><span class=" glyphicon glyphicon-plus"></button> 
+			     <button id="addnewachievement" type="button" class="btn btn-success"><span class=" glyphicon glyphicon-plus"></button>
 			    <button id="refreshbutton" type="button" class="btn btn-info pull-right"> <span class=" glyphicon glyphicon-refresh"></button>
 			</div>
 		</div>
@@ -37,7 +38,7 @@
 	</div>
 </div>
 
-<div class="modal fade" id="modalachievementdiv" role="dialog">
+<div class="modal" id="modalachievementdiv" role="dialog">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 
@@ -69,14 +70,14 @@
 						<label class="col-sm-2 control-label">Badge</label>
 						<div class="col-sm-10">
 							<div class="input-group">
-							    <input type="text" class="form-control" placeholder="Badge ID" id="achievement_badge_id" name="achievementbadgeid">
+							    <input type="text" class="form-control" placeholder="Badge ID" id="achievement_badge_id" name="achievementbadgeid" readonly>
 							    <span class="input-group-btn">
 								    <button class="btn btn-secondary btn-info" type="button" id="empty_badge">No Badge</button>
 								    <button class="btn btn-secondary" type="button" id="select_badge" data-toggle="collapse" data-target="#panel_badge" aria-expanded="false" aria-controls="panel_badge">Select</button>
 							    </span>
 							</div>
 
-						    <div class="collapse" id="panel_badge">	  
+						    <div class="collapse" id="panel_badge">
 							    <div style="height:<%= meta.table_height %>px; overflow: auto;">
 									<table class="table table-bordered table-striped table-fixed" id='list_badges_a'>
 										<thead>
@@ -87,9 +88,9 @@
 												<th>Badge Image</th>
 												<th>Select</th>
 										</thead>
-													
+
 										<tbody>
-											
+
 										</tbody>
 
 									</table>
@@ -108,7 +109,7 @@
 					</div>
 						<!-- Add remaining columns here -->
 
-					<div class="form-group">								
+					<div class="form-group">
 						<label class="col-sm-2 control-label">Notification</label>
 						<div class="col-sm-10">
 						  	<div class="input-group">
@@ -119,7 +120,7 @@
 						    </div>
 						</div>
 					</div>
-					<div class="form-group">        
+					<div class="form-group">
 				    	<div class="col-sm-offset-2 col-sm-10">
 				        	<button id="modalachievementsubmit" type="submit" class="btn btn-primary" value="" ></button>
 				    	</div>
