@@ -12,6 +12,8 @@ function setAppIDContext(appId_){
 }
 
 var initIWC = function(){
+  notification = new gadgets.MiniMessage("GAMELEVEL");
+
   iwcCallback = function(intent) {
     console.log(intent);
     if(intent.action == "REFRESH_APPID"){
@@ -20,15 +22,26 @@ var initIWC = function(){
       console.log(appId);
     }
     if(intent.action == "FETCH_APPID_CALLBACK"){
+      notification.dismissMessage();
       var data = JSON.parse(intent.data);
-      if(data.receiver == "level"){
-        if(data.appId){
-          setAppIDContext(data.appId);
-        }
-        else{
-          miniMessageAlert(notification,"Application ID in Gamification Manager Application is not selected","danger")
+      if(data.status == 200){
+        oidc_userinfo = data.member;
+        loggedIn(oidc_userinfo.preferred_username);
+        if(data.receiver == "level"){
+          if(data.appId){
+            setAppIDContext(data.appId);
+          }
+          else{
+            miniMessageAlert(notification,"Application ID in Gamification Manager Application is not selected","danger")
+          }
         }
       }
+      else if(data.status == 401){
+          $("table#list_levels").find("tbody").empty();
+           var newRow = "<tr class='text-center'><td colspan='6'>You are not logged in</td>";
+           $("table#list_levels").find("tbody").append(newRow);
+      }
+
     }
     if(intent.action == "LOGIN"){
       var data = JSON.parse(intent.data);
@@ -42,43 +55,48 @@ var initIWC = function(){
            $("table#list_levels").find("tbody").append(newRow);
       }
     }
-    if(intent.action == "FETCH_LOGIN_CALLBACK"){
-      var data = JSON.parse(intent.data);
-      if(data.receiver == "level"){
-        if(data.status == 200){
-          oidc_userinfo = data.member;
-            loggedIn(oidc_userinfo.preferred_username);
-        }
-      }
-    }
+    // if(intent.action == "FETCH_LOGIN_CALLBACK"){
+    //   var data = JSON.parse(intent.data);
+    //   if(data.receiver == "level"){
+    //     if(data.status == 200){
+    //       oidc_userinfo = data.member;
+    //         loggedIn(oidc_userinfo.preferred_username);
+    //     }
+    //   }
+    // }
   };
-  client = new Las2peerWidgetLibrary("<%= grunt.config('endPointServiceURL') %>", iwcCallback);
+  loadLas2peerWidgetLibrary();
+  // $('button#refreshbutton').on('click', function() {
+  //     sendIntentFetchLogin("level");
+  // });
+};
 
+var loadLas2peerWidgetLibrary = function(){
+  try{
+    client = new Las2peerWidgetLibrary("<%= grunt.config('endPointServiceURL') %>", iwcCallback);
+  }
+  catch(e){
+    var msg =notification.createDismissibleMessage("Error loading Las2peerWidgetLibrary. Try refresh the page !." + e);
+    msg.style.backgroundColor = "red";
+    msg.style.color = "white";
+  }
 };
 
 var loggedIn = function(mId){
   memberId = mId;
   init();
 
-  client = new Las2peerWidgetLibrary("<%= grunt.config('endPointServiceURL') %>", iwcCallback);
+  // client = new Las2peerWidgetLibrary("<%= grunt.config('endPointServiceURL') %>", iwcCallback);
 
   $("table#list_levels").find("tbody").empty();
    var newRow = "<tr class='text-center'><td colspan='6'>Hello " +memberId+ "</td>";
    $("table#list_levels").find("tbody").append(newRow);
-}
+};
 
 var init = function() {
 
-  notification = new gadgets.MiniMessage("GAMELEVEL");
-
   $('button#refreshbutton').on('click', function() {
-    if(memberId){
       sendIntentFetchAppId("level");
-    }
-    else{
-      initIWC();
-      sendIntentFetchLogin("level");
-    }
   });
 }
 
@@ -115,12 +133,12 @@ function sendIntentFetchAppId(sender){
   );
 }
 
-function sendIntentFetchLogin(sender){
-  client.sendIntent(
-    "FETCH_LOGIN",
-    sender
-  );
-}
+// function sendIntentFetchLogin(sender){
+//   client.sendIntent(
+//     "FETCH_LOGIN",
+//     sender
+//   );
+// }
 
 $(document).ready(function() {
   initIWC();

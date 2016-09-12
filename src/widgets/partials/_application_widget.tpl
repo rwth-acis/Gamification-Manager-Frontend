@@ -7,7 +7,7 @@
   <div class="row">
     <div class="container" id="login-text">
   <h4>
-    Loading...
+    Click Login after all widgets are loaded.
   </h4>
   </div>
     <!-- Tabs Container -->
@@ -60,7 +60,7 @@
     <!-- End Tabs Container -->
     <div class="container-fluid">
      <button type="button" class="btn btn-success text-center" data-toggle="modal" data-target="#createnewapp"><span class=" glyphicon glyphicon-plus"></button>
-    <button id="refreshbutton" type="button" class="btn btn-info pull-right"> <span class=" glyphicon glyphicon-refresh"></button>
+    <button id="refreshbutton" type="button" class="btn btn-info pull-right"> Login </button>
     </div>
   </div>
 </div>

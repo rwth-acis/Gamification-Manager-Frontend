@@ -14,16 +14,15 @@ var init = function() {
     if(intent.action == "FETCH_APPID"){
       sendIntentFetchAppIdCallback(appId,intent.data);
     }
-    if(intent.action == "FETCH_LOGIN"){
-      sendIntentFetchLoginCallback(statusLogin,oidc_userinfo,intent.data);
-    }
+    // if(intent.action == "FETCH_LOGIN"){
+    //   sendIntentFetchLoginCallback(statusLogin,oidc_userinfo,intent.data);
+    // }
   };
   client = new Las2peerWidgetLibrary("<%= grunt.config('endPointServiceURL') %>", iwcCallback);
   notification = new gadgets.MiniMessage("GAMEAPP");
   checkAndRegisterUserAgent();
 
   $('button#refreshbutton').on('click', function() {
-    learningLayerLogin();
     getApplicationsData();
   });
 
@@ -65,6 +64,8 @@ function signInCallback(result) {
       loginStatus = 200;
       memberId = oidc_userinfo.preferred_username;
       console.log(oidc_userinfo);
+      // Change Login button to Refresh button
+      $('button#refreshbutton').html("<span class=\" glyphicon glyphicon-refresh\">");
       init();
     } else {
       loginStatus = 401;
@@ -95,7 +96,12 @@ function checkAndRegisterUserAgent(){
 }
 
 
-$(document).ready(function() {});
+$(document).ready(function() {
+  $('button#refreshbutton').on('click', function() {
+      $("#login-text").find("h4").html("Logging in...");
+    learningLayerLogin();
+  });
+});
 
 var applicationListener = function(){
 
@@ -310,6 +316,8 @@ function sendIntentRefreshAppId(appId){
 function sendIntentFetchAppIdCallback(appId,receiver){
   var dataObj = {
       appId: appId,
+      status: loginStatus,
+      member: oidc_userinfo,
       receiver: receiver
     };
     console.log(JSON.stringify(dataObj));
@@ -319,18 +327,18 @@ function sendIntentFetchAppIdCallback(appId,receiver){
   );
 }
 
-function sendIntentFetchLoginCallback(loginStatus,oidc_userinfo,receiver){
-  var dataObj = {
-        status: loginStatus,
-        member: oidc_userinfo,
-      receiver: receiver
-    };
-    console.log(JSON.stringify(dataObj));
-  client.sendIntent(
-    "FETCH_LOGIN_CALLBACK",
-    JSON.stringify(dataObj)
-  );
-}
+// function sendIntentFetchLoginCallback(loginStatus,oidc_userinfo,receiver){
+//   var dataObj = {
+//         status: loginStatus,
+//         member: oidc_userinfo,
+//       receiver: receiver
+//     };
+//     console.log(JSON.stringify(dataObj));
+//   client.sendIntent(
+//     "FETCH_LOGIN_CALLBACK",
+//     JSON.stringify(dataObj)
+//   );
+// }
 
 function sendIntentLogin(){
   var dataObj = {

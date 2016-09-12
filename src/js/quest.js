@@ -12,6 +12,8 @@ function setAppIDContext(appId_){
   questModule.init();
 }
 var initIWC = function(){
+  notification = new gadgets.MiniMessage("GAMEQUEST");
+
    iwcCallback = function(intent) {
     console.log(intent);
     if(intent.action == "REFRESH_APPID"){
@@ -19,15 +21,26 @@ var initIWC = function(){
       setAppIDContext(intent.data);
     }
     if(intent.action == "FETCH_APPID_CALLBACK"){
+      notification.dismissMessage();
       var data = JSON.parse(intent.data);
-      if(data.receiver == "quest"){
-        if(data.appId){
-          setAppIDContext(data.appId);
-        }
-        else{
-          miniMessageAlert(notification,"Application ID in Gamification Manager Application is not selected","danger")
-        }
+      if(data.status == 200){
+          oidc_userinfo = data.member;
+          loggedIn(oidc_userinfo.preferred_username);
+          if(data.receiver == "quest"){
+            if(data.appId){
+              setAppIDContext(data.appId);
+            }
+            else{
+              miniMessageAlert(notification,"Application ID in Gamification Manager Application is not selected","danger")
+            }
+          }
       }
+      else if(data.status == 401){
+        $("table#list_quests").find("tbody").empty();
+        var newRow = "<tr class='text-center'><td colspan='14'>You are not logged in</td>";
+        $("table#list_quests").find("tbody").append(newRow);
+      }
+
     }
     if(intent.action == "LOGIN"){
       var data = JSON.parse(intent.data);
@@ -42,42 +55,47 @@ var initIWC = function(){
         $("table#list_quests").find("tbody").append(newRow);
       }
     }
-    if(intent.action == "FETCH_LOGIN_CALLBACK"){
-      var data = JSON.parse(intent.data);
-      if(data.receiver == "quest"){
-        if(data.status == 200){
-          oidc_userinfo = data.member;
-            loggedIn(oidc_userinfo.preferred_username);
-        }
-      }
-    }
+    // if(intent.action == "FETCH_LOGIN_CALLBACK"){
+    //   var data = JSON.parse(intent.data);
+    //   if(data.receiver == "quest"){
+    //     if(data.status == 200){
+    //       oidc_userinfo = data.member;
+    //         loggedIn(oidc_userinfo.preferred_username);
+    //     }
+    //   }
+    // }
   };
-  client = new Las2peerWidgetLibrary("<%= grunt.config('endPointServiceURL') %>", iwcCallback);
+  loadLas2peerWidgetLibrary();
+  // $('button#refreshbutton').on('click', function() {
+  //     sendIntentFetchLogin("quest");
+  // });
+};
 
+var loadLas2peerWidgetLibrary = function(){
+  try{
+    client = new Las2peerWidgetLibrary("<%= grunt.config('endPointServiceURL') %>", iwcCallback);
+  }
+  catch(e){
+    var msg =notification.createDismissibleMessage("Error loading Las2peerWidgetLibrary. Try refresh the page !." + e);
+    msg.style.backgroundColor = "red";
+    msg.style.color = "white";
+  }
 };
 
 var loggedIn = function(mId){
   memberId = mId;
   init();
-  client = new Las2peerWidgetLibrary("<%= grunt.config('endPointServiceURL') %>", iwcCallback);
+  // client = new Las2peerWidgetLibrary("<%= grunt.config('endPointServiceURL') %>", iwcCallback);
 
   $("table#list_quests").find("tbody").empty();
   var newRow = "<tr class='text-center'><td colspan='14'>Hello "+memberId+"</td>";
   $("table#list_quests").find("tbody").append(newRow);
-}
+};
 
 var init = function() {
 
-  notification = new gadgets.MiniMessage("GAMEQUEST");
-
   $('button#refreshbutton').on('click', function() {
-    if(memberId){
       sendIntentFetchAppId("quest");
-    }
-    else{
-      initIWC();
-      sendIntentFetchLogin("quest");
-    }
   });
 }
 
@@ -110,12 +128,12 @@ function sendIntentFetchAppId(sender){
   );
 }
 
-function sendIntentFetchLogin(sender){
-  client.sendIntent(
-    "FETCH_LOGIN",
-    sender
-  );
-}
+// function sendIntentFetchLogin(sender){
+//   client.sendIntent(
+//     "FETCH_LOGIN",
+//     sender
+//   );
+// }
 
 $(document).ready(function() {
   initIWC();

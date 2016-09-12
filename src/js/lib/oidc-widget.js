@@ -66,7 +66,7 @@ var learning_layers_server = "https://api.learning-layers.eu/o/oauth2";
 try{
 
 	(function() {
-		learningLayerLogin();
+		//learningLayerLogin();
 	})();
 } catch (e){
 	console.log(e);
