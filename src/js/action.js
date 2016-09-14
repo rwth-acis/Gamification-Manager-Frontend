@@ -262,6 +262,7 @@ var actionModule = (function() {
       $(modalInputId).prop('readonly', false);
       $(modalInputId).val('');
       $(modalTitle).html('Add a New Action');
+      $(modalInputDescription).val('');
       $(modalInputName).val('');
       $(modalInputPointValue).val('');
       $(modalNotifCheck).prop('checked',false);
@@ -300,7 +301,7 @@ var actionModule = (function() {
           formData,
           notification,
           function(data,type){
-            $("#modalactiondiv").modal('toggle');
+            $("#modalactiondiv").modal('hide');
             loadTable();
           },
           function(status,error){},
@@ -313,7 +314,7 @@ var actionModule = (function() {
           formData,
           notification,
           function(data,type){
-            $("#modalactiondiv").modal('toggle');
+            $("#modalactiondiv").modal('hide');
             loadTable();
           },
           function(status,error){},

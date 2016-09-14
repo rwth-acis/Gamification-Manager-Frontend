@@ -263,7 +263,7 @@ var levelModule = (function() {
   var addNewButtonListener = function(){
     $("button#addnewlevel").on('click', function(event) {
         // count number of rows so the number can be incremented
-      var levelindex = $("table#list_levels").find("tr").length;
+      var levelindex = $("table#list_levels").find("tbody tr").length;
       console.log($("table#list_levels").find("tr"));
         // Adapt Modal with add form
       $(modalSubmitButton).html('Submit');

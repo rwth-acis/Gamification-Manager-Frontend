@@ -155,7 +155,7 @@ module.exports = function (grunt) {
                             meta: {
                                 title: "Gamification Manager Achievement",
                                 description: "",
-                                width: "970",
+                                width: "1024",
                                 height: "410",
                                 table_height: "360",
                             },
