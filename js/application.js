@@ -1,6 +1,6 @@
 
  // global variables
-var client, appId, notification;
+var client, appId, memberId,loginStatus, notification;
 
 function setAppIDContext(appId_){
   appId = appId_;
@@ -8,14 +8,17 @@ function setAppIDContext(appId_){
   sendIntentRefreshAppId(appId);
 
 }
-    
+
 var init = function() {
   var iwcCallback = function(intent) {
     if(intent.action == "FETCH_APPID"){
       sendIntentFetchAppIdCallback(appId,intent.data);
     }
+    // if(intent.action == "FETCH_LOGIN"){
+    //   sendIntentFetchLoginCallback(statusLogin,oidc_userinfo,intent.data);
+    // }
   };
-  client = new Las2peerWidgetLibrary("http://127.0.0.1:8081/", iwcCallback);
+  client = new Las2peerWidgetLibrary("http://gaudi.informatik.rwth-aachen.de:8081/", iwcCallback);
   notification = new gadgets.MiniMessage("GAMEAPP");
   checkAndRegisterUserAgent();
 
@@ -56,12 +59,16 @@ var init = function() {
 
 
 
-function signinCallback(result) {
+function signInCallback(result) {
     if(result === "success"){
+      loginStatus = 200;
       memberId = oidc_userinfo.preferred_username;
       console.log(oidc_userinfo);
+      // Change Login button to Refresh button
+      $('button#refreshbutton').html("<span class=\" glyphicon glyphicon-refresh\">");
       init();
     } else {
+      loginStatus = 401;
       console.log(result);
       console.log(window.localStorage["access_token"]);
     }
@@ -80,6 +87,7 @@ function checkAndRegisterUserAgent(){
         {},
         function(data,type){
         getApplicationsData();
+        sendIntentLogin();
       },
         function(error) {
               $('#appselection').before('<div class="alert alert-danger">Error connecting web services</div>');
@@ -88,7 +96,12 @@ function checkAndRegisterUserAgent(){
 }
 
 
-$(document).ready(function() {});
+$(document).ready(function() {
+  $('button#refreshbutton').on('click', function() {
+      $("#login-text").find("h4").html("Logging in...");
+    learningLayerLogin();
+  });
+});
 
 var applicationListener = function(){
 
@@ -104,9 +117,9 @@ var applicationListener = function(){
   $('#alertglobalapp').find('button.btn').on('click', function(event) {
     var currentAppId = $(this).attr('id');
     $("#alertglobalapp").modal('hide');
-      
+
     addMemberToApp(currentAppId,memberId);
-    
+
   });
 
   function addMemberToApp(currentAppId,memberId){
@@ -122,7 +135,7 @@ var applicationListener = function(){
         //setAppIDContext(currentAppId);
         miniMessageAlert(notification,memberId + " is added to "+ currentAppId, "success");
         getApplicationsData();
-  
+
       },
       function(error) {
            // Notification failed to add member to app
@@ -134,7 +147,7 @@ var applicationListener = function(){
 
   $("table#list_registered_apps_table").find(".bregappclass").on("click", function(event){
     var selectedAppId =  $(event.target).parent().parent().find("td#appidid")[0].textContent;
-        
+
     $('#alertregisteredapp_text').text('Are you sure you want to open ' + selectedAppId +"?");
     $('#alertregisteredapp').find('button').attr('id',selectedAppId);
     $("#alertregisteredapp").modal('show');
@@ -167,7 +180,7 @@ function getApplicationsData(){
           newRow += "<td id='appidid'>" + appData.id + "</td>";
           newRow += "<td id='appdescid'>" + appData.description + "</td>";
         newRow += "<td id='appcommtypeid'>" + appData.commType + "</td>";
-                    
+
           $("#list_global_apps_table tbody").append(newRow);
         }
 
@@ -181,7 +194,7 @@ function getApplicationsData(){
         newRow += "<td id='appcommtypeid'>" + appData.commType + "</td>";
         newRow += "<td><button type='button' onclick='removeApplicationHandler(this)' data-dismiss='modal' data-toggle='modal' data-target='#alertremoveapp' class='btn btn-xs btn-danger '>Remove</button></td>";
         newRow += "<td><button type='button' onclick='deleteApplicationHandler(this)' data-dismiss='modal' data-toggle='modal' data-target='#alertdeleteapp' class='btn btn-xs btn-danger '>Delete</button></td>";
-     
+
           $("#list_registered_apps_table tbody").append(newRow);
         }
 
@@ -197,7 +210,7 @@ function getApplicationsData(){
 }
 
 var useAuthentication = function(rurl){
-    if(rurl.indexOf("\?") > 0){ 
+    if(rurl.indexOf("\?") > 0){
       rurl += "&access_token=" + window.localStorage["access_token"];
     } else {
       rurl += "?access_token=" + window.localStorage["access_token"];
@@ -207,8 +220,8 @@ var useAuthentication = function(rurl){
 
 
 
-    
-    
+
+
 
 function removeApplicationHandler(element){
   var selectedappid =  $(element).parent().parent().find("td#appidid")[0].textContent;
@@ -248,8 +261,8 @@ function removeApplicationAlertHandler(){
             miniMessageAlert(notification,"Failed to remove member fron application. " + error, "danger");
         }
     );
-  
-  $("#alertremoveapp").modal('toggle'); 
+
+  $("#alertremoveapp").modal('toggle');
 }
 
 
@@ -271,7 +284,7 @@ function deleteApplicationAlertHandler(){
         // Notification delete success
         }
         getApplicationsData();
-        
+
         console.log(data);
       },
       function(error) {
@@ -279,8 +292,8 @@ function deleteApplicationAlertHandler(){
             miniMessageAlert(notification,"Failed to delete application. " + error, "danger");
         }
     );
-  
-  $("#alertdeleteapp").modal('toggle'); 
+
+  $("#alertdeleteapp").modal('toggle');
 }
 
 
@@ -303,6 +316,8 @@ function sendIntentRefreshAppId(appId){
 function sendIntentFetchAppIdCallback(appId,receiver){
   var dataObj = {
       appId: appId,
+      status: loginStatus,
+      member: oidc_userinfo,
       receiver: receiver
     };
     console.log(JSON.stringify(dataObj));
@@ -312,3 +327,27 @@ function sendIntentFetchAppIdCallback(appId,receiver){
   );
 }
 
+// function sendIntentFetchLoginCallback(loginStatus,oidc_userinfo,receiver){
+//   var dataObj = {
+//         status: loginStatus,
+//         member: oidc_userinfo,
+//       receiver: receiver
+//     };
+//     console.log(JSON.stringify(dataObj));
+//   client.sendIntent(
+//     "FETCH_LOGIN_CALLBACK",
+//     JSON.stringify(dataObj)
+//   );
+// }
+
+function sendIntentLogin(){
+  var dataObj = {
+      status: loginStatus,
+      member: oidc_userinfo
+    };
+    console.log(JSON.stringify(dataObj));
+  client.sendIntent(
+    "LOGIN",
+    JSON.stringify(dataObj)
+  );
+}

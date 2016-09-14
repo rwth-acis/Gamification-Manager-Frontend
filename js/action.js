@@ -1,8 +1,9 @@
 
 
  // global variables
-var client, appId, notification;
-    
+var client, appId,memberId, notification;
+var oidc_userinfo;
+var iwcCallback;
 function setAppIDContext(appId_){
   appId = appId_;
   //$('#app-id-text').html(appId);
@@ -11,53 +12,115 @@ function setAppIDContext(appId_){
   actionModule.init();
 }
 
-var init = function() {
-  var iwcCallback = function(intent) {
+var initIWC = function(){
+
+  notification = new gadgets.MiniMessage("GAMEACTION");
+
+  iwcCallback = function(intent) {
     console.log(intent);
     if(intent.action == "REFRESH_APPID"){
-      
+
       setAppIDContext(intent.data);
       console.log(appId);
     }
     if(intent.action == "FETCH_APPID_CALLBACK"){
+      notification.dismissMessage();
       var data = JSON.parse(intent.data);
-      if(data.receiver == "action"){
-        if(data.appId){
-          setAppIDContext(data.appId);
-        }
-        else{
-          miniMessageAlert(notification,"Application ID in Gamification Manager Application is not selected","danger")
+      if(data.status == 200){
+        oidc_userinfo = data.member;
+        loggedIn(oidc_userinfo.preferred_username);
+        if(data.receiver == "action"){
+          if(data.appId){
+            setAppIDContext(data.appId);
+          }
+          else{
+            miniMessageAlert(notification,"Application ID in Gamification Manager Application is not selected","danger")
+          }
         }
       }
+      else if(data.status == 401){
+            $("table#list_actions").find("tbody").empty();
+            var newRow = "<tr class='text-center'><td colspan='8'>You are not logged in</td>";
+            $("table#list_actions").find("tbody").append(newRow);
+      }
+
     }
+    if(intent.action == "LOGIN"){
+      var data = JSON.parse(intent.data);
+      if(data.status == 200){
+        oidc_userinfo = data.member;
+        loggedIn(oidc_userinfo.preferred_username);
+
+      }
+      else if(data.status == 401){
+            $("table#list_actions").find("tbody").empty();
+            var newRow = "<tr class='text-center'><td colspan='8'>You are not logged in</td>";
+            $("table#list_actions").find("tbody").append(newRow);
+      }
+    }
+    // if(intent.action == "FETCH_LOGIN_CALLBACK"){
+    //   var data = JSON.parse(intent.data);
+    //   if(data.receiver == "action"){
+    //     if(data.status == 200){
+    //       oidc_userinfo = data.member;
+    //         loggedIn(oidc_userinfo.preferred_username);
+    //     }
+    //   }
+    // }
   };
-  client = new Las2peerWidgetLibrary("http://127.0.0.1:8081/", iwcCallback);
-  notification = new gadgets.MiniMessage("GAMEACTION");
+  loadLas2peerWidgetLibrary();
+  // $('button#refreshbutton').on('click', function() {
+  //     sendIntentFetchLogin("action");
+  // });
+};
+
+var loadLas2peerWidgetLibrary = function(){
+  try{
+    client = new Las2peerWidgetLibrary("http://gaudi.informatik.rwth-aachen.de:8081/", iwcCallback);
+  }
+  catch(e){
+    var msg =notification.createDismissibleMessage("Error loading Las2peerWidgetLibrary. Try refresh the page !." + e);
+    msg.style.backgroundColor = "red";
+    msg.style.color = "white";
+  }
+};
+
+var loggedIn = function(mId){
+  memberId = mId;
+  init();
+  // client = new Las2peerWidgetLibrary("http://gaudi.informatik.rwth-aachen.de:8081/", iwcCallback);
+
+  $("table#list_actions").find("tbody").empty();
+  var newRow = "<tr class='text-center'><td colspan='8'>Hello "+memberId+"</td>";
+  $("table#list_actions").find("tbody").append(newRow);
+};
+
+var init = function() {
 
   $('button#refreshbutton').on('click', function() {
-    sendIntentFetchAppId("action");
+      sendIntentFetchAppId("action");
   });
-}
+};
 
 
-function signinCallback(result) {
-    if(result === "success"){
-      memberId = oidc_userinfo.preferred_username;
-        
-        console.log(oidc_userinfo);
-        init();
-
-    } else {
-
-
-        console.log(result);
-        console.log(window.localStorage["access_token"]);
-
-    }
-}
+// function signinCallback(result) {
+//     if(result === "success"){
+//       memberId = oidc_userinfo.preferred_username;
+//
+//         console.log(oidc_userinfo);
+//         init();
+//
+//     } else {
+//
+//
+//         console.log(result);
+//         console.log(window.localStorage["access_token"]);
+//
+//     }
+// }
 
 var useAuthentication = function(rurl){
-    if(rurl.indexOf("\?") > 0){ 
+    if(rurl.indexOf("\?") > 0){
       rurl += "&access_token=" + window.localStorage["access_token"];
     } else {
       rurl += "?access_token=" + window.localStorage["access_token"];
@@ -72,13 +135,20 @@ function sendIntentFetchAppId(sender){
   );
 }
 
+// function sendIntentFetchLogin(sender){
+//   client.sendIntent(
+//     "FETCH_LOGIN",
+//     sender
+//   );
+// }
+
 $(document).ready(function() {
-  
+  initIWC();
 
 });
 
 var actionModule = (function() {
-  
+
   var actionAccess;
   var modalSubmitButton;
   var modalInputId;
@@ -106,9 +176,15 @@ var actionModule = (function() {
   };
 
   function renderActionTable(data){
+
+      $("table#list_actions").find("tbody").empty();
     if(data.rows.length < 1){
-        var newRow = "<tr class='text-center'><td colspan='8'>No data Found ! </td>";
+        var newRow = "<tr class='text-center'><td colspan='8'>No data Found !</td>";
         $("table#list_actions").find("tbody").append(newRow);
+     }
+     else if(data.message){
+       var newRow = "<tr class='text-center'><td colspan='8'>"+data.message+"</td>";
+       $("table#list_actions").find("tbody").append(newRow);
      }
      else{
         for(var i = 0; i < data.rows.length; i++){
@@ -121,7 +197,7 @@ var actionModule = (function() {
           newRow += "<td class='messageclass''>" + action.notificationMessage + "</td>";
           newRow += "<td class='text-center'>" + "<button type='button' class='btn btn-xs btn-warning updclass'>Edit</button></td> ";
           newRow += "<td class='text-center'>" +"<button type='button' class='btn btn-xs btn-danger delclass'>Delete</button></td>";
-            
+
             $("table#list_actions").find("tbody").append(newRow);
         }
       }
@@ -129,7 +205,7 @@ var actionModule = (function() {
 
   var loadTable = function(){
 
-    $("table#list_actions").find("tbody").empty();
+    //$("table#list_actions").find("tbody").empty();
     actionAccess.getActionsData(
       appId,
       notification,
@@ -186,12 +262,13 @@ var actionModule = (function() {
       $(modalInputId).prop('readonly', false);
       $(modalInputId).val('');
       $(modalTitle).html('Add a New Action');
+      $(modalInputDescription).val('');
       $(modalInputName).val('');
       $(modalInputPointValue).val('');
       $(modalNotifCheck).prop('checked',false);
       $(modalNotifMessageInput).val('');
       $("#modalactiondiv").modal('toggle');
-      
+
     });
   };
 
@@ -221,10 +298,10 @@ var actionModule = (function() {
       if(submitButtonText=='Submit'){
         actionAccess.createNewAction(
           appId,
-          formData, 
-          notification, 
+          formData,
+          notification,
           function(data,type){
-            $("#modalactiondiv").modal('toggle');
+            $("#modalactiondiv").modal('hide');
             loadTable();
           },
           function(status,error){},
@@ -234,17 +311,17 @@ var actionModule = (function() {
       else{
         actionAccess.updateAction(
           appId,
-          formData, 
-          notification, 
+          formData,
+          notification,
           function(data,type){
-            $("#modalactiondiv").modal('toggle');
+            $("#modalactiondiv").modal('hide');
             loadTable();
           },
           function(status,error){},
           actionId
         );
       }
-      
+
       return false;
     });
   };

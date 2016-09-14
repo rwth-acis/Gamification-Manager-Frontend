@@ -6,7 +6,7 @@ function miniMessageAlert(msgObj,message,type){
 		case "success": msg.style.backgroundColor = "green";
 		break;
 		default: msg.style.backgroundColor = "blue";
-	}	
+	}
 	msg.style.color = "white";
 }
 var ClientHelper = {
@@ -19,13 +19,13 @@ var ClientHelper = {
 			"application/json",
 			{},
 			function(data, type){
-				
+
 
 				if(notification){
 					miniMessageAlert(notification,"<b>" + elementid + "</b> is added !","success");
 				}
 				successCallback(data,type);
-				
+
 				return false;
 			},
 			function(status,error) {
@@ -50,7 +50,7 @@ var ClientHelper = {
 					miniMessageAlert(notification,"<b>" + elementid + "</b> is updated !","success");
 				}
 				successCallback(data,type);
-				
+
 				return false;
 			},
 			function(status,error) {
@@ -144,7 +144,7 @@ var ClientHelper = {
 			},
 			function(status,error) {
       			 notification.dismissMessage();
-				 var msg =notification.createDismissibleMessage("Cannot fetch data. Try to refresh or reselect Application ID. " + error.message);
+				 var msg =notification.createDismissibleMessage("Cannot fetch data. Try to refresh or reselect Application ID. " + error);
 		         msg.style.backgroundColor = "red";
   				 msg.style.color = "white";
 		         errorCallback(status,error);
@@ -243,8 +243,8 @@ BadgeDAO.prototype.getBadgeImage = function(currentAppId,badgeid){
 
 	if(!client.isAnonymous()){
 		console.log("Authenticated request");
-		var rurl = "http://127.0.0.1:8081/gamification/badges/"+currentAppId+"/" + badgeid + "/img";
-		
+		var rurl = "http://gaudi.informatik.rwth-aachen.de:8081/gamification/badges/"+currentAppId+"/" + badgeid + "/img";
+
 		return useAuthentication(rurl);
 	} else {
 		console.log("Anonymous request... ");
@@ -345,4 +345,3 @@ LevelDAO.prototype.deleteLevel = function( currentAppId,notification,successCall
 	var endPointURL = "gamification/levels/"+currentAppId+"/" + levelnum;
 	ClientHelper.deleteData(endPointURL,notification,successCallback, errorCallback,levelnum);
 }
-
