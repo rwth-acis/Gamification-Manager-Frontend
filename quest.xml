@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- generated on Wed Sep 14 2016 12:31:34 -->
+<!-- generated on Thu Sep 15 2016 06:57:45 -->
 <Module>
   <ModulePrefs
     title="Gamification Manager Quest"
     description=""
     author="Muhammad Abduh Arifin"
     author_email="arifin@dbis.rwth-aachen.de"
-    width="800"
+    width="1024"
     height="410" scrolling="true">
 
     <Require feature="opensocial-0.8" ></Require>
