@@ -93,7 +93,7 @@ var loggedIn = function(mId){
 };
 
 var init = function() {
-
+  $('button#refreshbutton').off('click');
   $('button#refreshbutton').on('click', function() {
       sendIntentFetchAppId("quest");
   });
@@ -250,7 +250,7 @@ var questModule = (function() {
               placement:'right'
           });
 
-
+          $("table#list_quests").find(".updclass").off("click");
           $("table#list_quests").find(".updclass").on("click", function(event){
               if(questCollection){
                 var selectedRow =  $(event.target).parent().parent()[0];
@@ -293,6 +293,7 @@ var questModule = (function() {
               }
           });
 
+          $("table#list_quests").find(".delclass").off("click");
           $("table#list_quests").find(".delclass").on("click", function(event){
             var selectedRow =  $(event.target).parent().parent()[0];
             var selectedQuest = questCollection[selectedRow.rowIndex-1];
@@ -315,6 +316,7 @@ var questModule = (function() {
   };
 
   var addNewButtonListener = function(){
+    $("#addnewquest").off('click');
     $("#addnewquest").on('click', function(event) {
     // Adapt Modal with add form
         $(modalQuestActionGroup).empty();
@@ -346,6 +348,7 @@ var questModule = (function() {
     $('#quest_action_list_group').append(htmlelement);
 
     // Button delete listener
+    $('#quest_action_list_group').find('button').off("click");
     $('#quest_action_list_group').find('button').on("click", function(e){
       var buttoniddeleted = $(this).attr("id");
       $('#quest_action_list_group').find('li#'+buttoniddeleted).remove();
@@ -355,6 +358,7 @@ var questModule = (function() {
 
   var dropDownListener = function(){
         // dropdown
+      $('#quest_dropdown_status').find('a').off('click');
       $('#quest_dropdown_status').find('a').on('click', function (e) {
 
         var target = $(e.target).attr("href") // activated tab
@@ -426,6 +430,7 @@ var questModule = (function() {
       $('#quest_completed_list').append(htmlelement);
 
       // Enable event listener
+      $('#quest_completed_list').find('a').off('click');
       $('#quest_completed_list').find('a').on('click', function (e) {
 
           var target = $(e.target).attr("id") // activated tab
@@ -438,6 +443,7 @@ var questModule = (function() {
   };
 
   var submitFormListener = function(){
+    $("button#modalquestsubmit").off("click");
     $("button#modalquestsubmit").on("click", function(e){
       //disable the default form submission
       e.preventDefault();
@@ -571,6 +577,7 @@ var questModule = (function() {
 
   // Event listener for other elements rather than quest itself
   var elementDependenciesListener = function(){
+    $("#modalquestdiv").find("#select_achievement").off("click");
     $("#modalquestdiv").find("#select_achievement").on("click", function(e){
 
       // var endPointURL = epURL+"games/achievements/"+currentAppId;
@@ -604,6 +611,7 @@ var questModule = (function() {
                 trigger: 'manual',
                 placement:'right'
             });
+            $("table#list_achievements_a").find(".show-badge").off("click");
             $("table#list_achievements_a").find(".show-badge").on("click", function(event){
               // Get badge data with id
               event.preventDefault();
@@ -626,6 +634,7 @@ var questModule = (function() {
                   $(document).click(function() {
                     $(event.target).popover('hide');
                   });
+                  $(".popover").off("click");
                   $(".popover").on("click", function(e)
                   {
                     $(event.target).popover('hide');
@@ -636,6 +645,7 @@ var questModule = (function() {
                 });
             });
 
+            $("table#list_achievements_a").find(".selectclass").off("click");
             $("table#list_achievements_a").find(".selectclass").on("click", function(event){
               var selectedAchievementId =  $(event.target).parent().parent().find(".idclass")[0].textContent;
 
@@ -652,7 +662,7 @@ var questModule = (function() {
 
     });
 
-
+    $("#modalquestdiv").find("#select_action").off("click");
     $("#modalquestdiv").find("#select_action").on("click", function(e){
 
       $("table#list_actions_a").find("tbody").empty();
@@ -670,6 +680,7 @@ var questModule = (function() {
               $("table#list_actions_a").find("tbody").append(newRow);
             }
 
+            $("table#list_actions_a").find(".selectclass").off("click");
             $("table#list_actions_a").find(".selectclass").on("click", function(event){
 
               var selectedaction =  $(event.target).data("row-id");

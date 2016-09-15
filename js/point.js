@@ -87,7 +87,7 @@ var loggedIn = function(mId){
 };
 
 var init = function() {
-
+  $('button#refreshbutton').off('click');
   $('button#refreshbutton').on('click', function() {
       sendIntentFetchAppId("point");
 
@@ -157,6 +157,7 @@ $(document).ready(function() {
           return false;
         }
       );
+      $("#point_id_container").find("#select_point").off("click");
       $("#point_id_container").find("#select_point").on("click", function(e){
 
         var unitName = $("#point_id_container").find("#level_point_id").val();

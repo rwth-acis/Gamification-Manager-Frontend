@@ -96,7 +96,7 @@ var loggedIn = function(mId){
 };
 
 var init = function() {
-
+  $('button#refreshbutton').off('click');
   $('button#refreshbutton').on('click', function() {
       sendIntentFetchAppId("action");
   });
@@ -214,6 +214,7 @@ var actionModule = (function() {
         actionCollection = data.rows;
         renderActionTable(data);
 
+          $("table#list_actions").find(".updclass").off("click");
           $("table#list_actions").find(".updclass").on("click", function(event){
             if(actionCollection){
 
@@ -237,6 +238,7 @@ var actionModule = (function() {
             }
         });
 
+        $("table#list_actions").find(".delclass").off("click");
         $("table#list_actions").find(".delclass").on("click", function(event){
           var selectedRow =  $(event.target).parent().parent()[0];
             var selectedAction = actionCollection[selectedRow.rowIndex-1];
@@ -257,6 +259,7 @@ var actionModule = (function() {
   };
 
   var addNewButtonListener = function(){
+    $("button#addnewaction").off('click');
     $("button#addnewaction").on('click', function(event) {
       $(modalSubmitButton).html('Submit');
       $(modalInputId).prop('readonly', false);

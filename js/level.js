@@ -94,7 +94,7 @@ var loggedIn = function(mId){
 };
 
 var init = function() {
-
+  $('button#refreshbutton').off('click');
   $('button#refreshbutton').on('click', function() {
       sendIntentFetchAppId("level");
   });
@@ -215,7 +215,7 @@ var levelModule = (function() {
         $("#modalleveldiv").modal('hide');
         levelCollection = data.rows;
         renderLevelTable(data);
-
+          $("table#list_levels").find(".updclass").off("click");
           $("table#list_levels").find(".updclass").on("click", function(event){
             if(levelCollection){
 
@@ -239,6 +239,7 @@ var levelModule = (function() {
           }
         });
 
+        $("table#list_levels").find(".delclass").off("click");
         $("table#list_levels").find(".delclass").on("click", function(event){
           var selectedRow =  $(event.target).parent().parent()[0];
           var selectedLevel = levelCollection[selectedRow.rowIndex-1];
@@ -261,6 +262,7 @@ var levelModule = (function() {
   };
 
   var addNewButtonListener = function(){
+    $("button#addnewlevel").off('click');
     $("button#addnewlevel").on('click', function(event) {
         // count number of rows so the number can be incremented
       var levelindex = $("table#list_levels").find("tbody tr").length;

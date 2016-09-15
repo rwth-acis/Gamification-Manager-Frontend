@@ -22,6 +22,7 @@ var init = function() {
   notification = new gadgets.MiniMessage("GAMEAPP");
   checkAndRegisterUserAgent();
 
+  $('button#refreshbutton').off('click');
   $('button#refreshbutton').on('click', function() {
     getApplicationsData();
   });
@@ -97,6 +98,7 @@ function checkAndRegisterUserAgent(){
 
 
 $(document).ready(function() {
+  $('button#refreshbutton').off('click');
   $('button#refreshbutton').on('click', function() {
       $("#login-text").find("h4").html("Logging in...");
     learningLayerLogin();
@@ -104,7 +106,7 @@ $(document).ready(function() {
 });
 
 var applicationListener = function(){
-
+  $("table#list_global_apps_table").find(".bglobappclass").off("click");
   $("table#list_global_apps_table").find(".bglobappclass").on("click", function(event){
     //Get Value in appidid
     var selectedAppId =  $(event.target).parent().parent().find("td#appidid")[0].textContent;
@@ -114,6 +116,7 @@ var applicationListener = function(){
     $("#alertglobalapp").modal('show');
   });
 
+  $('#alertglobalapp').find('button.btn').off('click');
   $('#alertglobalapp').find('button.btn').on('click', function(event) {
     var currentAppId = $(this).attr('id');
     $("#alertglobalapp").modal('hide');
@@ -144,7 +147,7 @@ var applicationListener = function(){
         }
     );
   }
-
+  $("table#list_registered_apps_table").find(".bregappclass").off("click");
   $("table#list_registered_apps_table").find(".bregappclass").on("click", function(event){
     var selectedAppId =  $(event.target).parent().parent().find("td#appidid")[0].textContent;
 
@@ -153,6 +156,7 @@ var applicationListener = function(){
     $("#alertregisteredapp").modal('show');
   });
 
+  $('#alertregisteredapp').find('button.btn').off('click');
   $('#alertregisteredapp').find('button.btn').on('click', function(event) {
     console.log("CLICK");
     var currentAppId = $(this).attr('id');

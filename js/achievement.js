@@ -90,7 +90,7 @@ var loggedIn = function(mId){
 };
 
 var init = function() {
-
+  $('button#refreshbutton').off('click');
   $('button#refreshbutton').on('click', function() {
       sendIntentFetchAppId("achievement");
   });
@@ -230,6 +230,7 @@ var achievementModule = (function() {
               trigger: 'manual',
               placement:'right'
           });
+          $("table#list_achievements").find(".show-badge").off("click");
           $("table#list_achievements").find(".show-badge").on("click", function(event){
             // Get badge data with id
             event.preventDefault();
@@ -252,6 +253,7 @@ var achievementModule = (function() {
                 $(document).click(function() {
                   $(event.target).popover('hide');
                 });
+                $(".popover").off("click");
                 $(".popover").on("click", function(e)
                 {
                   $(event.target).popover('hide');
@@ -262,6 +264,7 @@ var achievementModule = (function() {
               });
           });
 
+          $("table#list_achievements").find(".updclass").off("click");
           $("table#list_achievements").find(".updclass").on("click", function(event){
               if(achievementCollection){
                 var selectedRow =  $(event.target).parent().parent()[0];
@@ -286,6 +289,7 @@ var achievementModule = (function() {
               }
           });
 
+          $("table#list_achievements").find(".delclass").off("click");
           $("table#list_achievements").find(".delclass").on("click", function(event){
             var selectedRow =  $(event.target).parent().parent()[0];
             var selectedAchievement = achievementCollection[selectedRow.rowIndex-1];
@@ -308,6 +312,7 @@ var achievementModule = (function() {
   };
 
   var addNewButtonListener = function(){
+    $("button#addnewachievement").off('click');
     $("button#addnewachievement").on('click', function(event) {
       // count number of rows so the number can be incremented
         // Adapt Modal with add form
@@ -329,6 +334,7 @@ var achievementModule = (function() {
   var checkBoxListener = function(){
       // Check boxes in modal
   // check box for point flag
+    $('input[type="checkbox"]#achievement_notification_check').off("click");
     $('input[type="checkbox"]#achievement_notification_check').on("click",function(){
           if($(this).prop("checked") == true){
               $(modalNotifMessageInput).prop('readonly', false);
@@ -381,6 +387,7 @@ var achievementModule = (function() {
   };
 
   var elementDependenciesListener = function(){
+    $("#modalachievementdiv").find("#select_badge").off("click");
     $("#modalachievementdiv").find("#select_badge").on("click", function(e){
         // Retrieve badge data. The only difference is this is read only
       $("table#list_badges_a").find("tbody").empty();
@@ -399,6 +406,7 @@ var achievementModule = (function() {
 
             $("table#list_badges_a").find("tbody").append(newRow);
           }
+          $("table#list_badges_a").find(".badgeselectclass").off("click");
           $("table#list_badges_a").find(".badgeselectclass").on("click", function(event){
             var selectedRow =  $(event.target).parent().parent().find(".bidclass")[0];
             var selectedBadgeId = selectedRow.textContent;
@@ -412,6 +420,7 @@ var achievementModule = (function() {
       );
     });
     // Badge in achievement -----------------------
+    $("#modalachievementdiv").find("button.btn#empty_badge").off('click');
     $("#modalachievementdiv").find("button.btn#empty_badge").on('click', function(event) {
       $("#modalachievementdiv").find("#achievement_badge_id").val();
     });
