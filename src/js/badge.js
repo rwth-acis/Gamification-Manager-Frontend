@@ -93,7 +93,7 @@ var loggedIn = function(mId){
 
 var init = function() {
 
-
+  $('button#refreshbutton').off('click');
   $('button#refreshbutton').on('click', function() {
       sendIntentFetchAppId("badge");
   });
@@ -210,6 +210,7 @@ var badgeModule = (function() {
           badgeCollection = data.rows;
           renderBadgeTable(data);
 
+          $("table#list_badges").find(".bupdclass").off("click");
           $("table#list_badges").find(".bupdclass").on("click", function(event){
           if(badgeCollection){
 
@@ -234,6 +235,7 @@ var badgeModule = (function() {
           }
         });
 
+        $("table#list_badges").find(".bdelclass").off("click");
         $("table#list_badges").find(".bdelclass").on("click", function(event){
           var selectedRow =  $(event.target).parent().parent()[0];
             var selectedBadge = badgeCollection[selectedRow.rowIndex-1];
@@ -254,6 +256,7 @@ var badgeModule = (function() {
   };
 
   var addNewButtonListener = function(){
+    $("button#addnewbadge").off('click');
     $("button#addnewbadge").on('click', function(event) {
         // Adapt Modal with add form
         $(modalSubmitButton).html('Submit');
