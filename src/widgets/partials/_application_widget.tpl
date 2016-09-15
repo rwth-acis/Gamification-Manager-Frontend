@@ -20,6 +20,7 @@
       <div id="my-tab-content" class="tab-content">
         <!-- All Applications -->
         <div class="tab-pane " id="allapps">
+            <div style="width:100%; height:300px; overflow:auto;">
               <table class="table table-striped table-bordered table-hover table-can-be-selected" id='list_global_apps_table'>
                 <thead>
                   <tr>
@@ -32,11 +33,13 @@
                 <tbody id='globalappstbody'>
                 </tbody>
               </table>
+            </div>
         </div>
         <!-- End All Applications -->
         <!-- Registered Applications -->
         <div class="tab-pane active" id="registeredapps">
           <small>You are registered in the applications below</small>
+            <div style="width:100%; height:300px; overflow:auto;">
              <table class="table table-striped table-bordered table-hover table-can-be-selected" id='list_registered_apps_table'>
                 <thead>
                   <tr>
@@ -52,6 +55,7 @@
                 </tbody>
 
               </table>
+            </div>
         </div>
         <!-- End Registered Applications -->
       </div>

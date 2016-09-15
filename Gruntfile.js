@@ -191,7 +191,7 @@ module.exports = function (grunt) {
                             meta: {
                                 title: "Gamification Manager Quest",
                                 description: "",
-                                width: "800",
+                                width: "1024",
                                 height: "410",
                                 table_height: "360",
                             },

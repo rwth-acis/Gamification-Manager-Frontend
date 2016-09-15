@@ -1,5 +1,5 @@
 {
-    "baseUrl" : "https://rwth-acis.github.io/Gamification-Manager-Frontend",
+    "baseUrl" : "https://dl.dropboxusercontent.com/u/57683747/widget",
     "roleSandboxUrl": "http://gaudi.informatik.rwth-aachen.de:8073",
     "endPointServiceURL": "http://gaudi.informatik.rwth-aachen.de:8081/"
 }
