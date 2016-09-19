@@ -5,9 +5,16 @@ var iwcCallback;
 function setAppIDContext(appId_){
   appId = appId_;
   //$('#app-id-text').html(appId);
-  gadgets.window.setTitle("Gamification Manager Badge - " + appId);
+  if(appId){
+    gadgets.window.setTitle("Gamification Manager Badge - " + appId);
+    if(appId == ""){
+      $("table#list_badges").find("tbody").empty();
+    }
+    else{
+      badgeModule.init();
+    }
+  }
 
-  badgeModule.init();
 }
 
 var initIWC = function(){

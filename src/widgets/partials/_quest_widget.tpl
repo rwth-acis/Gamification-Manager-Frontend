@@ -133,7 +133,7 @@
 								      <span class="input-group-addon">
 								        <input type="checkbox" aria-label="..." id="quest_point_check">
 								      </span>
-								      <input type="number" class="form-control" id="quest_point_value" name="questpointvalue" value="0">
+								      <input type="number" class="form-control" id="quest_point_value" name="questpointvalue" value="0" readonly>
 							    </div>
 								<small class="text-muted">
 								  The quest will be revealed after a player reached this point threshold

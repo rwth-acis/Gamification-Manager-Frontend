@@ -6,9 +6,15 @@ var iwcCallback;
 function setAppIDContext(appId_){
   appId = appId_;
   //$('#app-id-text').html(appId);
-  gadgets.window.setTitle("Gamification Manager Achievement - " + appId);
-
-  achievementModule.init();
+  if(appId){
+    gadgets.window.setTitle("Gamification Manager Achievement - " + appId);
+    if(appId == ""){
+      $("table#list_achievements").find("tbody").empty();
+    }
+    else{
+      achievementModule.init();
+    }
+  }
 }
 
 var initIWC = function(){

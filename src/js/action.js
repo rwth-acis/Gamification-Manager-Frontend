@@ -7,9 +7,16 @@ var iwcCallback;
 function setAppIDContext(appId_){
   appId = appId_;
   //$('#app-id-text').html(appId);
-  gadgets.window.setTitle("Gamification Manager Action - " + appId);
+  if(appId){
+    gadgets.window.setTitle("Gamification Manager Action - " + appId);
+    if(appId == ""){
+      $("table#list_actions").find("tbody").empty();
+    }
+    else{
+      actionModule.init();
+    }
+  }
 
-  actionModule.init();
 }
 
 var initIWC = function(){
