@@ -7,9 +7,16 @@ var iwcCallback;
 function setAppIDContext(appId_){
   appId = appId_;
   //$('#app-id-text').html(appId);
-  gadgets.window.setTitle("Gamification Manager Quest - " + appId);
+  if(appId){
+    gadgets.window.setTitle("Gamification Manager Quest - " + appId);
+    if(appId == ""){
+      $("table#list_quests").find("tbody").empty();
+    }
+    else{
+      questModule.init();
+    }
+  }
 
-  questModule.init();
 }
 var initIWC = function(){
   notification = new gadgets.MiniMessage("GAMEQUEST");

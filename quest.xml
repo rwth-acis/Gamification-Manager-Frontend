@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- generated on Thu Sep 15 2016 08:36:57 -->
+<!-- generated on Mon Sep 19 2016 13:26:50 -->
 <Module>
   <ModulePrefs
     title="Gamification Manager Quest"
@@ -176,7 +176,7 @@
 								      <span class="input-group-addon">
 								        <input type="checkbox" aria-label="..." id="quest_point_check">
 								      </span>
-								      <input type="number" class="form-control" id="quest_point_value" name="questpointvalue" value="0">
+								      <input type="number" class="form-control" id="quest_point_value" name="questpointvalue" value="0" readonly>
 							    </div>
 								<small class="text-muted">
 								  The quest will be revealed after a player reached this point threshold

@@ -6,9 +6,15 @@ var iwcCallback;
 function setAppIDContext(appId_){
   appId = appId_;
   //$('#app-id-text').html(appId);
-  gadgets.window.setTitle("Gamification Manager Level - " + appId);
-
-  levelModule.init();
+  if(appId){
+    gadgets.window.setTitle("Gamification Manager Level - " + appId);
+    if(appId == ""){
+      $("table#list_levels").find("tbody").empty();
+    }
+    else{
+      levelModule.init();
+    }
+  }
 }
 
 var initIWC = function(){
