@@ -1,5 +1,5 @@
 <script src="<%= grunt.config('baseUrl') %>/js/lib/oidc-widget.js"></script>
-<script src="<%= grunt.config('baseUrl') %>/js/lib/gamificationelements.js"></script>
+<script src="<%= grunt.config('baseUrl') %>/js/gamificationelements.js"></script>
 <script src="<%= grunt.config('baseUrl') %>/js/application.js"></script>
 </head>
 <body>
