@@ -252,7 +252,7 @@ var achievementModule = (function() {
                 $("#badge-popover-content").find("#badgeidpopover").html(data.id);
                 $("#badge-popover-content").find("#badgenamepopover").html(data.name);
                 $("#badge-popover-content").find("#badgedescpopover").html(data.description);
-                $("#badge-popover-content").find("#badgeimagepopover").attr("src",useAuthentication(data.imagePath))
+                $("#badge-popover-content").find("#badgeimagepopover").attr("src",badgeAccess.getBadgeImage(appId,data.id));
                 $(event.target).popover('show');
 
                 // Dismiss popover when click anywhere
