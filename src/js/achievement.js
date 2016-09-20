@@ -245,6 +245,7 @@ var achievementModule = (function() {
             badgeAccess.getBadgeDataWithId(
               appId,
               $(event.target).data("row-badgeid"),
+              notification,
               function(data,type){
                 // Render in popover
                 console.log(data);

@@ -251,6 +251,7 @@ var actionModule = (function() {
             var selectedAction = actionCollection[selectedRow.rowIndex-1];
 
             actionAccess.deleteAction(
+              appId,
               notification,
               function(data,type){
                 loadTable();

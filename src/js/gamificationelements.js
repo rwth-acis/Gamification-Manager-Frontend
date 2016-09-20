@@ -201,7 +201,7 @@ BadgeDAO.prototype.getBadgesData = function(currentAppId,notification, successCa
 	ClientHelper.getData(endPointURL+query,notification,successCallback, errorCallback);
 }
 
-BadgeDAO.prototype.getBadgeDataWithId = function(currentAppId,badgeid,successCallback, errorCallback){
+BadgeDAO.prototype.getBadgeDataWithId = function(currentAppId,badgeid,notification,successCallback, errorCallback){
 	//currentAppId = window.localStorage["appid"];
 	var endPointURL = "gamification/badges/"+currentAppId+"/"+badgeid;
 	client.sendRequest(

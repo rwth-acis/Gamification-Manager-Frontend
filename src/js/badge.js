@@ -248,6 +248,7 @@ var badgeModule = (function() {
             var selectedBadge = badgeCollection[selectedRow.rowIndex-1];
 
             badgeAccess.deleteBadge(
+              appId,
               notification,
               function(data,type){
                 loadTable();
