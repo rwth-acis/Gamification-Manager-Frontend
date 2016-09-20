@@ -80,7 +80,7 @@ var initIWC = function(){
 
 var loadLas2peerWidgetLibrary = function(){
   try{
-    client = new Las2peerWidgetLibrary("<%= grunt.config('endPointServiceURL') %>", iwcCallback);
+    client = new Las2peerWidgetLibrary("http://gaudi.informatik.rwth-aachen.de:8081/", iwcCallback);
   }
   catch(e){
     var msg =notification.createDismissibleMessage("Error loading Las2peerWidgetLibrary. Try refresh the page !." + e);
@@ -92,7 +92,7 @@ var loadLas2peerWidgetLibrary = function(){
 var loggedIn = function(mId){
   memberId = mId;
   init();
-  // client = new Las2peerWidgetLibrary("<%= grunt.config('endPointServiceURL') %>", iwcCallback);
+  // client = new Las2peerWidgetLibrary("http://gaudi.informatik.rwth-aachen.de:8081/", iwcCallback);
 
   $("table#list_quests").find("tbody").empty();
   var newRow = "<tr class='text-center'><td colspan='14'>Hello "+memberId+"</td>";
@@ -203,9 +203,10 @@ var questModule = (function() {
        $("table#list_quests").find("tbody").append(newRow);
      }
      else{
+
           for(var i = 0; i < data.rows.length; i++){
             var quest = data.rows[i];
-
+            
             var newRow = "<tr class='text-center'><td class='text-center idclass'>" + quest.id + "</td>";
             newRow += "<td class='text-center nameclass'>" + quest.name + "</td>";
             newRow += "<td class='descclass'>" + quest.description + "</td>";
@@ -213,18 +214,18 @@ var questModule = (function() {
             newRow += "<td class='text-center achievementidclass'>" + quest.achievementId + "</td>";
             newRow += "<td class='text-center questflagclass'>" + quest.questFlag + "</td>";
 
-            if(quest.questIdCompleted){
-              newRow += "<td class='text-center questidcompletedclass'>" + quest.questIdCompleted + "</td>";
-            }else{
+            if(quest.questIdCompleted == null){
               newRow += "<td class='text-center questidcompletedclass'></td>";
+            }else{
+              newRow += "<td class='text-center questidcompletedclass'>" + quest.questIdCompleted + "</td>";
             }
             newRow += "<td class='text-center pointflagclass'>" + quest.pointFlag + "</td>";
             newRow += "<td class='text-center pointvalueclass'>" + quest.pointValue + "</td>";
             newRow += "<td class='actionidsclass'>";
 
             var htmlelement = "<ul class='list-group'>";
-            for (i = 0; i < quest.actionIds.length; i++) {
-               htmlelement += "<li class='list-group-item'><span class='badge'>"+quest.actionIds[i].times+"</span>"+quest.actionIds[i].actionId +"</li>"
+            for (var j = 0; j < quest.actionIds.length; j++) {
+               htmlelement += "<li class='list-group-item'><span class='badge'>"+quest.actionIds[j].times+"</span>"+quest.actionIds[j].actionId +"</li>"
             }
             htmlelement += "</ul>";
             var poptitle = "<li class='list-group-item'>Action ID - times</li>";
