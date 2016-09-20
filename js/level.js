@@ -301,6 +301,7 @@ var levelModule = (function() {
   };
 
   var submitFormListener = function(){
+    $("form#modallevelform").off();
     $("form#modallevelform").submit(function(e){
       //disable the default form submission
       e.preventDefault();

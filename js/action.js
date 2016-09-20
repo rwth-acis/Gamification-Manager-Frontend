@@ -297,6 +297,7 @@ var actionModule = (function() {
   }
 
   var submitFormListener = function(){
+    $("form#modalactionform").off();
     $("form#modalactionform").submit(function(e){
       //disable the default form submission
       e.preventDefault();

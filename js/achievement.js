@@ -353,6 +353,7 @@ var achievementModule = (function() {
   }
 
   var submitFormListener = function(){
+    $("form#modalachievementform").off();
     $("form#modalachievementform").submit(function(e){
       //disable the default form submission
       e.preventDefault();
@@ -429,7 +430,8 @@ var achievementModule = (function() {
     // Badge in achievement -----------------------
     $("#modalachievementdiv").find("button.btn#empty_badge").off('click');
     $("#modalachievementdiv").find("button.btn#empty_badge").on('click', function(event) {
-      $("#modalachievementdiv").find("#achievement_badge_id").val();
+      console.log("No badge");
+      $("#modalachievementdiv").find("#achievement_badge_id").val("");
     });
   };
 
