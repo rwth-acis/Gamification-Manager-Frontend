@@ -30,6 +30,7 @@ var init = function() {
 
 // Handler when the form in "Create New App" is submitted
       // App ID will be retrieved from the service and will be put on the id attribute in class maincontent
+  $("form#createnewappform").off();
   $("form#createnewappform").submit(function(e){
     //disable the default form submission
     e.preventDefault();

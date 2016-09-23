@@ -107,28 +107,14 @@ var init = function() {
 };
 
 
-// function signinCallback(result) {
-//     if(result === "success"){
-//       memberId = oidc_userinfo.preferred_username;
-//
-//         console.log(oidc_userinfo);
-//         init();
-//
-//     } else {
-//
-//
-//         console.log(result);
-//         console.log(window.localStorage["access_token"]);
-//
-//     }
-// }
-
 var useAuthentication = function(rurl){
     if(rurl.indexOf("\?") > 0){
       rurl += "&access_token=" + window.localStorage["access_token"];
     } else {
       rurl += "?access_token=" + window.localStorage["access_token"];
     }
+    // unique cache-busting query parameter
+    rurl += "&t=" + new Date().getTime();
     return rurl;
   }
 
@@ -179,6 +165,7 @@ var badgeModule = (function() {
   };
 
   function renderBadgeTable(data){
+
     $("table#list_badges").find("tbody").empty();
     if(data.rows.length < 1){
         var newRow = "<tr class='text-center'><td colspan='8'>No data Found !</td>";
@@ -296,6 +283,7 @@ var badgeModule = (function() {
   }
 
   var submitFormListener = function(){
+    $("form#modalbadgeform").off();
     $("form#modalbadgeform").submit(function(e){
       //disable the default form submission
       e.preventDefault();
