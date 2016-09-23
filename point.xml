@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- generated on Sat Sep 24 2016 01:28:18 -->
+<!-- generated on Sat Sep 24 2016 01:31:01 -->
 <Module>
   <ModulePrefs
     title="Gamification Manager Point"
@@ -27,14 +27,14 @@
   </ModulePrefs>
   <Content type="html">
     <![CDATA[
-    <script src="https://dl.dropboxusercontent.com/u/57683747/widget/js/lib/jquery.js"></script>
-    <script src="https://dl.dropboxusercontent.com/u/57683747/widget/js/lib/bootstrap.js"></script>
-    <script src="https://dl.dropboxusercontent.com/u/57683747/widget/js/lib/iwc.js"></script>
-    <script src="https://dl.dropboxusercontent.com/u/57683747/widget/js/lib/las2peerWidgetLibrary.js"></script>
-    <link rel="stylesheet" href="https://dl.dropboxusercontent.com/u/57683747/widget/css/bootstrap.css">
-    <link rel="stylesheet" href="https://dl.dropboxusercontent.com/u/57683747/widget/css/style.css">
-    <script src="https://dl.dropboxusercontent.com/u/57683747/widget/js/gamificationelements.js"></script>
-<script src="https://dl.dropboxusercontent.com/u/57683747/widget/js/point.js"></script>
+    <script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/jquery.js"></script>
+    <script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/bootstrap.js"></script>
+    <script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/iwc.js"></script>
+    <script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/las2peerWidgetLibrary.js"></script>
+    <link rel="stylesheet" href="https://rwth-acis.github.io/Gamification-Manager-Frontend/css/bootstrap.css">
+    <link rel="stylesheet" href="https://rwth-acis.github.io/Gamification-Manager-Frontend/css/style.css">
+    <script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/gamificationelements.js"></script>
+<script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/point.js"></script>
 
 
 </head>
