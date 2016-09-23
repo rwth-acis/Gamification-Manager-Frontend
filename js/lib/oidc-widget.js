@@ -63,14 +63,14 @@ var google_server = "https://accounts.google.com/o/oauth2";
 var learning_layers_server = "https://api.learning-layers.eu/o/oauth2";
 
 // Exceptions and debug messages are logged to the console.
-try{
+// try{
 
-	(function() {
-		//learningLayerLogin();
-	})();
-} catch (e){
-	console.log(e);
-}
+// 	(function() {
+// 		//learningLayerLogin();
+// 	})();
+// } catch (e){
+// 	console.log(e);
+// }
 
 function learningLayerLogin(){
 	// Learning layer server
