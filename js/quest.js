@@ -1,15 +1,16 @@
 
  // global variables
-var client, appId, memberId, notification;
+var client, gameId, memberId, notification;
 var oidc_userinfo;
 var iwcCallback;
 
-function setAppIDContext(appId_){
-  appId = appId_;
-  //$('#app-id-text').html(appId);
-  if(appId){
-    gadgets.window.setTitle("Gamification Manager Quest - " + appId);
-    if(appId == ""){
+function setGameIDContext(gameId_){
+  gameId = gameId_;
+  //$('#game-id-text').html(gameId);
+  if(gameId){
+    //gadgets.window.setTitle("Gamification Manager Quest - " + gameId);
+    $("h4#title-widget").text("Game ID : " + gameId);
+    if(gameId == ""){
       $("table#list_quests").find("tbody").empty();
     }
     else{
@@ -25,7 +26,7 @@ var initIWC = function(){
     console.log(intent);
     if(intent.action == "REFRESH_APPID"){
 
-      setAppIDContext(intent.data);
+      setGameIDContext(intent.data);
     }
     if(intent.action == "FETCH_APPID_CALLBACK"){
       notification.dismissMessage();
@@ -34,11 +35,11 @@ var initIWC = function(){
           oidc_userinfo = data.member;
           loggedIn(oidc_userinfo.preferred_username);
           if(data.receiver == "quest"){
-            if(data.appId){
-              setAppIDContext(data.appId);
+            if(data.gameId){
+              setGameIDContext(data.gameId);
             }
             else{
-              miniMessageAlert(notification,"Application ID in Gamification Manager Application is not selected","danger")
+              miniMessageAlert(notification,"Game ID in Gamification Manager Game is not selected","danger")
             }
           }
       }
@@ -102,7 +103,7 @@ var loggedIn = function(mId){
 var init = function() {
   $('button#refreshbutton').off('click');
   $('button#refreshbutton').on('click', function() {
-      sendIntentFetchAppId("quest");
+      sendIntentFetchGameId("quest");
   });
 }
 
@@ -128,7 +129,7 @@ var useAuthentication = function(rurl){
     return rurl;
   }
 
-function sendIntentFetchAppId(sender){
+function sendIntentFetchGameId(sender){
   client.sendIntent(
     "FETCH_APPID",
     sender
@@ -247,7 +248,7 @@ var questModule = (function() {
 
     //$("table#list_quests").find("tbody").empty();
     questAccess.getQuestsData(
-      appId,
+      gameId,
       notification,
       function(data,type){
           $("#modalquestdiv").modal('hide');
@@ -307,7 +308,7 @@ var questModule = (function() {
             var selectedQuest = questCollection[selectedRow.rowIndex-1];
 
               questAccess.deleteQuest(
-                appId,
+                gameId,
                 notification,
                 function(data,type){
                   loadTable();
@@ -554,7 +555,7 @@ var questModule = (function() {
 
       if(submitButtonText=='Submit'){
         questAccess.createNewQuest(
-          appId,
+          gameId,
           content,
           notification,
           function(data,type){
@@ -567,7 +568,7 @@ var questModule = (function() {
       }
       else{
         questAccess.updateQuest(
-          appId,
+          gameId,
           content,
           notification,
           function(data,type){
@@ -588,10 +589,10 @@ var questModule = (function() {
     $("#modalquestdiv").find("#select_achievement").off("click");
     $("#modalquestdiv").find("#select_achievement").on("click", function(e){
 
-      // var endPointURL = epURL+"games/achievements/"+currentAppId;
+      // var endPointURL = epURL+"games/achievements/"+currentGameId;
       var tableElement = $("table#list_achievements_a");
       achievementAccess.getAchievementsData(
-        appId,
+        gameId,
         notification,
         function(data,type){
           console.log(data);
@@ -626,7 +627,7 @@ var questModule = (function() {
               // Get id of the selected element to be attached with popover
               var idelement = "#" + $(event.target).data("row-badgeid");
               badgeAccess.getBadgeDataWithId(
-                appId,
+                gameId,
                 $(event.target).data("row-badgeid"),
                 function(data,type){
                   // Render in popover
@@ -675,7 +676,7 @@ var questModule = (function() {
 
       $("table#list_actions_a").find("tbody").empty();
       actionAccess.getActionsData(
-        appId,
+        gameId,
         notification,
         function(data,type){
           console.log(data);

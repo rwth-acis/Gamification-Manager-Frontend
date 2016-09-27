@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- generated on Sat Sep 24 2016 01:31:01 -->
+<!-- generated on Tue Sep 27 2016 18:18:50 -->
 <Module>
   <ModulePrefs
     title="Gamification Manager Point"
@@ -7,7 +7,7 @@
     author="Muhammad Abduh Arifin"
     author_email="arifin@dbis.rwth-aachen.de"
     width="400"
-    height="200" scrolling="true">
+    height="230" scrolling="true">
 
     <Require feature="opensocial-0.8" ></Require>
     <Require feature="openapp" ></Require>
@@ -27,18 +27,21 @@
   </ModulePrefs>
   <Content type="html">
     <![CDATA[
-    <script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/jquery.js"></script>
-    <script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/bootstrap.js"></script>
-    <script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/iwc.js"></script>
-    <script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/las2peerWidgetLibrary.js"></script>
-    <link rel="stylesheet" href="https://rwth-acis.github.io/Gamification-Manager-Frontend/css/bootstrap.css">
-    <link rel="stylesheet" href="https://rwth-acis.github.io/Gamification-Manager-Frontend/css/style.css">
-    <script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/gamificationelements.js"></script>
-<script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/point.js"></script>
+    <script src="https://dl.dropboxusercontent.com/u/57683747/widget_game/js/lib/jquery.js"></script>
+    <script src="https://dl.dropboxusercontent.com/u/57683747/widget_game/js/lib/bootstrap.js"></script>
+    <script src="https://dl.dropboxusercontent.com/u/57683747/widget_game/js/lib/iwc.js"></script>
+    <script src="https://dl.dropboxusercontent.com/u/57683747/widget_game/js/lib/las2peerWidgetLibrary.js"></script>
+    <link rel="stylesheet" href="https://dl.dropboxusercontent.com/u/57683747/widget_game/css/bootstrap.css">
+    <link rel="stylesheet" href="https://dl.dropboxusercontent.com/u/57683747/widget_game/css/style.css">
+    <script src="https://dl.dropboxusercontent.com/u/57683747/widget_game/js/gamificationelements.js"></script>
+<script src="https://dl.dropboxusercontent.com/u/57683747/widget_game/js/point.js"></script>
 
 
-</head>
-<body>
+<div class="container-fluid text-center">
+  <div class="row">
+  <h4 id="title-widget">Game ID : - </h4>
+  </div>
+</div>     
 <div id="wrapper" class="container-fluid" >
 <div class="row">
 	<div class="col-md-12">

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- generated on Sat Sep 24 2016 01:31:01 -->
+<!-- generated on Tue Sep 27 2016 18:18:50 -->
 <Module>
   <ModulePrefs
-    title="Gamification Manager Application"
+    title="Gamification Manager Game"
     description=""
     author="Muhammad Abduh Arifin"
     author_email="arifin@dbis.rwth-aachen.de"
     width="560"
-    height="450" scrolling="true">
+    height="480" scrolling="true">
 
     <Require feature="opensocial-0.8" ></Require>
     <Require feature="openapp" ></Require>
@@ -27,17 +27,21 @@
   </ModulePrefs>
   <Content type="html">
     <![CDATA[
-    <script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/jquery.js"></script>
-    <script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/bootstrap.js"></script>
-    <script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/iwc.js"></script>
-    <script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/las2peerWidgetLibrary.js"></script>
-    <link rel="stylesheet" href="https://rwth-acis.github.io/Gamification-Manager-Frontend/css/bootstrap.css">
-    <link rel="stylesheet" href="https://rwth-acis.github.io/Gamification-Manager-Frontend/css/style.css">
-    <script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/oidc-widget.js"></script>
-<script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/gamificationelements.js"></script>
-<script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/application.js"></script>
-</head>
-<body>
+    <script src="https://dl.dropboxusercontent.com/u/57683747/widget_game/js/lib/jquery.js"></script>
+    <script src="https://dl.dropboxusercontent.com/u/57683747/widget_game/js/lib/bootstrap.js"></script>
+    <script src="https://dl.dropboxusercontent.com/u/57683747/widget_game/js/lib/iwc.js"></script>
+    <script src="https://dl.dropboxusercontent.com/u/57683747/widget_game/js/lib/las2peerWidgetLibrary.js"></script>
+    <link rel="stylesheet" href="https://dl.dropboxusercontent.com/u/57683747/widget_game/css/bootstrap.css">
+    <link rel="stylesheet" href="https://dl.dropboxusercontent.com/u/57683747/widget_game/css/style.css">
+    <script src="https://dl.dropboxusercontent.com/u/57683747/widget_game/js/lib/oidc-widget.js"></script>
+<script src="https://dl.dropboxusercontent.com/u/57683747/widget_game/js/gamificationelements.js"></script>
+<script src="https://dl.dropboxusercontent.com/u/57683747/widget_game/js/game.js"></script>
+
+<div class="container-fluid text-center">
+  <div class="row">
+  <h4 id="title-widget">Game ID : - </h4>
+  </div>
+</div>          
 <div class="container-fluid">
   <div class="row">
     <div class="container" id="login-text">
@@ -47,72 +51,72 @@
   </div>
     <!-- Tabs Container -->
     <div class="container-fluid text-center" style="height:360px; overflow: auto;">
-      <!-- Tabs Application -->
+      <!-- Tabs Game -->
       <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
-        <li class="active"><a href="#registeredapps" data-toggle="tab">Registered Applications</a></li>
-        <li><a href="#allapps" data-toggle="tab">Other Applications</a></li>
+        <li class="active"><a href="#registeredgames" data-toggle="tab">Registered Games</a></li>
+        <li><a href="#allgames" data-toggle="tab">Other Games</a></li>
       </ul>
       <div id="my-tab-content" class="tab-content">
-        <!-- All Applications -->
-        <div class="tab-pane " id="allapps">
+        <!-- All Games -->
+        <div class="tab-pane " id="allgames">
             <div style="width:100%; height:300px; overflow:auto;">
-              <table class="table table-striped table-bordered table-hover table-can-be-selected" id='list_global_apps_table'>
+              <table class="table table-striped table-bordered table-hover table-can-be-selected" id='list_global_games_table'>
                 <thead>
                   <tr>
                     <th>Select</th>
-                    <th>App ID</th>
+                    <th>Game ID</th>
                     <th>Description</th>
                     <th>Community Type</th>
                 </thead>
 
-                <tbody id='globalappstbody'>
+                <tbody id='globalgamestbody'>
                 </tbody>
               </table>
             </div>
         </div>
-        <!-- End All Applications -->
-        <!-- Registered Applications -->
-        <div class="tab-pane active" id="registeredapps">
-          <small>You are registered in the applications below</small>
+        <!-- End All Games -->
+        <!-- Registered Games -->
+        <div class="tab-pane active" id="registeredgames">
+          <small>You are registered in the games below</small>
             <div style="width:100%; height:300px; overflow:auto;">
-             <table class="table table-striped table-bordered table-hover table-can-be-selected" id='list_registered_apps_table'>
+             <table class="table table-striped table-bordered table-hover table-can-be-selected" id='list_registered_games_table'>
                 <thead>
                   <tr>
                     <th>Select</th>
-                    <th>App ID</th>
+                    <th>Game ID</th>
                     <th>Description</th>
                     <th>Community Type</th>
                     <th>Remove</th>
                     <th>Delete</th>
                 </thead>
 
-                <tbody id='registeredappstbody'>
+                <tbody id='registeredgamestbody'>
                 </tbody>
 
               </table>
             </div>
         </div>
-        <!-- End Registered Applications -->
+        <!-- End Registered Games -->
       </div>
-      <!-- End Tabs Application -->
+      <!-- End Tabs Game -->
     </div>
     <!-- End Tabs Container -->
     <div class="container-fluid">
-     <button type="button" class="btn btn-success text-center" data-toggle="modal" data-target="#createnewapp"><span class=" glyphicon glyphicon-plus"></button>
+     <button id="addnewgame" type="button" class="btn btn-success text-center" ><span class=" glyphicon glyphicon-plus"></button>
     <button id="refreshbutton" type="button" class="btn btn-info pull-right"> Login </button>
     </div>
   </div>
 </div>
 
-<div class="modal fade" id="alertglobalapp" role="dialog">
+<div class="modal fade" id="alertglobalgame" role="dialog">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Select The Existing Application</h4>
+        <h4 class="modal-title">Select The Existing Game</h4>
       </div>
       <div class="modal-body">
-        <p id="alertglobalapp_text"></p>
+        <p id="alertglobalgame_text"></p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" value="Open" >Open</button>
@@ -121,15 +125,15 @@
   </div>
 </div>
 
-<div class="modal fade" id="alertregisteredapp" role="dialog">
+<div class="modal fade" id="alertregisteredgame" role="dialog">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Select Your Registered Application</h4>
+        <h4 class="modal-title">Select Your Registered Game</h4>
       </div>
       <div class="modal-body">
-        <p id="alertregisteredapp_text"></p>
+        <p id="alertregisteredgame_text"></p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" value="Open" >Open</button>
@@ -138,65 +142,65 @@
   </div>
 </div>
 
-<div class="modal fade" id="alertdeleteapp" role="dialog">
+<div class="modal fade" id="alertdeletegame" role="dialog">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Delete the application</h4>
+        <h4 class="modal-title">Delete the game</h4>
       </div>
       <div class="modal-body">
-        <p id="alertdeleteapp_text"></p>
+        <p id="alertdeletegame_text"></p>
       </div>
       <div class="modal-footer">
-        <button id='' type="button" class="btn btn-primary" onclick='deleteApplicationAlertHandler()' value="Delete" >Delete</button>
+        <button id='' type="button" class="btn btn-primary" onclick='deleteGameAlertHandler()' value="Delete" >Delete</button>
       </div>
     </div>
   </div>
 </div>
 
-<div class="modal fade" id="alertremoveapp" role="dialog">
+<div class="modal fade" id="alertremovegame" role="dialog">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Remove the application</h4>
+        <h4 class="modal-title">Remove the game</h4>
       </div>
       <div class="modal-body">
-        <p id="alertremoveapp_text"></p>
+        <p id="alertremovegame_text"></p>
       </div>
       <div class="modal-footer">
-        <button id='' type="button" class="btn btn-primary" onclick='removeApplicationAlertHandler()' value="Remove" >Remove</button>
+        <button id='' type="button" class="btn btn-primary" onclick='removeGameAlertHandler()' value="Remove" >Remove</button>
       </div>
     </div>
   </div>
 </div>
 
-<div class="modal fade" id="createnewapp" role="dialog">
+<div class="modal fade" id="createnewgame" role="dialog">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Create New Application</h4>
+        <h4 class="modal-title">Create New Game</h4>
       </div>
       <div class="modal-body">
-        <form method="POST" enctype="multipart/form-data" method="post" id="createnewappform" class="form-horizontal" role="form">
+        <form method="POST" enctype="multipart/form-data" method="post" id="createnewgameform" class="form-horizontal" role="form">
           <div class="form-group">
-            <label class="col-sm-2 control-label">Application ID:</label>
+            <label class="col-sm-2 control-label">Game ID:</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" maxlength="20" id="createnewapp_appid" name="appid" placeholder="My Gamification" required>
+              <input type="text" class="form-control" maxlength="20" id="createnewgame_gameid" name="gameid" placeholder="My Gamification" required>
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-2 control-label">Community Type:</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" maxlength="20" id="createnewapp_commtype" name="commtype" placeholder="my_community">
+              <input type="text" class="form-control" maxlength="20" id="createnewgame_commtype" name="commtype" placeholder="my_community">
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Application Description:</label>
+            <label class="col-sm-2 control-label">Game Description:</label>
             <div class="col-sm-10">
-              <textarea class="form-control" rows="3" maxlength="50" id="createnewapp_appdesc" name="appdesc" placeholder="This is the application description"></textarea>
+              <textarea class="form-control" rows="3" maxlength="50" id="createnewgame_gamedesc" name="gamedesc" placeholder="This is the game description"></textarea>
             </div>
           </div>
           <div class="form-group">
@@ -218,19 +222,19 @@
         <h4 class="modal-title">Settings</h4>
       </div>
       <div class="modal-body">
-        <div class="table-responsive" id='list_registered_apps_settings'>
-            <h4>Manage Your Registered Applications</h4>
-            <table class="table table-striped table-hover" id='list_registered_apps_settings_table'>
+        <div class="table-responsive" id='list_registered_games_settings'>
+            <h4>Manage Your Registered Games</h4>
+            <table class="table table-striped table-hover" id='list_registered_games_settings_table'>
               <thead>
                 <tr>
-                  <th>App ID</th>
+                  <th>Game ID</th>
                   <th>Description</th>
                   <th>Community Type</th>
                   <th></th>
                   <th></th>
               </thead>
 
-              <tbody id='registeredappssettingstbody'>
+              <tbody id='registeredgamessettingstbody'>
 
               </tbody>
 
@@ -246,7 +250,7 @@
 
 <div id="modalspinner" style="display: none">
     <div class="center">
-        <img alt="" src="https://rwth-acis.github.io/Gamification-Manager-Frontend/img/loader.svg" />
+        <img alt="" src="https://dl.dropboxusercontent.com/u/57683747/widget_game/img/loader.svg" />
     </div>
 </div>
     ]]>
