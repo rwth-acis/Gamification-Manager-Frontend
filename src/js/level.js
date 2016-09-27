@@ -1,14 +1,15 @@
 
  // global variables
-var client, appId,memberId, notification;
+var client, gameId,memberId, notification;
 var oidc_userinfo;
 var iwcCallback;
-function setAppIDContext(appId_){
-  appId = appId_;
-  //$('#app-id-text').html(appId);
-  if(appId){
-    gadgets.window.setTitle("Gamification Manager Level - " + appId);
-    if(appId == ""){
+function setGameIDContext(gameId_){
+  gameId = gameId_;
+  //$('#game-id-text').html(gameId);
+  if(gameId){
+    //gadgets.window.setTitle("Gamification Manager Level - " + gameId);
+    $("h4#title-widget").text("Game ID : " + gameId);
+    if(gameId == ""){
       $("table#list_levels").find("tbody").empty();
     }
     else{
@@ -24,8 +25,8 @@ var initIWC = function(){
     console.log(intent);
     if(intent.action == "REFRESH_APPID"){
 
-      setAppIDContext(intent.data);
-      console.log(appId);
+      setGameIDContext(intent.data);
+      console.log(gameId);
     }
     if(intent.action == "FETCH_APPID_CALLBACK"){
       notification.dismissMessage();
@@ -34,11 +35,11 @@ var initIWC = function(){
         oidc_userinfo = data.member;
         loggedIn(oidc_userinfo.preferred_username);
         if(data.receiver == "level"){
-          if(data.appId){
-            setAppIDContext(data.appId);
+          if(data.gameId){
+            setGameIDContext(data.gameId);
           }
           else{
-            miniMessageAlert(notification,"Application ID in Gamification Manager Application is not selected","danger")
+            miniMessageAlert(notification,"Game ID in Gamification Manager Game is not selected","danger")
           }
         }
       }
@@ -102,7 +103,7 @@ var loggedIn = function(mId){
 var init = function() {
   $('button#refreshbutton').off('click');
   $('button#refreshbutton').on('click', function() {
-      sendIntentFetchAppId("level");
+      sendIntentFetchGameId("level");
   });
 }
 
@@ -132,7 +133,7 @@ var useAuthentication = function(rurl){
     return rurl;
   }
 
-function sendIntentFetchAppId(sender){
+function sendIntentFetchGameId(sender){
   client.sendIntent(
     "FETCH_APPID",
     sender
@@ -215,7 +216,7 @@ var levelModule = (function() {
 
     //$("table#list_levels").find("tbody").empty();
     levelAccess.getLevelsData(
-      appId,
+      gameId,
       notification,
       function(data,type){
         $("#modalleveldiv").modal('hide');
@@ -251,7 +252,7 @@ var levelModule = (function() {
           var selectedLevel = levelCollection[selectedRow.rowIndex-1];
 
           levelAccess.deleteLevel(
-            appId,
+            gameId,
             notification,
             function(data,type){
               loadTable();
@@ -313,7 +314,7 @@ var levelModule = (function() {
 
       if(submitButtonText=='Submit'){
         levelAccess.createNewLevel(
-          appId,
+          gameId,
           formData,
           notification,
           function(data,type){
@@ -326,7 +327,7 @@ var levelModule = (function() {
       }
       else{
         levelAccess.updateLevel(
-          appId,
+          gameId,
           formData,
           notification,
           function(data,type){

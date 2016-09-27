@@ -1,8 +1,11 @@
 <script src="<%= grunt.config('baseUrl') %>/js/gamificationelements.js"></script>
 <script src="<%= grunt.config('baseUrl') %>/js/achievement.js"></script>
 
-</head>
-<body>
+<div class="container-fluid text-center">
+  <div class="row">
+  <h4 id="title-widget">Game ID : - </h4>
+  </div>
+</div>     
 <div id="wrapper" class="container-fluid" >
 	<div class="row">
 		<div class="col-md-12">
@@ -47,7 +50,7 @@
 			    <h4 class="modal-title"></h4>
 			</div>
 			<div class="modal-body">
-				<form method="POST" data-toggle="validator" enctype="multipart/form-data" id="modalachievementform" name="appId" class="form-horizontal" role="form">
+				<form method="POST" data-toggle="validator" enctype="multipart/form-data" id="modalachievementform" name="gameId" class="form-horizontal" role="form">
 				    <div class="form-group">
 						<label class="col-sm-2 control-label">Achievement ID</label>
 						<div class="col-sm-10">

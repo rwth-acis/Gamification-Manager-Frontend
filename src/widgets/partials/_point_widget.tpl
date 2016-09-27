@@ -2,8 +2,11 @@
 <script src="<%= grunt.config('baseUrl') %>/js/point.js"></script>
 
 
-</head>
-<body>
+<div class="container-fluid text-center">
+  <div class="row">
+  <h4 id="title-widget">Game ID : - </h4>
+  </div>
+</div>     
 <div id="wrapper" class="container-fluid" >
 <div class="row">
 	<div class="col-md-12">

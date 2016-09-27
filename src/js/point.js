@@ -1,14 +1,15 @@
 
  // global variables
-var client, appId,memberId, notification;
+var client, gameId,memberId, notification;
 var oidc_userinfo;
 var iwcCallback;
-function setAppIDContext(appId_){
-  appId = appId_;
-  //$('#app-id-text').html(appId);
-  if(appId){
-    gadgets.window.setTitle("Gamification Manager Point - " + appId);
-    if(appId == ""){
+function setGameIDContext(gameId_){
+  gameId = gameId_;
+  //$('#game-id-text').html(gameId);
+  if(gameId){
+    //gadgets.window.setTitle("Gamification Manager Point - " + gameId);
+    $("h4#title-widget").text("Game ID : " + gameId);
+    if(gameId == ""){
       $("#point_id_container").find("#level_point_id").val('');
     }
     else{
@@ -26,7 +27,7 @@ var initIWC = function(){
     console.log(intent);
     if(intent.action == "REFRESH_APPID"){
 
-      setAppIDContext(intent.data);
+      setGameIDContext(intent.data);
     }
     if(intent.action == "FETCH_APPID_CALLBACK"){
       notification.dismissMessage();
@@ -35,11 +36,11 @@ var initIWC = function(){
         oidc_userinfo = data.member;
         loggedIn(oidc_userinfo.preferred_username);
         if(data.receiver == "point"){
-          if(data.appId){
-            setAppIDContext(data.appId);
+          if(data.gameId){
+            setGameIDContext(data.gameId);
           }
           else{
-            miniMessageAlert(notification,"Application ID in Gamification Manager Application is not selected","danger")
+            miniMessageAlert(notification,"Game ID in Gamification Manager Game is not selected","danger")
           }
         }
       }
@@ -96,7 +97,7 @@ var loggedIn = function(mId){
 var init = function() {
   $('button#refreshbutton').off('click');
   $('button#refreshbutton').on('click', function() {
-      sendIntentFetchAppId("point");
+      sendIntentFetchGameId("point");
 
   });
 }
@@ -123,7 +124,7 @@ var useAuthentication = function(rurl){
     return rurl;
   }
 
-function sendIntentFetchAppId(sender){
+function sendIntentFetchGameId(sender){
   client.sendIntent(
     "FETCH_APPID",
     sender
@@ -145,7 +146,7 @@ $(document).ready(function() {
  var pointModule = (function() {
 
   var init = function(){
-      var endPointPath = "gamification/points/"+appId+"/name";
+      var endPointPath = "gamification/points/"+gameId+"/name";
       client.sendRequest(
         "GET",
         endPointPath,
@@ -169,7 +170,7 @@ $(document).ready(function() {
 
         var unitName = $("#point_id_container").find("#level_point_id").val();
         console.log(unitName);
-        var endPointPath = "gamification/points/"+appId+"/name/"+unitName;
+        var endPointPath = "gamification/points/"+gameId+"/name/"+unitName;
         client.sendRequest(
           "PUT",
           endPointPath,

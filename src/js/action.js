@@ -1,15 +1,16 @@
 
 
  // global variables
-var client, appId,memberId, notification;
+var client, gameId,memberId, notification;
 var oidc_userinfo;
 var iwcCallback;
-function setAppIDContext(appId_){
-  appId = appId_;
-  //$('#app-id-text').html(appId);
-  if(appId){
-    gadgets.window.setTitle("Gamification Manager Action - " + appId);
-    if(appId == ""){
+function setGameIDContext(gameId_){
+  gameId = gameId_;
+  //$('#game-id-text').html(gameId);
+  if(gameId){
+    //gadgets.window.setTitle("Gamification Manager Action - " + gameId);
+    $("h4#title-widget").text("Game ID : " + gameId);
+    if(gameId == ""){
       $("table#list_actions").find("tbody").empty();
     }
     else{
@@ -27,8 +28,8 @@ var initIWC = function(){
     console.log(intent);
     if(intent.action == "REFRESH_APPID"){
 
-      setAppIDContext(intent.data);
-      console.log(appId);
+      setGameIDContext(intent.data);
+      console.log(gameId);
     }
     if(intent.action == "FETCH_APPID_CALLBACK"){
       notification.dismissMessage();
@@ -37,11 +38,11 @@ var initIWC = function(){
         oidc_userinfo = data.member;
         loggedIn(oidc_userinfo.preferred_username);
         if(data.receiver == "action"){
-          if(data.appId){
-            setAppIDContext(data.appId);
+          if(data.gameId){
+            setGameIDContext(data.gameId);
           }
           else{
-            miniMessageAlert(notification,"Application ID in Gamification Manager Application is not selected","danger")
+            miniMessageAlert(notification,"Game ID in Gamification Manager Game is not selected","danger")
           }
         }
       }
@@ -105,7 +106,7 @@ var loggedIn = function(mId){
 var init = function() {
   $('button#refreshbutton').off('click');
   $('button#refreshbutton').on('click', function() {
-      sendIntentFetchAppId("action");
+      sendIntentFetchGameId("action");
   });
 };
 
@@ -135,7 +136,7 @@ var useAuthentication = function(rurl){
     return rurl;
   }
 
-function sendIntentFetchAppId(sender){
+function sendIntentFetchGameId(sender){
   client.sendIntent(
     "FETCH_APPID",
     sender
@@ -214,7 +215,7 @@ var actionModule = (function() {
 
     //$("table#list_actions").find("tbody").empty();
     actionAccess.getActionsData(
-      appId,
+      gameId,
       notification,
       function(data,type){
         $("#modalactiondiv").modal('hide');
@@ -251,7 +252,7 @@ var actionModule = (function() {
             var selectedAction = actionCollection[selectedRow.rowIndex-1];
 
             actionAccess.deleteAction(
-              appId,
+              gameId,
               notification,
               function(data,type){
                 loadTable();
@@ -309,7 +310,7 @@ var actionModule = (function() {
 
       if(submitButtonText=='Submit'){
         actionAccess.createNewAction(
-          appId,
+          gameId,
           formData,
           notification,
           function(data,type){
@@ -322,7 +323,7 @@ var actionModule = (function() {
       }
       else{
         actionAccess.updateAction(
-          appId,
+          gameId,
           formData,
           notification,
           function(data,type){
