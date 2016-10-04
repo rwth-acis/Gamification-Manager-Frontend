@@ -1,13 +1,14 @@
 
-var client, appId, memberId, notification;
+var client, gameId, memberId, notification;
 var oidc_userinfo;
 var iwcCallback;
-function setAppIDContext(appId_){
-  appId = appId_;
-  //$('#app-id-text').html(appId);
-  if(appId){
-    gadgets.window.setTitle("Gamification Manager Badge - " + appId);
-    if(appId == ""){
+function setGameIDContext(gameId_){
+  gameId = gameId_;
+  //$('#game-id-text').html(gameId);
+  if(gameId){
+    //gadgets.window.setTitle("Gamification Manager Badge - " + gameId);
+    $("h4#title-widget").text("Game ID : " + gameId);
+    if(gameId == ""){
       $("table#list_badges").find("tbody").empty();
     }
     else{
@@ -24,8 +25,8 @@ var initIWC = function(){
     console.log(intent);
     if(intent.action == "REFRESH_APPID"){
 
-      setAppIDContext(intent.data);
-      console.log(appId);
+      setGameIDContext(intent.data);
+      console.log(gameId);
     }
     if(intent.action == "FETCH_APPID_CALLBACK"){
       notification.dismissMessage();
@@ -34,11 +35,11 @@ var initIWC = function(){
         oidc_userinfo = data.member;
         loggedIn(oidc_userinfo.preferred_username);
         if(data.receiver == "badge"){
-          if(data.appId){
-            setAppIDContext(data.appId);
+          if(data.gameId){
+            setGameIDContext(data.gameId);
           }
           else{
-            miniMessageAlert(notification,"Application ID in Gamification Manager Application is not selected","danger")
+            miniMessageAlert(notification,"Game ID in Gamification Manager Game is not selected","danger")
           }
         }
       }
@@ -79,7 +80,7 @@ var initIWC = function(){
 
 var loadLas2peerWidgetLibrary = function(){
   try{
-    client = new Las2peerWidgetLibrary("http://gaudi.informatik.rwth-aachen.de:8081/", iwcCallback);
+    client = new Las2peerWidgetLibrary("<%= grunt.config('endPointServiceURL') %>", iwcCallback);
   }
   catch(e){
     var msg =notification.createDismissibleMessage("Error loading Las2peerWidgetLibrary. Try refresh the page !." + e);
@@ -91,7 +92,7 @@ var loadLas2peerWidgetLibrary = function(){
 var loggedIn = function(mId){
   memberId = mId;
   init();
-  // client = new Las2peerWidgetLibrary("http://gaudi.informatik.rwth-aachen.de:8081/", iwcCallback);
+  // client = new Las2peerWidgetLibrary("<%= grunt.config('endPointServiceURL') %>", iwcCallback);
 
   $("table#list_badges").find("tbody").empty();
   var newRow = "<tr class='text-center'><td colspan='8'>Hello "+memberId+"</td>";
@@ -102,7 +103,7 @@ var init = function() {
 
   $('button#refreshbutton').off('click');
   $('button#refreshbutton').on('click', function() {
-      sendIntentFetchAppId("badge");
+      sendIntentFetchGameId("badge");
   });
 };
 
@@ -118,7 +119,7 @@ var useAuthentication = function(rurl){
     return rurl;
   }
 
-function sendIntentFetchAppId(sender){
+function sendIntentFetchGameId(sender){
   client.sendIntent(
     "FETCH_APPID",
     sender
@@ -183,7 +184,7 @@ var badgeModule = (function() {
         newRow += "<td class='text-center bnameclass'>" + badge.name + "</td>";
       newRow += "<td class='bdescclass'>" + badge.description + "</td>";
       //newRow += "<td><button id='" + i + "' type='button' onclick='viewBadgeImageHandler(this,0)' class='btn btn-info bimgclass' name='"+ badge.imagePath +"' data-toggle='modal' data-target='#modalimage'>View Image</button></td>";
-      newRow += "<td><img class='text-center badgeimage badgeimagemini' src='"+ badgeAccess.getBadgeImage(appId,badge.id) +"' alt='your image' /></td>";
+      newRow += "<td><img class='text-center badgeimage badgeimagemini' src='"+ badgeAccess.getBadgeImage(gameId,badge.id) +"' alt='your image' /></td>";
       newRow += "<td class='text-center busenotifclass''>" + badge.useNotification + "</td>";
       newRow += "<td class='bmessageclass''>" + badge.notificationMessage + "</td>";
       newRow += "<td class='text-center'>" + "<button type='button' class='btn btn-xs btn-warning bupdclass'>Edit</button></td> ";
@@ -197,7 +198,7 @@ var badgeModule = (function() {
 
     //$("table#list_badges").find("tbody").empty();
     badgeAccess.getBadgesData(
-      appId,
+      gameId,
       notification,
       function(data,type){
         $("#modalbadgediv").modal('hide');
@@ -217,7 +218,7 @@ var badgeModule = (function() {
             modalTitle.html('Update a Badge');
               $(modalInputName).val(selectedBadge.name);
               $(modalInputDescription).val(selectedBadge.description);
-              $(modalImage).attr("src",badgeAccess.getBadgeImage(appId,selectedBadge.id));
+              $(modalImage).attr("src",badgeAccess.getBadgeImage(gameId,selectedBadge.id));
               $(modalImage).prop('required',false);
               $(modalNotifCheck).prop('checked',selectedBadge.useNotification);
             $(modalNotifMessageInput).val(selectedBadge.notificationMessage);
@@ -235,7 +236,7 @@ var badgeModule = (function() {
             var selectedBadge = badgeCollection[selectedRow.rowIndex-1];
 
             badgeAccess.deleteBadge(
-              appId,
+              gameId,
               notification,
               function(data,type){
                 loadTable();
@@ -295,7 +296,7 @@ var badgeModule = (function() {
 
       if(submitButtonText=='Submit'){
         badgeAccess.createNewBadge(
-          appId,
+          gameId,
           formData,
           notification,
           function(data,type){
@@ -308,7 +309,7 @@ var badgeModule = (function() {
       }
       else{
         badgeAccess.updateBadge(
-          appId,
+          gameId,
           formData,
           notification,
           function(data,type){

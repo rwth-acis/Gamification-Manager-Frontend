@@ -144,7 +144,7 @@ var ClientHelper = {
 			},
 			function(status,error) {
       			 notification.dismissMessage();
-				 var msg =notification.createDismissibleMessage("Cannot fetch data. Try to refresh or reselect Application ID. " + error);
+				 var msg =notification.createDismissibleMessage("Cannot fetch data. Try to refresh or reselect Game ID. " + error);
 		         msg.style.backgroundColor = "red";
   				 msg.style.color = "white";
 		         errorCallback(status,error);
@@ -160,28 +160,28 @@ var ClientHelper = {
 var QuestDAO = function(endPointURL){
 }
 
-QuestDAO.prototype.getQuestsData = function(currentAppId,notification,successCallback, errorCallback){
-	var endPointURL = "gamification/quests/"+currentAppId;
+QuestDAO.prototype.getQuestsData = function(currentGameId,notification,successCallback, errorCallback){
+	var endPointURL = "gamification/quests/"+currentGameId;
 	var query = "?current=1&rowCount=-1&searchPhrase=";
 	ClientHelper.getData(endPointURL+query,notification,successCallback, errorCallback);
 }
 
-QuestDAO.prototype.createNewQuest = function(currentAppId,content, notification,successCallback, errorCallback, questid){
+QuestDAO.prototype.createNewQuest = function(currentGameId,content, notification,successCallback, errorCallback, questid){
 
 	var objsent = JSON.stringify(content);
-	var endPointURL = "gamification/quests/"+currentAppId;
+	var endPointURL = "gamification/quests/"+currentGameId;
 	ClientHelper.postWithJSON(endPointURL, content, notification,successCallback, errorCallback, questid);
 }
 
-QuestDAO.prototype.updateQuest = function(currentAppId,content, notification,successCallback, errorCallback, questid){
+QuestDAO.prototype.updateQuest = function(currentGameId,content, notification,successCallback, errorCallback, questid){
 
 	var objsent = JSON.stringify(content);
-	var endPointURL = "gamification/quests/"+currentAppId+"/"+questid;
+	var endPointURL = "gamification/quests/"+currentGameId+"/"+questid;
 	ClientHelper.putWithJSON(endPointURL, content, notification,successCallback, errorCallback, questid);
 }
 
-QuestDAO.prototype.deleteQuest = function(currentAppId,notification,successCallback, errorCallback,questid){
-	var endPointURL = "gamification/quests/"+currentAppId+"/"+questid;
+QuestDAO.prototype.deleteQuest = function(currentGameId,notification,successCallback, errorCallback,questid){
+	var endPointURL = "gamification/quests/"+currentGameId+"/"+questid;
 	ClientHelper.deleteData(endPointURL,notification,successCallback, errorCallback,questid);
 }
 
@@ -195,18 +195,18 @@ QuestDAO.prototype.deleteQuest = function(currentAppId,notification,successCallb
 var BadgeDAO = function(){
 }
 
-BadgeDAO.prototype.getBadgesData = function(currentAppId,notification, successCallback, errorCallback){
-	var endPointURL = "gamification/badges/"+currentAppId;
+BadgeDAO.prototype.getBadgesData = function(currentGameId,notification, successCallback, errorCallback){
+	var endPointURL = "gamification/badges/"+currentGameId;
 	var query = "?current=1&rowCount=-1&searchPhrase=";
 	ClientHelper.getData(endPointURL+query,notification,successCallback, errorCallback);
 }
 
-BadgeDAO.prototype.getBadgeDataWithId = function(currentAppId,badgeid,notification,successCallback, errorCallback){
-	//currentAppId = window.localStorage["appid"];
-	var endPointURL = "gamification/badges/"+currentAppId+"/"+badgeid;
+BadgeDAO.prototype.getBadgeDataWithId = function(currentGameId,badgeid,notification,successCallback, errorCallback){
+	//currentGameId = window.localStorage["gameid"];
+	var endPointURL = "gamification/badges/"+currentGameId+"/"+badgeid;
 	client.sendRequest(
 		"GET",
-		"gamification/badges/"+currentAppId+"/"+badgeid,
+		"gamification/badges/"+currentGameId+"/"+badgeid,
 		{},
 		false,
 		{},
@@ -220,30 +220,30 @@ BadgeDAO.prototype.getBadgeDataWithId = function(currentAppId,badgeid,notificati
 	);
 }
 
-BadgeDAO.prototype.createNewBadge = function(currentAppId,content, notification,successCallback, errorCallback, badgeid){
-	//currentAppId = window.localStorage["appid"];
-	var endPointURL = "gamification/badges/"+currentAppId;
+BadgeDAO.prototype.createNewBadge = function(currentGameId,content, notification,successCallback, errorCallback, badgeid){
+	//currentGameId = window.localStorage["gameid"];
+	var endPointURL = "gamification/badges/"+currentGameId;
 	ClientHelper.postWithForm(endPointURL, content, notification,successCallback, errorCallback, badgeid);
 }
 
-BadgeDAO.prototype.updateBadge = function(currentAppId,content, notification,successCallback, errorCallback, badgeid){
-	//currentAppId = window.localStorage["appid"];
-	var endPointURL = "gamification/badges/"+currentAppId+"/"+badgeid;
+BadgeDAO.prototype.updateBadge = function(currentGameId,content, notification,successCallback, errorCallback, badgeid){
+	//currentGameId = window.localStorage["gameid"];
+	var endPointURL = "gamification/badges/"+currentGameId+"/"+badgeid;
 	ClientHelper.putWithForm(endPointURL,content, notification,successCallback, errorCallback, badgeid);
 }
 
-BadgeDAO.prototype.deleteBadge = function(currentAppId,notification,successCallback, errorCallback, badgeid){
-	//currentAppId =window.localStorage["appid"];
-	var endPointURL = "gamification/badges/"+currentAppId+"/" + badgeid;
+BadgeDAO.prototype.deleteBadge = function(currentGameId,notification,successCallback, errorCallback, badgeid){
+	//currentGameId =window.localStorage["gameid"];
+	var endPointURL = "gamification/badges/"+currentGameId+"/" + badgeid;
 	ClientHelper.deleteData(endPointURL,notification,successCallback, errorCallback,badgeid);
 }
 
-BadgeDAO.prototype.getBadgeImage = function(currentAppId,badgeid){
-	//currentAppId = window.localStorage["appid"];
+BadgeDAO.prototype.getBadgeImage = function(currentGameId,badgeid){
+	//currentGameId = window.localStorage["gameid"];
 
 	if(!client.isAnonymous()){
 		console.log("Authenticated request");
-		var rurl = "http://gaudi.informatik.rwth-aachen.de:8081/gamification/badges/"+currentAppId+"/" + badgeid + "/img";
+		var rurl = "<%= grunt.config('endPointServiceURL') %>gamification/badges/"+currentGameId+"/" + badgeid + "/img";
 
 		return useAuthentication(rurl);
 	} else {
@@ -263,24 +263,24 @@ BadgeDAO.prototype.getBadgeImage = function(currentAppId,badgeid){
 var AchievementDAO = function(endPointURL){
 }
 
-AchievementDAO.prototype.getAchievementsData = function(currentAppId,notification,successCallback, errorCallback){
-	var endPointURL = "gamification/achievements/"+currentAppId;
+AchievementDAO.prototype.getAchievementsData = function(currentGameId,notification,successCallback, errorCallback){
+	var endPointURL = "gamification/achievements/"+currentGameId;
 	var query = "?current=1&rowCount=-1&searchPhrase=";
 	ClientHelper.getData(endPointURL+query,notification,successCallback, errorCallback);
 }
 
-AchievementDAO.prototype.createNewAchievement = function(currentAppId,content, notification,successCallback, errorCallback, achievementid){
-	var endPointURL = "gamification/achievements/"+currentAppId;
+AchievementDAO.prototype.createNewAchievement = function(currentGameId,content, notification,successCallback, errorCallback, achievementid){
+	var endPointURL = "gamification/achievements/"+currentGameId;
 	ClientHelper.postWithForm(endPointURL, content, notification,successCallback, errorCallback, achievementid);
 }
 
-AchievementDAO.prototype.updateAchievement = function(currentAppId,content, notification,successCallback, errorCallback, achievementid){
-	var endPointURL = "gamification/achievements/"+currentAppId+"/"+achievementid;
+AchievementDAO.prototype.updateAchievement = function(currentGameId,content, notification,successCallback, errorCallback, achievementid){
+	var endPointURL = "gamification/achievements/"+currentGameId+"/"+achievementid;
 	ClientHelper.putWithForm(endPointURL,content, notification,successCallback, errorCallback, achievementid);
 }
 
-AchievementDAO.prototype.deleteAchievement = function(currentAppId,notification,successCallback, errorCallback, achievementid){
-	var endPointURL = "gamification/achievements/"+currentAppId+"/" + achievementid;
+AchievementDAO.prototype.deleteAchievement = function(currentGameId,notification,successCallback, errorCallback, achievementid){
+	var endPointURL = "gamification/achievements/"+currentGameId+"/" + achievementid;
 	ClientHelper.deleteData(endPointURL,notification,successCallback, errorCallback,achievementid);
 }
 
@@ -294,24 +294,24 @@ AchievementDAO.prototype.deleteAchievement = function(currentAppId,notification,
 var ActionDAO = function(endPointURL){
 }
 
-ActionDAO.prototype.getActionsData = function(currentAppId,notification,successCallback, errorCallback){
-	var endPointURL = "gamification/actions/"+currentAppId;
+ActionDAO.prototype.getActionsData = function(currentGameId,notification,successCallback, errorCallback){
+	var endPointURL = "gamification/actions/"+currentGameId;
 	var query = "?current=1&rowCount=-1&searchPhrase=";
 	ClientHelper.getData(endPointURL+query,notification,successCallback, errorCallback);
 }
 
-ActionDAO.prototype.createNewAction = function(currentAppId,content, notification,successCallback, errorCallback, actionid){
-	var endPointURL = "gamification/actions/"+currentAppId;
+ActionDAO.prototype.createNewAction = function(currentGameId,content, notification,successCallback, errorCallback, actionid){
+	var endPointURL = "gamification/actions/"+currentGameId;
 	ClientHelper.postWithForm(endPointURL, content, notification,successCallback, errorCallback, actionid);
 }
 
-ActionDAO.prototype.updateAction = function(currentAppId,content, notification,successCallback, errorCallback, actionid){
-	var endPointURL = "gamification/actions/"+currentAppId+"/"+actionid;
+ActionDAO.prototype.updateAction = function(currentGameId,content, notification,successCallback, errorCallback, actionid){
+	var endPointURL = "gamification/actions/"+currentGameId+"/"+actionid;
 	ClientHelper.putWithForm(endPointURL,content, notification,successCallback, errorCallback, actionid);
 }
 
-ActionDAO.prototype.deleteAction = function(currentAppId,notification,successCallback, errorCallback, actionid){
-	var endPointURL = "gamification/actions/"+currentAppId+"/" + actionid;
+ActionDAO.prototype.deleteAction = function(currentGameId,notification,successCallback, errorCallback, actionid){
+	var endPointURL = "gamification/actions/"+currentGameId+"/" + actionid;
 	ClientHelper.deleteData(endPointURL,notification,successCallback, errorCallback,actionid);
 }
 
@@ -325,23 +325,23 @@ ActionDAO.prototype.deleteAction = function(currentAppId,notification,successCal
 var LevelDAO = function(endPointURL){
 }
 
-LevelDAO.prototype.getLevelsData = function(currentAppId,notification,successCallback, errorCallback){
-	var endPointURL = "gamification/levels/"+currentAppId;
+LevelDAO.prototype.getLevelsData = function(currentGameId,notification,successCallback, errorCallback){
+	var endPointURL = "gamification/levels/"+currentGameId;
 	var query = "?current=1&rowCount=-1&searchPhrase=";
 	ClientHelper.getData(endPointURL+query,notification,successCallback, errorCallback);
 }
 
-LevelDAO.prototype.createNewLevel = function(currentAppId,content, notification,successCallback, errorCallback, levelnum){
-	var endPointURL = "gamification/levels/"+currentAppId;
+LevelDAO.prototype.createNewLevel = function(currentGameId,content, notification,successCallback, errorCallback, levelnum){
+	var endPointURL = "gamification/levels/"+currentGameId;
 	ClientHelper.postWithForm(endPointURL, content, notification,successCallback, errorCallback, levelnum);
 }
 
-LevelDAO.prototype.updateLevel = function(currentAppId,content, notification,successCallback, errorCallback, levelnum){
-	var endPointURL = "gamification/levels/"+currentAppId+"/"+levelnum;
+LevelDAO.prototype.updateLevel = function(currentGameId,content, notification,successCallback, errorCallback, levelnum){
+	var endPointURL = "gamification/levels/"+currentGameId+"/"+levelnum;
 	ClientHelper.putWithForm(endPointURL,content, notification,successCallback, errorCallback, levelnum);
 }
 
-LevelDAO.prototype.deleteLevel = function( currentAppId,notification,successCallback, errorCallback, levelnum){
-	var endPointURL = "gamification/levels/"+currentAppId+"/" + levelnum;
+LevelDAO.prototype.deleteLevel = function( currentGameId,notification,successCallback, errorCallback, levelnum){
+	var endPointURL = "gamification/levels/"+currentGameId+"/" + levelnum;
 	ClientHelper.deleteData(endPointURL,notification,successCallback, errorCallback,levelnum);
 }

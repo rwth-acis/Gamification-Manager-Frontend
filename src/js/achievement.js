@@ -1,14 +1,15 @@
 
  // global variables
-var client, appId, memberId, notification;
+var client, gameId, memberId, notification;
 var oidc_userinfo;
 var iwcCallback;
-function setAppIDContext(appId_){
-  appId = appId_;
-  //$('#app-id-text').html(appId);
-  if(appId){
-    gadgets.window.setTitle("Gamification Manager Achievement - " + appId);
-    if(appId == ""){
+function setGameIDContext(gameId_){
+  gameId = gameId_;
+  //$('#game-id-text').html(gameId);
+  if(gameId){
+    //gadgets.window.setTitle("Gamification Manager Achievement - " + gameId);
+    $("h4#title-widget").text("Game ID : " + gameId);
+    if(gameId == ""){
       $("table#list_achievements").find("tbody").empty();
     }
     else{
@@ -23,7 +24,7 @@ var initIWC = function(){
   iwcCallback = function(intent) {
     console.log(intent);
     if(intent.action == "REFRESH_APPID"){
-      setAppIDContext(intent.data);
+      setGameIDContext(intent.data);
     }
     if(intent.action == "FETCH_APPID_CALLBACK"){
       notification.dismissMessage();
@@ -32,11 +33,11 @@ var initIWC = function(){
         oidc_userinfo = data.member;
         loggedIn(oidc_userinfo.preferred_username);
         if(data.receiver == "achievement"){
-          if(data.appId){
-            setAppIDContext(data.appId);
+          if(data.gameId){
+            setGameIDContext(data.gameId);
           }
           else{
-            miniMessageAlert(notification,"Application ID in Gamification Manager Application is not selected","danger")
+            miniMessageAlert(notification,"Game ID in Gamification Manager Game is not selected","danger")
           }
         }
       }
@@ -77,7 +78,7 @@ var initIWC = function(){
 
 var loadLas2peerWidgetLibrary = function(){
   try{
-    client = new Las2peerWidgetLibrary("http://gaudi.informatik.rwth-aachen.de:8081/", iwcCallback);
+    client = new Las2peerWidgetLibrary("<%= grunt.config('endPointServiceURL') %>", iwcCallback);
   }
   catch(e){
     var msg =notification.createDismissibleMessage("Error loading Las2peerWidgetLibrary. Try refresh the page !." + e);
@@ -89,7 +90,7 @@ var loadLas2peerWidgetLibrary = function(){
 var loggedIn = function(mId){
   memberId = mId;
   init();
-  // client = new Las2peerWidgetLibrary("http://gaudi.informatik.rwth-aachen.de:8081/", iwcCallback);
+  // client = new Las2peerWidgetLibrary("<%= grunt.config('endPointServiceURL') %>", iwcCallback);
   $("table#list_achievements").find("tbody").empty();
   var newRow = "<tr class='text-center'><td colspan='9'>Hello "+memberId+"</td>";
   $("table#list_achievements").find("tbody").append(newRow);
@@ -98,7 +99,7 @@ var loggedIn = function(mId){
 var init = function() {
   $('button#refreshbutton').off('click');
   $('button#refreshbutton').on('click', function() {
-      sendIntentFetchAppId("achievement");
+      sendIntentFetchGameId("achievement");
   });
 
 };
@@ -129,7 +130,7 @@ var useAuthentication = function(rurl){
     return rurl;
   }
 
-function sendIntentFetchAppId(sender){
+function sendIntentFetchGameId(sender){
   client.sendIntent(
     "FETCH_APPID",
     sender
@@ -218,7 +219,7 @@ var achievementModule = (function() {
 
     //$("table#list_achievements").find("tbody").empty();
     achievementAccess.getAchievementsData(
-      appId,
+      gameId,
       notification,
       function(data,type){
           $("#modalachievementdiv").modal('hide');
@@ -243,7 +244,7 @@ var achievementModule = (function() {
             // Get id of the selected element to be attached with popover
             var idelement = "#" + $(event.target).data("row-badgeid");
             badgeAccess.getBadgeDataWithId(
-              appId,
+              gameId,
               $(event.target).data("row-badgeid"),
               notification,
               function(data,type){
@@ -253,7 +254,7 @@ var achievementModule = (function() {
                 $("#badge-popover-content").find("#badgeidpopover").html(data.id);
                 $("#badge-popover-content").find("#badgenamepopover").html(data.name);
                 $("#badge-popover-content").find("#badgedescpopover").html(data.description);
-                $("#badge-popover-content").find("#badgeimagepopover").attr("src",badgeAccess.getBadgeImage(appId,data.id));
+                $("#badge-popover-content").find("#badgeimagepopover").attr("src",badgeAccess.getBadgeImage(gameId,data.id));
                 $(event.target).popover('show');
 
                 // Dismiss popover when click anywhere
@@ -302,7 +303,7 @@ var achievementModule = (function() {
             var selectedAchievement = achievementCollection[selectedRow.rowIndex-1];
 
               achievementAccess.deleteAchievement(
-                appId,
+                gameId,
                 notification,
                 function(data,type){
                   loadTable();
@@ -365,7 +366,7 @@ var achievementModule = (function() {
       console.log(achievementId);
       if(submitButtonText=='Submit'){
         achievementAccess.createNewAchievement(
-          appId,
+          gameId,
           formData,
           notification,
           function(data,type){
@@ -378,7 +379,7 @@ var achievementModule = (function() {
       }
       else{
         achievementAccess.updateAchievement(
-          appId,
+          gameId,
           formData,
           notification,
           function(data,type){
@@ -400,7 +401,7 @@ var achievementModule = (function() {
         // Retrieve badge data. The only difference is this is read only
       $("table#list_badges_a").find("tbody").empty();
       badgeAccess.getBadgesData(
-        appId,
+        gameId,
         notification,
         function(data,type){
           for(var i = 0; i < data.rows.length; i++){
@@ -409,7 +410,7 @@ var achievementModule = (function() {
             var newRow = "<tr><td class='text-center bidclass'>" + badge.id + "</td>";
             newRow += "<td class='text-center bnameclass'>" + badge.name + "</td>";
             newRow += "<td class='bdescclass'>" + badge.description + "</td>";
-            newRow += "<td><img class='text-center badgeimage badgeimagemini' src='"+ badgeAccess.getBadgeImage(appId,badge.id) +"' alt='your image' /></td>";
+            newRow += "<td><img class='text-center badgeimage badgeimagemini' src='"+ badgeAccess.getBadgeImage(gameId,badge.id) +"' alt='your image' /></td>";
             newRow += "<td class='text-center'>" +"<button type='button' class='btn btn-xs btn-success badgeselectclass'>Select</button></td>";
 
             $("table#list_badges_a").find("tbody").append(newRow);

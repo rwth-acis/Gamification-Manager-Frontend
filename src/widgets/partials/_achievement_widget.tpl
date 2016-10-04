@@ -1,48 +1,16 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!-- generated on Sat Sep 24 2016 01:31:02 -->
-<Module>
-  <ModulePrefs
-    title="Gamification Manager Achievement"
-    description=""
-    author="Muhammad Abduh Arifin"
-    author_email="arifin@dbis.rwth-aachen.de"
-    width="1024"
-    height="410" scrolling="true">
+<script src="<%= grunt.config('baseUrl') %>/js/gamificationelements.js"></script>
+<script src="<%= grunt.config('baseUrl') %>/js/achievement.js"></script>
 
-    <Require feature="opensocial-0.8" ></Require>
-    <Require feature="openapp" ></Require>
-    <Require feature="dynamic-height"></Require>
-      <Require feature="minimessage"></Require>
-	<OAuth>
-      <Service name="openapp"
-        xmlns:openapp="http://www.role-project.eu/xml/openapp/opensocialext/"
-        openapp:service="http://purl.org/role/terms/spaceService"
-        openapp:permitReadAppend="http://purl.org/role/terms/data">
-        <Request method="" url=""></Request>
-        <Authorization url=""></Authorization>
-        <Access method="" url=""></Access>
-      </Service>
-    </OAuth>
-
-  </ModulePrefs>
-  <Content type="html">
-    <![CDATA[
-    <script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/jquery.js"></script>
-    <script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/bootstrap.js"></script>
-    <script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/iwc.js"></script>
-    <script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/las2peerWidgetLibrary.js"></script>
-    <link rel="stylesheet" href="https://rwth-acis.github.io/Gamification-Manager-Frontend/css/bootstrap.css">
-    <link rel="stylesheet" href="https://rwth-acis.github.io/Gamification-Manager-Frontend/css/style.css">
-    <script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/gamificationelements.js"></script>
-<script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/achievement.js"></script>
-
-</head>
-<body>
+<div class="container-fluid text-center">
+  <div class="row">
+  <h4 id="title-widget">Game ID : - </h4>
+  </div>
+</div>     
 <div id="wrapper" class="container-fluid" >
 	<div class="row">
 		<div class="col-md-12">
 
-			<div style="height:360px; overflow: auto;">
+			<div style="height:<%= meta.table_height %>px; overflow: auto;">
 				<table class="table table-bordered table-striped table-fixed" id='list_achievements'>
 					<thead>
 						<tr>
@@ -82,7 +50,7 @@
 			    <h4 class="modal-title"></h4>
 			</div>
 			<div class="modal-body">
-				<form method="POST" data-toggle="validator" enctype="multipart/form-data" id="modalachievementform" name="appId" class="form-horizontal" role="form">
+				<form method="POST" data-toggle="validator" enctype="multipart/form-data" id="modalachievementform" name="gameId" class="form-horizontal" role="form">
 				    <div class="form-group">
 						<label class="col-sm-2 control-label">Achievement ID</label>
 						<div class="col-sm-10">
@@ -113,7 +81,7 @@
 							</div>
 
 						    <div class="collapse" id="panel_badge">
-							    <div style="height:360px; overflow: auto;">
+							    <div style="height:<%= meta.table_height %>px; overflow: auto;">
 									<table class="table table-bordered table-striped table-fixed" id='list_badges_a'>
 										<thead>
 											<tr>
@@ -194,9 +162,6 @@
 
 <div id="modalspinner" style="display: none">
     <div class="center">
-        <img alt="" src="https://rwth-acis.github.io/Gamification-Manager-Frontend/img/loader.svg" />
+        <img alt="" src="<%= grunt.config('baseUrl') %>/img/loader.svg" />
     </div>
 </div>
-    ]]>
-  </Content>
-</Module>
