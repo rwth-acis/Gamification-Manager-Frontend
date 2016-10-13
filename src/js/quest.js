@@ -81,7 +81,7 @@ var initIWC = function(){
 
 var loadLas2peerWidgetLibrary = function(){
   try{
-    client = new Las2peerWidgetLibrary("http://gaudi.informatik.rwth-aachen.de:8081/", iwcCallback);
+    client = new Las2peerWidgetLibrary("{{= grunt.config('endPointServiceURL') }}", iwcCallback);
   }
   catch(e){
     var msg =notification.createDismissibleMessage("Error loading Las2peerWidgetLibrary. Try refresh the page !." + e);

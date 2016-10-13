@@ -243,7 +243,7 @@ BadgeDAO.prototype.getBadgeImage = function(currentGameId,badgeid){
 
 	if(!client.isAnonymous()){
 		console.log("Authenticated request");
-		var rurl = "<%= grunt.config('endPointServiceURL') %>gamification/badges/"+currentGameId+"/" + badgeid + "/img";
+		var rurl = "{{= grunt.config('endPointServiceURL') }}gamification/badges/"+currentGameId+"/" + badgeid + "/img";
 
 		return useAuthentication(rurl);
 	} else {

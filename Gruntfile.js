@@ -4,8 +4,9 @@ module.exports = function (grunt) {
 
     // Project configuration.
     //noinspection JSUnusedGlobalSymbols
+    grunt.template.addDelimiters('handlebars-like-delimiters', '{{', '}}');
+    grunt.template.setDelimiters('handlebars-like-delimiters');
     var localConfig = grunt.file.readJSON('.localConfig.json');
-
     grunt.initConfig({
 
 			pkg : grunt.file.readJSON('package.json'),
@@ -226,7 +227,6 @@ module.exports = function (grunt) {
             }
 
         });
-
     // Actually load this plugin's task(s).
     grunt.loadTasks('tasks');
 

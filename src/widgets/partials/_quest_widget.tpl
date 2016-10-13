@@ -1,5 +1,5 @@
-<script src="<%= grunt.config('baseUrl') %>/js/gamificationelements.js"></script>
-<script src="<%= grunt.config('baseUrl') %>/js/quest.js"></script>
+<script src="{{= grunt.config('baseUrl') }}/js/gamificationelements.js"></script>
+<script src="{{= grunt.config('baseUrl') }}/js/quest.js"></script>
 
 <div class="container-fluid text-center">
   <div class="row">
@@ -10,7 +10,7 @@
 	<div class="row">
 		<div class="col-md-12">
 
-			<div style="height:<%= meta.table_height %>px; overflow: auto;">
+			<div style="height:{{= meta.table_height }}px; overflow: auto;">
 				<table class="table table-bordered table-striped table-fixed" id='list_quests'>
 					<thead>
 						<tr>
@@ -266,6 +266,6 @@
 </div> -->
 <div id="modalspinner" style="display: none">
     <div class="center">
-        <img alt="" src="<%= grunt.config('baseUrl') %>/img/loader.svg" />
+        <img alt="" src="{{= grunt.config('baseUrl') }}/img/loader.svg" />
     </div>
 </div>

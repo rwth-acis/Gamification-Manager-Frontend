@@ -78,7 +78,7 @@ var initIWC = function(){
 
 var loadLas2peerWidgetLibrary = function(){
   try{
-    client = new Las2peerWidgetLibrary("<%= grunt.config('endPointServiceURL') %>", iwcCallback);
+    client = new Las2peerWidgetLibrary("{{= grunt.config('endPointServiceURL') }}", iwcCallback);
   }
   catch(e){
     var msg =notification.createDismissibleMessage("Error loading Las2peerWidgetLibrary. Try refresh the page !." + e);
@@ -90,7 +90,7 @@ var loadLas2peerWidgetLibrary = function(){
 var loggedIn = function(mId){
   memberId = mId;
   init();
-  // client = new Las2peerWidgetLibrary("<%= grunt.config('endPointServiceURL') %>", iwcCallback);
+  // client = new Las2peerWidgetLibrary("{{= grunt.config('endPointServiceURL') }}", iwcCallback);
   $("table#list_achievements").find("tbody").empty();
   var newRow = "<tr class='text-center'><td colspan='9'>Hello "+memberId+"</td>";
   $("table#list_achievements").find("tbody").append(newRow);
