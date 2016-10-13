@@ -202,7 +202,7 @@ var levelModule = (function() {
             newRow += "<td class='messageclass''>" + level.notificationMessage + "</td>";
             newRow += "<td class='text-center'>" + "<button type='button' class='btn btn-xs btn-warning updclass'>Edit</button> ";
 
-            if(i == data.rows.length-1){
+            if(i == data.rows.length-1 && data.rows.length != 1){
               newRow += "<button type='button' class='btn btn-xs btn-danger delclass'>Delete</button>";
             }
             newRow += "</td>";

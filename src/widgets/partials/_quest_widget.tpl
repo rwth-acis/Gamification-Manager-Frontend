@@ -59,7 +59,7 @@
 				    <div class="form-group">
 						<label class="col-sm-2 control-label">Quest ID:</label>
 						<div class="col-sm-10">
-							<input type="text" maxlength="20" class="form-control" id="quest_id" name="questid" placeholder="1" required>
+							<input type="text" maxlength="20" class="form-control" id="quest_id" name="questid" placeholder="my_quest" required>
 						</div>
 
 					</div>
@@ -239,7 +239,7 @@
 		</div>
 	</form>
   </div>
-<div id="badge-popover-content" class="hidden">
+<!-- <div id="badge-popover-content" class="hidden">
 	<form>
     	<div class="form-group row">
 		  <div class="col-sm-12">
@@ -263,7 +263,7 @@
 		  </div>
 		</div>
 	</form>
-</div>
+</div> -->
 <div id="modalspinner" style="display: none">
     <div class="center">
         <img alt="" src="<%= grunt.config('baseUrl') %>/img/loader.svg" />

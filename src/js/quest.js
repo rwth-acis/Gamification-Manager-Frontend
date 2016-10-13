@@ -607,57 +607,58 @@ var questModule = (function() {
               newRow += "<td class='text-center nameclass'>" + achievement.name + "</td>";
               newRow += "<td class='descclass'>" + achievement.description + "</td>";
               newRow += "<td class='pointvalueclass'>" + achievement.pointValue + "</td>";
-              newRow += "<td class='badgeidclass'> <a href='#' class='show-badge' id='"+ achievement.badgeId +"' data-row-badgeid='" + achievement.badgeId + "' >"+achievement.badgeId+"</a></td>";
+              //newRow += "<td class='badgeidclass'> <a href='#' class='show-badge' id='"+ achievement.badgeId +"' data-row-badgeid='" + achievement.badgeId + "' >"+achievement.badgeId+"</a></td>";
+              newRow += "<td class='badgeidclass'>"+achievement.badgeId+"</td>";
 
               newRow += "<td class='text-center'>" + "<button type='button' class='btn btn-xs btn-warning selectclass'>Select</button></td> ";
 
               $("table#list_achievements_a").find("tbody").append(newRow);
             }
 
-            $("table#list_achievements_a").find(".show-badge").popover({
-                html : true,
-                content: function() {
-                  return $("#badge-popover-content").html();
-                },
-                title: function() {
-                  return $("#badge-popover-title").html();
-                },
-                trigger: 'manual',
-                placement:'right'
-            });
-            $("table#list_achievements_a").find(".show-badge").off("click");
-            $("table#list_achievements_a").find(".show-badge").on("click", function(event){
-              // Get badge data with id
-              event.preventDefault();
-              // Get id of the selected element to be attached with popover
-              var idelement = "#" + $(event.target).data("row-badgeid");
-              badgeAccess.getBadgeDataWithId(
-                gameId,
-                $(event.target).data("row-badgeid"),
-                function(data,type){
-                  // Render in popover
-                  console.log(data);
-                  console.log($(event.target));
-                  $("#badge-popover-content").find("#badgeidpopover").html(data.id);
-                  $("#badge-popover-content").find("#badgenamepopover").html(data.name);
-                  $("#badge-popover-content").find("#badgedescpopover").html(data.description);
-                  $("#badge-popover-content").find("#badgeimagepopover").attr("src",useAuthentication(data.imagePath))
-                  $(event.target).popover('show');
+            // $("table#list_achievements_a").find(".show-badge").popover({
+            //     html : true,
+            //     content: function() {
+            //       return $("#badge-popover-content").html();
+            //     },
+            //     title: function() {
+            //       return $("#badge-popover-title").html();
+            //     },
+            //     trigger: 'manual',
+            //     placement:'right'
+            // });
+            // $("table#list_achievements_a").find(".show-badge").off("click");
+            // $("table#list_achievements_a").find(".show-badge").on("click", function(event){
+            //   // Get badge data with id
+            //   event.preventDefault();
+            //   // Get id of the selected element to be attached with popover
+            //   var idelement = "#" + $(event.target).data("row-badgeid");
+            //   badgeAccess.getBadgeDataWithId(
+            //     gameId,
+            //     $(event.target).data("row-badgeid"),
+            //     function(data,type){
+            //       // Render in popover
+            //       console.log(data);
+            //       console.log($(event.target));
+            //       $("#badge-popover-content").find("#badgeidpopover").html(data.id);
+            //       $("#badge-popover-content").find("#badgenamepopover").html(data.name);
+            //       $("#badge-popover-content").find("#badgedescpopover").html(data.description);
+            //       $("#badge-popover-content").find("#badgeimagepopover").attr("src",useAuthentication(data.imagePath))
+            //       $(event.target).popover('show');
 
-                  // Dismiss popover when click anywhere
-                  $(document).click(function() {
-                    $(event.target).popover('hide');
-                  });
-                  $(".popover").off("click");
-                  $(".popover").on("click", function(e)
-                  {
-                    $(event.target).popover('hide');
-                  });
-                },
-                function(error){
+            //       // Dismiss popover when click anywhere
+            //       $(document).click(function() {
+            //         $(event.target).popover('hide');
+            //       });
+            //       $(".popover").off("click");
+            //       $(".popover").on("click", function(e)
+            //       {
+            //         $(event.target).popover('hide');
+            //       });
+            //     },
+            //     function(error){
 
-                });
-            });
+            //     });
+            // });
 
             $("table#list_achievements_a").find(".selectclass").off("click");
             $("table#list_achievements_a").find(".selectclass").on("click", function(event){
