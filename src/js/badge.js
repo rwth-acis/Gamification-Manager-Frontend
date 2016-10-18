@@ -80,7 +80,7 @@ var initIWC = function(){
 
 var loadLas2peerWidgetLibrary = function(){
   try{
-    client = new Las2peerWidgetLibrary("{{= grunt.config('endPointServiceURL') }}", iwcCallback);
+    client = new Las2peerWidgetLibrary("{{= grunt.config('endPointBadge') }}", iwcCallback);
   }
   catch(e){
     var msg =notification.createDismissibleMessage("Error loading Las2peerWidgetLibrary. Try refresh the page !." + e);
@@ -92,7 +92,7 @@ var loadLas2peerWidgetLibrary = function(){
 var loggedIn = function(mId){
   memberId = mId;
   init();
-  // client = new Las2peerWidgetLibrary("{{= grunt.config('endPointServiceURL') }}", iwcCallback);
+  // client = new Las2peerWidgetLibrary("{{= grunt.config('endPointBadge') }}", iwcCallback);
 
   $("table#list_badges").find("tbody").empty();
   var newRow = "<tr class='text-center'><td colspan='8'>Hello "+memberId+"</td>";

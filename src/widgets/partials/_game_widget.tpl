@@ -223,6 +223,6 @@
 
 <div id="modalspinner" style="display: none">
     <div class="center">
-        <img alt="" src="{{= grunt.config('baseUrl') }}/lib/loading.svg" />
+        <img alt="" src="{{= grunt.config('baseUrl') }}/img/loader.svg" />
     </div>
 </div>

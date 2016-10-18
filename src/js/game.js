@@ -105,7 +105,7 @@ var init = function() {
     //   sendIntentFetchLoginCallback(statusLogin,oidc_userinfo,intent.data);
     // }
   };
-  client = new Las2peerWidgetLibrary("{{= grunt.config('endPointServiceURL') }}", iwcCallback);
+  client = new Las2peerWidgetLibrary("{{= grunt.config('endPointGame') }}", iwcCallback);
   notification = new gadgets.MiniMessage("GAMEAPP");
   checkAndRegisterUserAgent();
 

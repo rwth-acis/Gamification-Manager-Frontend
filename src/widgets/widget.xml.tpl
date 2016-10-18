@@ -28,7 +28,7 @@
   <Content type="html">
     <![CDATA[
     <script src="{{= grunt.config('baseUrl') }}/js/lib/jquery.js"></script>
-    <script src="{{= grunt.config('baseUrl') }}/js/lib/tether.min.js"></script>
+    <script src="{{= grunt.config('baseUrl') }}/js/lib/tether.js"></script>
     <script src="{{= grunt.config('baseUrl') }}/js/lib/bootstrap.js"></script>
     <script src="{{= grunt.config('baseUrl') }}/js/lib/iwc.js"></script>
     <script src="{{= grunt.config('baseUrl') }}/js/lib/las2peerWidgetLibrary.js"></script>

@@ -12,7 +12,15 @@ module.exports = function (grunt) {
 			pkg : grunt.file.readJSON('package.json'),
 			baseUrl : localConfig.baseUrl,
 			roleSandboxUrl : localConfig.roleSandboxUrl,
-			endPointServiceURL : localConfig.endPointServiceURL,
+			endPointAchievement : localConfig.endPointAchievement,
+            endPointAction : localConfig.endPointAction,
+            endPointBadge : localConfig.endPointBadge,
+            endPointGame : localConfig.endPointGame,
+            endPointGamifier : localConfig.endPointGamifier,
+            endPointLevel : localConfig.endPointLevel,
+            endPointPoint : localConfig.endPointPoint,
+            endPointQuest : localConfig.endPointQuest,
+            endPointVisualization : localConfig.endPointVisualization,
             bowerdir : grunt.file.readJSON('.bowerrc')['directory'],
 			distdir : 'dist',
 			srcdir : 'src',
@@ -54,7 +62,13 @@ module.exports = function (grunt) {
 						}, {
 							src : '<%= bowerdir %>/lodash/dist/lodash.js',
 							dest : '<%= distdir %>/js/lib/lodash.js'
-						}
+						}, {
+                            src : '<%= bowerdir %>/tether/dist/js/tether.js',
+                            dest : '<%= distdir %>/js/lib/tether.js'
+                        }, {
+                            src : '<%= bowerdir %>/tether/dist/css/tether.css',
+                            dest : '<%= distdir %>/css/lib/tether.css'
+                        }
 					]
 				},
 				main : {
@@ -68,7 +82,7 @@ module.exports = function (grunt) {
                     options : {
                         processContent : function (content /*, srcpath*/
                         ) {
-                            return grunt.template.process(content);
+                            return grunt.template.process(content,{delimiters:'handlebars-like-delimiters'});
                         },
                         processContentExclude  : ['**/*.{png,gif,jpg}', '**/lodash.js']
                     }
