@@ -1,0 +1,13 @@
+{
+    "baseUrl" : "https://dl.dropboxusercontent.com/u/57683747/widget_game",
+    "roleSandboxUrl": "http://gaudi.informatik.rwth-aachen.de:8073",
+    "endPointAchievement": "http://gaudi.informatik.rwth-aachen.de:8083/",
+    "endPointAction": "http://gaudi.informatik.rwth-aachen.de:8084/",
+    "endPointBadge": "http://gaudi.informatik.rwth-aachen.de:8085/",
+    "endPointGame": "http://gaudi.informatik.rwth-aachen.de:8086/",
+    "endPointGamifier": "http://gaudi.informatik.rwth-aachen.de:8087/",
+    "endPointLevel": "http://gaudi.informatik.rwth-aachen.de:8088/",
+    "endPointPoint": "http://gaudi.informatik.rwth-aachen.de:8089/",
+    "endPointQuest": "http://gaudi.informatik.rwth-aachen.de:8089/",
+    "endPointVisualization": "http://gaudi.informatik.rwth-aachen.de:8086/"
+}

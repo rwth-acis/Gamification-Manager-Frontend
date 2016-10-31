@@ -4,8 +4,6 @@ module.exports = function (grunt) {
 
     // Project configuration.
     //noinspection JSUnusedGlobalSymbols
-    grunt.template.addDelimiters('handlebars-like-delimiters', '{{', '}}');
-    grunt.template.setDelimiters('handlebars-like-delimiters');
     var localConfig = grunt.file.readJSON('.localConfig.json');
     grunt.initConfig({
 
@@ -82,7 +80,7 @@ module.exports = function (grunt) {
                     options : {
                         processContent : function (content /*, srcpath*/
                         ) {
-                            return grunt.template.process(content,{delimiters:'handlebars-like-delimiters'});
+                            return grunt.template.process(content);
                         },
                         processContentExclude  : ['**/*.{png,gif,jpg}', '**/lodash.js']
                     }

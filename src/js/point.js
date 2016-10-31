@@ -26,7 +26,7 @@ var initIWC = function(){
   iwcCallback = function(intent) {
     console.log(intent);
     if(intent.action == "REFRESH_APPID"){
-
+      initContent();
       setGameIDContext(intent.data);
     }
     if(intent.action == "FETCH_APPID_CALLBACK"){
@@ -37,6 +37,8 @@ var initIWC = function(){
         loggedIn(oidc_userinfo.preferred_username);
         if(data.receiver == "point"){
           if(data.gameId){
+
+            initContent();
             setGameIDContext(data.gameId);
           }
           else{
@@ -83,7 +85,7 @@ var initIWC = function(){
 
 var loadLas2peerWidgetLibrary = function(){
   try{
-    client = new Las2peerWidgetLibrary("{{= grunt.config('endPointPoint') }}", iwcCallback);
+    client = new Las2peerWidgetLibrary("<%= grunt.config('endPointPoint') %>", iwcCallback);
   }
   catch(e){
     var msg =notification.createDismissibleMessage("Error loading Las2peerWidgetLibrary. Try refresh the page !." + e);
@@ -94,13 +96,11 @@ var loadLas2peerWidgetLibrary = function(){
 
 var loggedIn = function(mId){
 
-  var contentTemplate = _.template($("#content-template").html());
-  var contentElmt = $(".container-fluid");
-  contentElmt.html(contentTemplate);
+
   memberId = mId;
   init();
 
-  // client = new Las2peerWidgetLibrary("{{= grunt.config('endPointPoint') }}", iwcCallback);
+  // client = new Las2peerWidgetLibrary("<%= grunt.config('endPointPoint') %>", iwcCallback);
 };
 
 var init = function() {
@@ -111,6 +111,12 @@ var init = function() {
   });
 }
 
+var initContent = function(){
+  var contentTemplate = _.template($("#content-template").html());
+  var contentElmt = $(".container-fluid");
+  contentElmt.html(contentTemplate);
+
+}
 
 // function signinCallback(result) {
 //     if(result === "success"){

@@ -13,12 +13,18 @@ var loadGameList = function(){
     {},
     function(data,type){
       console.log(data)
-      var htmlData = "";
-      gameListElmt.empty();
-      _.forEach(data,function(game){
-        htmlData += existingGameTmpl(game);
-      });
-      gameListElmt.append(htmlData);
+
+      if(data.length > 0){
+        var htmlData = "";
+        gameListElmt.empty();
+        _.forEach(data,function(game){
+          htmlData += existingGameTmpl(game);
+        });
+        gameListElmt.append(htmlData);
+      }
+      else{
+        gameListElmt.html("<h4 class=\"text-center\">No Data</h4>")
+      }
       //       _.forEach(games,function(v){
       //   htmlData += tmpl(v);
       //   this.$el.prop('id',this.model.get("id"));
@@ -50,7 +56,7 @@ var gameContentView = function(){
   var gameContentElmt = $('#game-content');
   gameContentElmt.html(gameContentTmpl);
   loadGameList();
-  $('small#member-id').html('<b>' + memberId + '</p>');
+  $('p#member-id').html('<b>' + memberId + '</p>');
 
   // list group button modal listener
   $('#buttonModal').off();
@@ -105,7 +111,7 @@ var init = function() {
     //   sendIntentFetchLoginCallback(statusLogin,oidc_userinfo,intent.data);
     // }
   };
-  client = new Las2peerWidgetLibrary("{{= grunt.config('endPointGame') }}", iwcCallback);
+  client = new Las2peerWidgetLibrary("<%= grunt.config('endPointGame') %>", iwcCallback);
   notification = new gadgets.MiniMessage("GAMEAPP");
   checkAndRegisterUserAgent();
 
@@ -151,6 +157,11 @@ var init = function() {
 
 $(document).ready(function() {
    authenticateView();
+   _.templateSettings = {
+      evaluate: /\{\{(.+?)\}\}/g,
+      interpolate: /\{\{=(.+?)\}\}/g,
+      escape: /\{\{-(.+?)\}\}/g
+    };
 
 });
 

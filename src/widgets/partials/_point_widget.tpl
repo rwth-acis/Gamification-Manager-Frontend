@@ -1,5 +1,5 @@
-<script src="{{= grunt.config('baseUrl') }}/js/gamificationelements.js"></script>
-<script src="{{= grunt.config('baseUrl') }}/js/point.js"></script>
+<script src="<%= grunt.config('baseUrl') %>/js/gamificationelements.js"></script>
+<script src="<%= grunt.config('baseUrl') %>/js/point.js"></script>
 
 
 <div class="container-fluid">

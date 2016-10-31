@@ -4,21 +4,38 @@ var client, gameId, memberId, notification;
 var oidc_userinfo;
 var iwcCallback;
 
+  var questAccess, achievementAccess, actionAccess, badgeAccess;
+  var questCollection;
+  var modalInputQuestId;
+  var modalInputQuestName;
+  var modalInputQuestDescription;
+  var modalInputQuestAchievementId;
+  var modalInputQuestStatus;
+  var modalCheckQuestPoint;
+  var modalInputQuestPoint;
+  var modalCheckQuestQuestCompleted;
+  var modalInputQuestQuestCompleted;
+  var modalTitle;
+  var modalQuestActionGroup;
+  var modalQuestSubmitButton;
+
+  var modalNotifCheck;
+  var modalNotifMessageInput;
+
 function setGameIDContext(gameId_){
   gameId = gameId_;
   //$('#game-id-text').html(gameId);
   if(gameId){
-    //gadgets.window.setTitle("Gamification Manager Quest - " + gameId);
-    $("h4#title-widget").text("Game ID : " + gameId);
     if(gameId == ""){
-      $("table#list_quests").find("tbody").empty();
+      resetContent()
     }
     else{
-      questModule.init();
+      initContent();
     }
   }
-
 }
+
+
 var initIWC = function(){
   notification = new gadgets.MiniMessage("GAMEQUEST");
 
@@ -40,13 +57,12 @@ var initIWC = function(){
             }
             else{
               miniMessageAlert(notification,"Game ID in Gamification Manager Game is not selected","danger")
+              resetContent()
             }
           }
       }
       else if(data.status == 401){
-        $("table#list_quests").find("tbody").empty();
-        var newRow = "<tr class='text-center'><td colspan='14'>You are not logged in</td>";
-        $("table#list_quests").find("tbody").append(newRow);
+        resetContent()
       }
 
     }
@@ -58,9 +74,7 @@ var initIWC = function(){
 
       }
       else if(data.status == 401){
-        $("table#list_quests").find("tbody").empty();
-        var newRow = "<tr class='text-center'><td colspan='14'>You are not logged in</td>";
-        $("table#list_quests").find("tbody").append(newRow);
+        resetContent()
       }
     }
     // if(intent.action == "FETCH_LOGIN_CALLBACK"){
@@ -77,11 +91,26 @@ var initIWC = function(){
   // $('button#refreshbutton').on('click', function() {
   //     sendIntentFetchLogin("quest");
   // });
+      modalInputQuestId = $("#modalquestdiv").find("#quest_id");
+    modalInputQuestName = $("#modalquestdiv").find("#quest_name");
+    modalInputQuestDescription = $("#modalquestdiv").find("#quest_desc");
+    modalInputQuestAchievementId = $("#modalquestdiv").find("#achievement-select");
+    modalInputQuestStatus = $("#modalquestdiv").find("#status-select");
+    modalCheckQuestPoint = $("#modalquestdiv").find("#quest_point_check");
+    modalInputQuestPoint = $("#modalquestdiv").find("#quest_point_value");
+    modalCheckQuestQuestCompleted = $("#modalquestdiv").find("#quest_quest_check");
+    modalInputQuestQuestCompleted = $("#modalquestdiv").find("#quest-id-completed-select");
+    modalTitle = $("#modalquestdiv").find(".modal-title");
+    modalQuestSubmitButton = $("#modalquestdiv").find("#modalquestsubmit");
+    modalQuestActionGroup = $("#modalquestdiv").find('#quest_action_list_group');
+
+    modalNotifCheck = $("#modalquestdiv").find("#quest_notification_check");
+    modalNotifMessageInput = $("#modalquestdiv").find("#quest_notification_message");
 };
 
 var loadLas2peerWidgetLibrary = function(){
   try{
-    client = new Las2peerWidgetLibrary("{{= grunt.config('endPointQuest') }}", iwcCallback);
+    client = new Las2peerWidgetLibrary("<%= grunt.config('endPointQuest') %>", iwcCallback);
   }
   catch(e){
     var msg =notification.createDismissibleMessage("Error loading Las2peerWidgetLibrary. Try refresh the page !." + e);
@@ -95,9 +124,7 @@ var loggedIn = function(mId){
   init();
   // client = new Las2peerWidgetLibrary("http://gaudi.informatik.rwth-aachen.de:8081/", iwcCallback);
 
-  $("table#list_quests").find("tbody").empty();
-  var newRow = "<tr class='text-center'><td colspan='14'>Hello "+memberId+"</td>";
-  $("table#list_quests").find("tbody").append(newRow);
+  $("#login-alert h5").before("<h5>Welcome " + memberId + " !");
 };
 
 var init = function() {
@@ -107,18 +134,77 @@ var init = function() {
   });
 }
 
+var initContent = function(){
 
-// function signinCallback(result) {
-//     if(result === "success"){
-//       memberId = oidc_userinfo.preferred_username;
-//
-//         console.log(oidc_userinfo);
-//         init();
-//
-//     } else {
-//       miniMessageAlert(notification,"Sign in failed!. "+ result,"danger");
-//     }
-// }
+  questAccess = new QuestDAO();
+  achievementAccess = new AchievementDAO();
+  actionAccess = new ActionDAO();
+  badgeAccess = new BadgeDAO();
+  var contentTemplate = _.template($("#content-template").html());
+  var contentElmt = $(".content-wrapper");
+  contentElmt.html(contentTemplate);
+
+
+  $("h6#title-widget").text(gameId);
+  loadContent();
+
+
+
+  $('#contentModal').off();
+  $('#contentModal').on('show.bs.modal', function (event) {
+    console.log($(this));
+    var button = $(event.relatedTarget) // Button that triggered the modal
+    var questid = button.data('questid') // Extract info from data-* attributes
+
+    var index = _.map(questCollection,function(e) { return e.id; }).indexOf(questid);
+    var modal = $(this)
+    modal.find(".fa-tag").html("<span> " + questCollection[index].id+"</span>")
+    modal.find('h4.card-title').text(questCollection[index].name)
+    modal.find('p.desc').html("<i class=\"fa fa-align-justify\"></i> "+questCollection[index].description)
+    modal.find('p.status').html("<i class=\"fa fa-ellipsis-h\"></i> "+questCollection[index].status)
+    modal.find('p.ach').html("<i class=\"fa fa-star\"></i> "+questCollection[index].achievementId)
+    if(questCollection[index].pointFlag){
+      modal.find('#pvalue').addClass("text-success")
+    }else{
+      modal.find('#pvalue').addClass("text-danger")
+    }
+    if(questCollection[index].questFlag){
+      modal.find('#questconstraint').addClass("text-success")
+    }else{
+      modal.find('#questconstraint').addClass("text-danger")
+    }
+    modal.find('#pvalue').html("<p><strong>Point</strong></p><p>"+questCollection[index].pointValue+"</p>")
+    modal.find('#questconstraint').html("<p><strong>Quest</strong></p><p>"+questCollection[index].questIdCompleted+"</p>")
+
+    var actionListHtml = ""
+    _.forEach(questCollection[index].actionIds,function(action){
+        actionListHtml += "<li class=\"list-group-item\"> <span class=\"tag tag-default tag-pill pull-xs-right\">"+action.times+"</span>"+action.actionId+"</li>"
+      });
+    modal.find('#action-list').html(actionListHtml)
+    
+    if(questCollection[index].useNotification){
+      modal.find('p.msg').addClass("text-success");
+      modal.find('p.msg').removeClass("text-danger");
+    }else{
+      modal.find('p.msg').addClass("text-danger");
+      modal.find('p.msg').removeClass("text-success");
+    }
+      modal.find('p.msg').html("<i class=\"fa fa-comment-o\"></i> "+questCollection[index].notificationMessage)
+    modal.find('.bedit').attr("onclick","editButtonListener(\""+questid+"\")")
+    modal.find('.bdelete').attr("onclick","deleteButtonListener(\""+questid+"\")")
+    modal.find('button').attr("data-questid",questid)
+
+  })
+  submitFormListener();
+  checkBoxListener();
+  elementDependenciesListener();
+
+  // accordion in content Modal
+  // $('#accordion').off()
+  // $('#accordion').collapse({
+  //   toggle: false
+  // })
+}
 
 var useAuthentication = function(rurl){
     if(rurl.indexOf("\?") > 0){
@@ -136,137 +222,14 @@ function sendIntentFetchGameId(sender){
   );
 }
 
-// function sendIntentFetchLogin(sender){
-//   client.sendIntent(
-//     "FETCH_LOGIN",
-//     sender
-//   );
-// }
+function editButtonListener(questId){
+    if(questCollection){
 
-$(document).ready(function() {
-  initIWC();
-});
-
-
-
-var questModule = (function() {
-
-  var questAccess, achievementAccess, actionAccess, badgeAccess;
-  var questCollection;
-  var modalInputQuestId;
-  var modalInputQuestName;
-  var modalInputQuestDescription;
-  var modalInputQuestAchievementId;
-  var modalInputQuestStatus;
-  var modalCheckQuestPoint;
-  var modalInputQuestPoint;
-  var modalCheckQuestQuestCompleted;
-  var modalInputQuestQuestCompleted;
-  var modalTitle;
-  var modalQuestActionGroup;
-  var modalQuestSubmitButton;
-
-  var modalNotifCheck;
-  var modalNotifMessageInput;
-  var initialize = function(){
-
-    questAccess = new QuestDAO();
-    achievementAccess = new AchievementDAO();
-    actionAccess = new ActionDAO();
-    badgeAccess = new BadgeDAO();
-    questCollection = [];
-    modalInputQuestId = $("#modalquestdiv").find("#quest_id");
-    modalInputQuestName = $("#modalquestdiv").find("#quest_name");
-    modalInputQuestDescription = $("#modalquestdiv").find("#quest_desc");
-    modalInputQuestAchievementId = $("#modalquestdiv").find("#quest_achievement_id");
-    modalInputQuestStatus = $("#modalquestdiv").find("#quest_status_text");
-    modalCheckQuestPoint = $("#modalquestdiv").find("#quest_point_check");
-    modalInputQuestPoint = $("#modalquestdiv").find("#quest_point_value");
-    modalCheckQuestQuestCompleted = $("#modalquestdiv").find("#quest_quest_check");
-    modalInputQuestQuestCompleted = $("#modalquestdiv").find("#quest_id_completed");
-    modalTitle = $("#modalquestdiv").find(".modal-title");
-    modalQuestSubmitButton = $("#modalquestdiv").find("#modalquestsubmit");
-    modalQuestActionGroup = $("#modalquestdiv").find('#quest_action_list_group');
-
-    modalNotifCheck = $("#modalquestdiv").find("#quest_notification_check");
-    modalNotifMessageInput = $("#modalquestdiv").find("#quest_notification_message");
-  };
-
-  function renderQuestTable(data){
-
-    $("table#list_quests").find("tbody").empty();
-    if(data.rows.length < 1){
-        var newRow = "<tr class='text-center'><td colspan='14'>No data Found !</td>";
-        $("table#list_quests").find("tbody").append(newRow);
-     }
-     else if(data.message){
-       var newRow = "<tr class='text-center'><td colspan='14'>"+data.message+"</td>";
-       $("table#list_quests").find("tbody").append(newRow);
-     }
-     else{
-
-          for(var i = 0; i < data.rows.length; i++){
-            var quest = data.rows[i];
-            
-            var newRow = "<tr class='text-center'><td class='text-center idclass'>" + quest.id + "</td>";
-            newRow += "<td class='text-center nameclass'>" + quest.name + "</td>";
-            newRow += "<td class='descclass'>" + quest.description + "</td>";
-            newRow += "<td class='text-center statusclass'>" + quest.status + "</td>";
-            newRow += "<td class='text-center achievementidclass'>" + quest.achievementId + "</td>";
-            newRow += "<td class='text-center questflagclass'>" + quest.questFlag + "</td>";
-
-            if(quest.questIdCompleted == null){
-              newRow += "<td class='text-center questidcompletedclass'></td>";
-            }else{
-              newRow += "<td class='text-center questidcompletedclass'>" + quest.questIdCompleted + "</td>";
-            }
-            newRow += "<td class='text-center pointflagclass'>" + quest.pointFlag + "</td>";
-            newRow += "<td class='text-center pointvalueclass'>" + quest.pointValue + "</td>";
-            newRow += "<td class='actionidsclass'>";
-
-            var htmlelement = "<ul class='list-group'>";
-            for (var j = 0; j < quest.actionIds.length; j++) {
-               htmlelement += "<li class='list-group-item'><span class='badge'>"+quest.actionIds[j].times+"</span>"+quest.actionIds[j].actionId +"</li>"
-            }
-            htmlelement += "</ul>";
-            var poptitle = "<li class='list-group-item'>Action ID - times</li>";
-            var popaction = "<a href=\"#\" data-placement=\"top\" data-html=\"true\" data-trigger=\"hover\" data-toggle=\"popover\" data-content=\""+htmlelement+" \" title=\""+poptitle+"\">Actions used</a>";
-
-            newRow +=  popaction+"</td>";
-            newRow += "<td class='text-center usenotifclass''>" + quest.useNotification + "</td>";
-            newRow += "<td class='messageclass''>" + quest.notificationMessage + "</td>";
-            newRow += "<td class='text-center'>" + "<button type='button' class='btn btn-xs btn-warning updclass'>Edit</button></td> ";
-            newRow += "<td class='text-center'>" +"<button type='button' class='btn btn-xs btn-danger delclass'>Delete</button></td>";
-
-            $("table#list_quests").find("tbody").append(newRow);
-          }
-     }
-
-  }
-
-  var loadTable = function(){
-
-    //$("table#list_quests").find("tbody").empty();
-    questAccess.getQuestsData(
-      gameId,
-      notification,
-      function(data,type){
-          $("#modalquestdiv").modal('hide');
-          questCollection = data.rows;
-          renderQuestTable(data);
-
-          $("[data-toggle=popover]").popover({
-              placement:'right'
-          });
-
-          $("table#list_quests").find(".updclass").off("click");
-          $("table#list_quests").find(".updclass").on("click", function(event){
-              if(questCollection){
-                var selectedRow =  $(event.target).parent().parent()[0];
-                var selectedQuest = questCollection[selectedRow.rowIndex-1];
+      var index = _.map(questCollection,function(e) { return e.id; }).indexOf(questId);
+                var selectedQuest = questCollection[index];
 
                 $(modalQuestSubmitButton).html('Update');
-                $(modalTitle).html('Update an Level');
+                $(modalTitle).html('Update a Quest');
                 $(modalInputQuestId).val(selectedQuest.id);
                 $(modalInputQuestId).prop('readonly', true);
                 $(modalInputQuestName).val(selectedQuest.name);
@@ -300,35 +263,33 @@ var questModule = (function() {
 
                 $("#modalquestdiv").modal('toggle');
               }
-          });
 
-          $("table#list_quests").find(".delclass").off("click");
-          $("table#list_quests").find(".delclass").on("click", function(event){
-            var selectedRow =  $(event.target).parent().parent()[0];
-            var selectedQuest = questCollection[selectedRow.rowIndex-1];
-            console.log(selectedQuest);
-              questAccess.deleteQuest(
-                gameId,
-                notification,
-                function(data,type){
-                  loadTable();
-                },
-                function(status,error){
-                },
-                selectedQuest.id
-              );
-          });
-      },
-      function(status,error) {
-      }
-    );
-  };
+}
 
-  var addNewButtonListener = function(){
-    $("#addnewquest").off('click');
-    $("#addnewquest").on('click', function(event) {
-    // Adapt Modal with add form
-        $(modalQuestActionGroup).empty();
+function deleteButtonListener(questId){
+    if(questCollection){
+
+
+      questAccess.deleteQuest(
+        gameId,
+        notification,
+        function(data,type){
+          loadContent();
+        },
+        function(status,error){
+        },
+        questId
+      );
+
+
+      $(".modal").modal('hide');
+
+  }
+
+}
+
+function addButtonListener(){
+          $(modalQuestActionGroup).empty();
       $(modalQuestSubmitButton).html('Submit');
       $(modalInputQuestId).prop('readonly', false);
       $(modalInputQuestId).val('');
@@ -347,44 +308,62 @@ var questModule = (function() {
       $(modalNotifMessageInput).val('');
         $("#modalquestdiv").modal('toggle');
 
-    });
-  };
+};
 
-  var renderAppendActionListInModal = function(selectedaction,selectedtimes){
-    // put in the list group
-      var htmlelement = "<li class=\"list-group-item\" id=\""+selectedaction+"\"><div class=\"input-group\">"+selectedaction+"  -  <span id=\"times\"> "+selectedtimes+" times</span>"+
-             "<span class=\"input-group-btn\"><button type=\"button\" id=\""+selectedaction+"\" class=\"close\" >&times;</button></span></div></li>";
-    $('#quest_action_list_group').append(htmlelement);
+function refreshButtonListener(){
+  sendIntentFetchGameId("quest");
+}
 
-    // Button delete listener
-    $('#quest_action_list_group').find('button').off("click");
-    $('#quest_action_list_group').find('button').on("click", function(e){
-      var buttoniddeleted = $(this).attr("id");
-      $('#quest_action_list_group').find('li#'+buttoniddeleted).remove();
-    });
-  }
+$(document).ready(function() {
+  initIWC();
+
+   _.templateSettings = {
+      evaluate: /\{\{(.+?)\}\}/g,
+      interpolate: /\{\{=(.+?)\}\}/g,
+      escape: /\{\{-(.+?)\}\}/g
+    };
+   resetContent();
+});
+
+function resetContent(){
 
 
-  var dropDownListener = function(){
-        // dropdown
-      $('#quest_dropdown_status').find('a').off('click');
-      $('#quest_dropdown_status').find('a').on('click', function (e) {
+  var loginTemplate = _.template($("#login-template").html());
+  var contentElmt = $(".content-wrapper");
+  contentElmt.html(loginTemplate);
+}
 
-        var target = $(e.target).attr("href") // activated tab
-        console.log(target);
-        switch(target) {
-          case "#revealed":
-            $(modalInputQuestStatus).val('REVEALED');
-          break;
-          case "#hidden":
-            $(modalInputQuestStatus).val('HIDDEN');
-          break;
-          case "#completed":
-            $(modalInputQuestStatus).val('COMPLETED');
-          break;
+function loadContent(){
+      questAccess.getQuestsData(
+      gameId,
+      notification,
+      function(data,type){
+          $("#modalquestdiv").modal('hide');
+          questCollection = data.rows;
+
+        if(questCollection.length > 0){
+          var listTemplate = _.template($("#list-quest").html());
+          var listGroupElmt = $(".list-quest-group");
+
+          var htmlData = ""
+          listGroupElmt.empty();
+          _.forEach(questCollection,function(quest){
+            console.log(quest)
+            htmlData += listTemplate(quest);
+          });
+          listGroupElmt.append(htmlData);
+        }
+        else{
+          var listGroupElmt = $(".list-group");
+          listGroupElmt.html("<h4 class=\"text-center\">No Data</h4>")
+        }
+      },
+      function(status,error) {
+        console.log(error);
       }
-    });
-  }
+    );
+
+}
 
   var checkBoxListener = function(){
 
@@ -414,15 +393,13 @@ var questModule = (function() {
       // Disable input text
       // Hide panel completed
           if($(this).prop("checked") == false){
-              $(modalInputQuestQuestCompleted).prop('readonly', true);
-            $('#panel_quest_completed').collapse("hide");
+              $(modalInputQuestQuestCompleted).prop('disabled', true);
           }
           else if($(this).prop("checked") == true){
       // Enable input text
       // Show panel completed
-              $(modalInputQuestQuestCompleted).prop('readonly', false);
+              $(modalInputQuestQuestCompleted).prop('disabled', false);
 
-            $('#panel_quest_completed').collapse("show");
           }
 
           // Process the data, get data from quest table
@@ -442,20 +419,20 @@ var questModule = (function() {
       }
       $('#quest_completed_list').append(htmlelement);
 
-      // Enable event listener
-      $('#quest_completed_list').find('a').off('click');
-      $('#quest_completed_list').find('a').on('click', function (e) {
+      // // Enable event listener
+      // $('#quest_completed_list').find('a').off('click');
+      // $('#quest_completed_list').find('a').on('click', function (e) {
 
-          var target = $(e.target).attr("id") // activated tab
-          console.log(target);
-          $(modalInputQuestQuestCompleted).val(target);
-            $('#panel_quest_completed').collapse("hide");
-      });
+      //     var target = $(e.target).attr("id") // activated tab
+      //     console.log(target);
+      //     $(modalInputQuestQuestCompleted).val(target);
+      //       $('#panel_quest_completed').collapse("hide");
+      // });
 
       });
   };
 
-  var submitFormListener = function(){
+var submitFormListener = function(){
     $("button#modalquestsubmit").off("click");
     $("button#modalquestsubmit").on("click", function(e){
       //disable the default form submission
@@ -471,7 +448,7 @@ var questModule = (function() {
       var questachievementid =  $(modalInputQuestAchievementId).val();
       if(questachievementid == ''){
 
-        miniMessageAlert(notification,"Achievement should be selected!","danger");
+        showErrorMessageInModal("Achievement should be selected!")
         return false;
       }
 
@@ -480,7 +457,7 @@ var questModule = (function() {
       var questpointvalue = $(modalInputQuestPoint).val();
       if(questpointflag){
         if(questpointvalue == ''){
-          miniMessageAlert(notification,"Point value should be set!","danger");
+          showErrorMessageInModal("Point value should be set!")
           return false;
         }
       }else{
@@ -492,7 +469,7 @@ var questModule = (function() {
       var questidcompleted = $(modalInputQuestQuestCompleted).val();
       if(questquestflag){
         if(questidcompleted == '' || questidcompleted == null ||questidcompleted==undefined){
-          miniMessageAlert(notification,"Quest ID completed should be set!","danger");
+          showErrorMessageInModal("Quest ID completed should be set!")
           return false;
         }
       }
@@ -508,8 +485,7 @@ var questModule = (function() {
 
       var list = $(modalQuestActionGroup).find('li');
       if(list.length == 0){
-        miniMessageAlert(notification,"Actions should be selected!","danger");
-
+        showErrorMessageInModal("Actions should be selected!")
         return false;
       }
       for(var i = 0;i < list.length; i++) {
@@ -529,8 +505,7 @@ var questModule = (function() {
       var questnotifmessage = $(modalNotifMessageInput).val();
       if(questnotifflag){
         if(questnotifmessage == undefined){
-          miniMessageAlert(notification,"Message notification should be set!","danger");
-
+          showErrorMessageInModal("Message notification should be set!")
           return false;
         }
       }
@@ -555,7 +530,7 @@ var questModule = (function() {
       var questid = $("#modalquestdiv").find("#quest_id").val();
 
       var submitButtonText = $("button#modalquestsubmit").html();
-
+      console.log(JSON.stringify(content))
 
       if(submitButtonText=='Submit'){
         questAccess.createNewQuest(
@@ -564,9 +539,12 @@ var questModule = (function() {
           notification,
           function(data,type){
             $("#modalquestdiv").modal('toggle');
-            loadTable();
+            loadContent();
           },
-          function(status,error){},
+          function(status,error){
+
+            showErrorMessageInModal(error.message)
+          },
           questid
         );
       }
@@ -577,9 +555,12 @@ var questModule = (function() {
           notification,
           function(data,type){
             $("#modalquestdiv").modal('toggle');
-            loadTable();
+          $("#contentModal").modal('hide');
+            loadContent();
           },
-          function(status,error){},
+          function(status,error){
+            showErrorMessageInModal(error.message)
+          },
           questid
         );
       }
@@ -588,96 +569,110 @@ var questModule = (function() {
 
   };
 
+
   // Event listener for other elements rather than quest itself
-  var elementDependenciesListener = function(){
-    $("#modalquestdiv").find("#select_achievement").off("click");
-    $("#modalquestdiv").find("#select_achievement").on("click", function(e){
+var elementDependenciesListener = function(){
+      $('#modalquestdiv').off();
+    $('#modalquestdiv').on('show.bs.modal', function (event) {
+      
+      // Get id from the existing modal
+      var quest_id = $("#quest_id").val()
 
-      // var endPointURL = epURL+"games/achievements/"+currentGameId;
-      var tableElement = $("table#list_achievements_a");
-      tableElement.find("tbody").empty();
-      achievementAccess.getAchievementsData(
-        gameId,
-        notification,
-        function(data,type){
-          console.log(data);
-            for(var i = 0; i < data.rows.length; i++){
-              var achievement = data.rows[i];
-              var newRow = "<tr><td class='text-center idclass'>" + achievement.id + "</td>";
-              newRow += "<td class='text-center nameclass'>" + achievement.name + "</td>";
-              newRow += "<td class='descclass'>" + achievement.description + "</td>";
-              newRow += "<td class='pointvalueclass'>" + achievement.pointValue + "</td>";
-              //newRow += "<td class='badgeidclass'> <a href='#' class='show-badge' id='"+ achievement.badgeId +"' data-row-badgeid='" + achievement.badgeId + "' >"+achievement.badgeId+"</a></td>";
-              newRow += "<td class='badgeidclass'>"+achievement.badgeId+"</td>";
+      // If update mode
+        var modal = $(this)
+        achievementAccess.getAchievementsData(
+          gameId,
+          notification,
+          function(data,type){
 
-              newRow += "<td class='text-center'>" + "<button type='button' class='btn btn-xs btn-warning selectclass'>Select</button></td> ";
+              var optionElmt = modal.find('#achievement-select');
+              var htmlData = ""
+              htmlData += "<option value=\"\">No achievement</option>"
+              if(data.rows){
+                _.forEach(data.rows,function(achievement){
+                  htmlData += "<option value=\""+achievement.id+"\">"+achievement.id+"</option>"
+                });
+                optionElmt.html(htmlData);
 
-              $("table#list_achievements_a").find("tbody").append(newRow);
-            }
 
-            // $("table#list_achievements_a").find(".show-badge").popover({
-            //     html : true,
-            //     content: function() {
-            //       return $("#badge-popover-content").html();
-            //     },
-            //     title: function() {
-            //       return $("#badge-popover-title").html();
-            //     },
-            //     trigger: 'manual',
-            //     placement:'right'
-            // });
-            // $("table#list_achievements_a").find(".show-badge").off("click");
-            // $("table#list_achievements_a").find(".show-badge").on("click", function(event){
-            //   // Get badge data with id
-            //   event.preventDefault();
-            //   // Get id of the selected element to be attached with popover
-            //   var idelement = "#" + $(event.target).data("row-badgeid");
-            //   badgeAccess.getBadgeDataWithId(
-            //     gameId,
-            //     $(event.target).data("row-badgeid"),
-            //     function(data,type){
-            //       // Render in popover
-            //       console.log(data);
-            //       console.log($(event.target));
-            //       $("#badge-popover-content").find("#badgeidpopover").html(data.id);
-            //       $("#badge-popover-content").find("#badgenamepopover").html(data.name);
-            //       $("#badge-popover-content").find("#badgedescpopover").html(data.description);
-            //       $("#badge-popover-content").find("#badgeimagepopover").attr("src",useAuthentication(data.imagePath))
-            //       $(event.target).popover('show');
+                if(quest_id){
+                  var index = _.map(questCollection,function(e) { return e.id; }).indexOf(quest_id);
+                  $('#achievement-select option:contains(' + questCollection[index].achievementId + ')').prop({selected: true});
+                }
+              }else{
+                htmlData = "<option value=\"\" selected>No achievement found</option>"
+                optionElmt.html(htmlData);
+              }
 
-            //       // Dismiss popover when click anywhere
-            //       $(document).click(function() {
-            //         $(event.target).popover('hide');
-            //       });
-            //       $(".popover").off("click");
-            //       $(".popover").on("click", function(e)
-            //       {
-            //         $(event.target).popover('hide');
-            //       });
-            //     },
-            //     function(error){
 
-            //     });
-            // });
+          },
+          function(status,error) {
+            console.log(error);
+          }
+        );
+      
+        // completed quest constraint
+        if(questCollection){
+              var optionElmt = modal.find('#quest-id-completed-select');
+              var htmlData = ""
 
-            $("table#list_achievements_a").find(".selectclass").off("click");
-            $("table#list_achievements_a").find(".selectclass").on("click", function(event){
-              var selectedAchievementId =  $(event.target).parent().parent().find(".idclass")[0].textContent;
-
-              $("#modalquestdiv").find("#panel_achievement").collapse('toggle')
-              $("#modalquestdiv").find("#quest_achievement_id").val(selectedAchievementId);
-
-            });
-
-        },
-        function(status,error) {
-          console.log(error);
+              _.forEach(questCollection,function(quest){
+                htmlData += "<option value=\""+quest.id+"\">"+quest.id+"</option>"
+              });
+              optionElmt.html(htmlData);
+        }else{
+            var optionElmt = modal.find('#quest-id-completed-select');
+                htmlData = "<option value=\"\" selected>No quest found</option>"
+                optionElmt.html(htmlData);
         }
-      );
+
+      // If add mode
+      // do nothing
+
 
     });
 
-    $("#modalquestdiv").find("#select_action").off("click");
+    // $("#modalquestdiv").find("#select_achievement").off("click");
+    // $("#modalquestdiv").find("#select_achievement").on("click", function(e){
+
+    //   // var endPointURL = epURL+"games/achievements/"+currentGameId;
+    //   var tableElement = $("table#list_achievements_a");
+    //   tableElement.find("tbody").empty();
+    //   achievementAccess.getAchievementsData(
+    //     gameId,
+    //     notification,
+    //     function(data,type){
+    //       console.log(data);
+    //         for(var i = 0; i < data.rows.length; i++){
+    //           var achievement = data.rows[i];
+    //           var newRow = "<tr><td class='text-center idclass'>" + achievement.id + "</td>";
+    //           newRow += "<td class='text-center nameclass'>" + achievement.name + "</td>";
+    //           newRow += "<td class='descclass'>" + achievement.description + "</td>";
+    //           newRow += "<td class='pointvalueclass'>" + achievement.pointValue + "</td>";
+    //           //newRow += "<td class='badgeidclass'> <a href='#' class='show-badge' id='"+ achievement.badgeId +"' data-row-badgeid='" + achievement.badgeId + "' >"+achievement.badgeId+"</a></td>";
+    //           newRow += "<td class='badgeidclass'>"+achievement.badgeId+"</td>";
+
+    //           newRow += "<td class='text-center'>" + "<button type='button' class='btn btn-xs btn-warning selectclass'>Select</button></td> ";
+
+    //           $("table#list_achievements_a").find("tbody").append(newRow);
+    //         }
+
+
+    //         $("table#list_achievements_a").find(".selectclass").off("click");
+    //         $("table#list_achievements_a").find(".selectclass").on("click", function(event){
+    //           var selectedAchievementId =  $(event.target).parent().parent().find(".idclass")[0].textContent;
+
+    //           $("#modalquestdiv").find("#panel_achievement").collapse('toggle')
+    //           $("#modalquestdiv").find("#quest_achievement_id").val(selectedAchievementId);
+
+    //         });
+
+    //     },
+    //     function(status,error) {
+    //       console.log(error);
+    //     }
+    //   );
+    $("#modalquestdiv").find("#select_action").off();
     $("#modalquestdiv").find("#select_action").on("click", function(e){
 
       $("table#list_actions_a").find("tbody").empty();
@@ -708,29 +703,36 @@ var questModule = (function() {
               }
               else{
                 miniMessageAlert(notification,"Action is already selected!","danger");
+                showErrorMessageInModal("Action is already selected!")
               }
           });
 
           },
           function(status,error) {
+            showErrorMessageInModal(error.message)
             console.log(error);
           }
       );
 
     });
-  };
-
-  return {
-    init : function(){
-      initialize();
-      loadTable();
-      addNewButtonListener();
-      dropDownListener();
-      checkBoxListener();
-      elementDependenciesListener();
-      submitFormListener();
-    }
-  };
 
 
-})();
+}
+
+var renderAppendActionListInModal = function(selectedaction,selectedtimes){
+  // put in the list group
+    var htmlelement = "<li class=\"list-group-item\" id=\""+selectedaction+"\"><div class=\"input-group\">"+selectedaction+"  -  <span id=\"times\"> "+selectedtimes+" times</span>"+
+           "<span class=\"input-group-btn\"><button type=\"button\" id=\""+selectedaction+"\" class=\"close\" >&times;</button></span></div></li>";
+  $('#quest_action_list_group').append(htmlelement);
+
+  // Button delete listener
+  $('#quest_action_list_group').find('button').off("click");
+  $('#quest_action_list_group').find('button').on("click", function(e){
+    var buttoniddeleted = $(this).attr("id");
+    $('#quest_action_list_group').find('li#'+buttoniddeleted).remove();
+  });
+};
+
+function showErrorMessageInModal(text){
+    $("#modalquestform").before("<div class=\"alert alert-danger alert-dismissible fade in\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>"+text+"</div>")
+}

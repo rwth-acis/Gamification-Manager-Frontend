@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- generated on {{ grunt.template.today() }} -->
+<!-- generated on {{ grunt.template.today() %> -->
 <Module>
   <ModulePrefs
-    title="{{= meta.title }}"
-    description="{{= meta.description }}"
-    author="{{= grunt.config('pkg.author.name') }}"
-    author_email="{{= grunt.config('pkg.author.email') }}"
-    width="{{= meta.width }}"
-    height="{{= meta.height }}" scrolling="true">
+    title="<%= meta.title %>"
+    description="<%= meta.description %>"
+    author="<%= grunt.config('pkg.author.name') %>"
+    author_email="<%= grunt.config('pkg.author.email') %>"
+    width="<%= meta.width %>"
+    height="<%= meta.height %>" scrolling="true">
 
     <Require feature="opensocial-0.8" ></Require>
     <Require feature="openapp" ></Require>
@@ -27,16 +27,16 @@
   </ModulePrefs>
   <Content type="html">
     <![CDATA[
-    <script src="{{= grunt.config('baseUrl') }}/js/lib/jquery.js"></script>
-    <script src="{{= grunt.config('baseUrl') }}/js/lib/tether.js"></script>
-    <script src="{{= grunt.config('baseUrl') }}/js/lib/bootstrap.js"></script>
-    <script src="{{= grunt.config('baseUrl') }}/js/lib/iwc.js"></script>
-    <script src="{{= grunt.config('baseUrl') }}/js/lib/las2peerWidgetLibrary.js"></script>
-    <script src="{{= grunt.config('baseUrl') }}/js/lib/lodash.js"></script>
-    <link rel="stylesheet" href="{{= grunt.config('baseUrl') }}/css/bootstrap.css">
-    <link rel="stylesheet" href="{{= grunt.config('baseUrl') }}/css/style.css">
+    <script src="<%= grunt.config('baseUrl') %>/js/lib/jquery.js"></script>
+    <script src="<%= grunt.config('baseUrl') %>/js/lib/tether.js"></script>
+    <script src="<%= grunt.config('baseUrl') %>/js/lib/bootstrap.js"></script>
+    <script src="<%= grunt.config('baseUrl') %>/js/lib/iwc.js"></script>
+    <script src="<%= grunt.config('baseUrl') %>/js/lib/las2peerWidgetLibrary.js"></script>
+    <script src="<%= grunt.config('baseUrl') %>/js/lib/lodash.js"></script>
+    <link rel="stylesheet" href="<%= grunt.config('baseUrl') %>/css/bootstrap.css">
+    <link rel="stylesheet" href="<%= grunt.config('baseUrl') %>/css/style.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-    {{= partial(bodyPartial,null) }}
+    <%= partial(bodyPartial,null) %>
     ]]>
   </Content>
 </Module>
