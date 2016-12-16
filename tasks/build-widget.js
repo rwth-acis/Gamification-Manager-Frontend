@@ -32,7 +32,7 @@ module.exports = function(grunt) {
                     return "";
                 } else {
                     tmpl = grunt.file.read(filepath);
-                    tmpl = grunt.template.process(tmpl,{data: templateData});
+                    tmpl = grunt.template.process(tmpl,{data: templateData, delimiters:'handlebars-like-delimiters'});
                     return grunt.template.process(tmpl, _.extend(templateUtilFunctions,data)).replace(/(^(\r\n|\n|\r)*)|((\r\n|\n|\r)*$)/g,"");
                 }
                 
@@ -56,7 +56,7 @@ module.exports = function(grunt) {
                 }
             }).map(function(filepath) {
               var tmpl = grunt.file.read(filepath);
-              output += grunt.template.process(tmpl, {data: templateData});
+              output += grunt.template.process(tmpl, {data: templateData, delimiters:'handlebars-like-delimiters'});
             });
 
           grunt.file.write(f.dest, output);
