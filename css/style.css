@@ -1,12 +1,42 @@
 
-.table-can-be-selected tbody
-{
-cursor: pointer;
+#sidebar {
+  width: inherit;
+  min-width: 110px;
+  background-color:#f5f5f5;
+  float: left;
+  height:100%;
+  position:relative;
+  overflow-y:auto;
+}
+#main {
+  height:100%;
+  overflow:auto;
+  padding: 20px;
 }
 
-.table-can-be-selected >tbody>tr:hover>td, .table-can-be-selected>tbody>tr:hover>th {
-  background-color: #b3c450;
+a {
+  cursor: pointer;
+}
 
+a, a:visited, a:hover, a:active {
+  color: inherit;
+}
+
+#image-logo {
+  max-width: 100px;
+  max-height: 100px;
+  margin: 20px 0; 
+  padding: 5px;
+}
+
+.wrapper {
+min-height: 100%;
+height: auto !important;
+height: 100%;
+margin: 0 auto -7em;
+}
+.footer, .push {
+height: 2em;
 }
 
 #modalspinner
@@ -22,6 +52,7 @@ cursor: pointer;
     opacity: 0.6;
     -moz-opacity: 0.8;
 }
+
 .center
 {
     z-index: 1000;
@@ -79,4 +110,21 @@ cursor: pointer;
 
 .hidden {
   display: none;
+}
+
+/* image badge */
+.card-img-top {
+  width: 100px;
+  height: 100px;
+}
+
+ul.list-group.list-reward:after {
+  clear: both;
+  display: block;
+  content: "";
+}
+
+.list-reward-item {
+    
+  display: inline;
 }

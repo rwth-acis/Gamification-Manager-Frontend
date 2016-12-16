@@ -1,22 +1,45 @@
 
 
  // global variables
-var client, gameId,memberId, notification;
+var client, gameId,memberId, notification, actionAccess;
 var oidc_userinfo;
 var iwcCallback;
+  var actionAccess;
+  var modalSubmitButton;
+  var modalInputId;
+  var modalInputName;
+  var modalInputDescription;
+  var modalInputPointValue;
+  var modalTitle;
+
+  var modalNotifCheck;
+  var modalNotifMessageInput;
+
+  var actionCollection;
+
+ var modalSubmitButton;
+    var modalTitle;
+     var modalInputId;
+      var modalInputName;
+      var modalInputDescription;
+      var modalInputPointValue;
+    var modalNotifCheck;
+    var modalNotifMessageInput;
+
+
 function setGameIDContext(gameId_){
   gameId = gameId_;
   //$('#game-id-text').html(gameId);
   if(gameId){
     //gadgets.window.setTitle("Gamification Manager Action - " + gameId);
-    $("h4#title-widget").text("Game ID : " + gameId);
     if(gameId == ""){
-      $("table#list_actions").find("tbody").empty();
+      resetContent()
     }
     else{
-      actionModule.init();
+      initContent();
     }
   }
+
 
 }
 
@@ -27,7 +50,6 @@ var initIWC = function(){
   iwcCallback = function(intent) {
     console.log(intent);
     if(intent.action == "REFRESH_APPID"){
-
       setGameIDContext(intent.data);
       console.log(gameId);
     }
@@ -43,13 +65,12 @@ var initIWC = function(){
           }
           else{
             miniMessageAlert(notification,"Game ID in Gamification Manager Game is not selected","danger")
+            resetContent();
           }
         }
       }
       else if(data.status == 401){
-            $("table#list_actions").find("tbody").empty();
-            var newRow = "<tr class='text-center'><td colspan='8'>You are not logged in</td>";
-            $("table#list_actions").find("tbody").append(newRow);
+            resetContent();
       }
 
     }
@@ -61,9 +82,7 @@ var initIWC = function(){
 
       }
       else if(data.status == 401){
-            $("table#list_actions").find("tbody").empty();
-            var newRow = "<tr class='text-center'><td colspan='8'>You are not logged in</td>";
-            $("table#list_actions").find("tbody").append(newRow);
+            resetContent();
       }
     }
     // if(intent.action == "FETCH_LOGIN_CALLBACK"){
@@ -80,11 +99,21 @@ var initIWC = function(){
   // $('button#refreshbutton').on('click', function() {
   //     sendIntentFetchLogin("action");
   // });
+
+  // Init modal element
+    modalSubmitButton = $("#modalactionsubmit");
+     modalTitle = $("#modalactiondiv").find(".modal-title");
+      modalInputId = $("#modalactiondiv").find("#action_id_name");
+       modalInputName = $("#modalactiondiv").find("#action_name");
+       modalInputDescription = $("#modalactiondiv").find("#action_desc");
+       modalInputPointValue = $("#modalactiondiv").find("#action_point_value");
+     modalNotifCheck = $("#modalactiondiv").find("#action_notification_check");
+     modalNotifMessageInput = $("#modalactiondiv").find("#action_notification_message");
 };
 
 var loadLas2peerWidgetLibrary = function(){
   try{
-    client = new Las2peerWidgetLibrary("http://gaudi.informatik.rwth-aachen.de:8081/", iwcCallback);
+    client = new Las2peerWidgetLibrary("http://gaudi.informatik.rwth-aachen.de:8086/", iwcCallback);
   }
   catch(e){
     var msg =notification.createDismissibleMessage("Error loading Las2peerWidgetLibrary. Try refresh the page !." + e);
@@ -96,19 +125,55 @@ var loadLas2peerWidgetLibrary = function(){
 var loggedIn = function(mId){
   memberId = mId;
   init();
-  // client = new Las2peerWidgetLibrary("http://gaudi.informatik.rwth-aachen.de:8081/", iwcCallback);
-
-  $("table#list_actions").find("tbody").empty();
-  var newRow = "<tr class='text-center'><td colspan='8'>Hello "+memberId+"</td>";
-  $("table#list_actions").find("tbody").append(newRow);
+  $("#login-alert h5").before("<h5>Welcome " + memberId + " !");
 };
 
 var init = function() {
-  $('button#refreshbutton').off('click');
-  $('button#refreshbutton').on('click', function() {
-      sendIntentFetchGameId("action");
-  });
 };
+
+var initContent = function(){
+
+  actionAccess = new ActionDAO();
+  var contentTemplate = _.template($("#content-template").html());
+  var contentElmt = $(".content-wrapper");
+  contentElmt.html(contentTemplate);
+
+
+  $("h6#title-widget").text(gameId);
+  
+  loadContent();
+
+
+
+  $('#contentModal').off();
+  $('#contentModal').on('show.bs.modal', function (event) {
+    console.log($(this));
+    var button = $(event.relatedTarget) // Button that triggered the modal
+    var actionid = button.data('actionid') // Extract info from data-* attributes
+    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+
+    var index = _.map(actionCollection,function(e) { return e.id; }).indexOf(actionid);
+    var modal = $(this)
+    modal.find('.card-header').html("<i class=\"fa fa-tag\" aria-hidden=\"true\"></i> "+actionCollection[index].id+"<span class=\"tag tag-pill tag-success pull-xs-right\">"+actionCollection[index].pointValue+"</span>")
+    modal.find('h4.card-title').text(actionCollection[index].name)
+      modal.find('p.desc').html("<i class=\"fa fa-align-justify\"></i> "+actionCollection[index].description)
+    
+    if(actionCollection[index].useNotification){
+      modal.find('p.msg').addClass("text-success");
+      modal.find('p.msg').removeClass("text-danger");
+    }else{
+      modal.find('p.msg').addClass("text-danger");
+      modal.find('p.msg').removeClass("text-success");
+    }
+      modal.find('p.msg').html("<i class=\"fa fa-comment-o\"></i> "+actionCollection[index].notificationMessage)
+    modal.find('.bedit').attr("onclick","editButtonListener(\""+actionid+"\")")
+    modal.find('.bdelete').attr("onclick","deleteButtonListener(\""+actionid+"\")")
+    modal.find('button').attr("data-actionid",actionid)
+  })
+  submitFormListener();
+  checkBoxListener();
+}
 
 
 // function signinCallback(result) {
@@ -143,159 +208,114 @@ function sendIntentFetchGameId(sender){
   );
 }
 
-// function sendIntentFetchLogin(sender){
-//   client.sendIntent(
-//     "FETCH_LOGIN",
-//     sender
-//   );
-// }
+function editButtonListener(actionId){
+    if(actionCollection){
+      var index = _.map(actionCollection,function(e) { return e.id; }).indexOf(actionId);
+      var selectedAction = actionCollection[index];
+
+      $(modalSubmitButton).html('Update');
+      $(modalTitle).html('Update an Action');
+      $(modalInputId).val(selectedAction.id);
+      $(modalInputId).prop('readonly', true);
+      $(modalInputName).val(selectedAction.name);
+      $(modalInputDescription).val(selectedAction.description);
+      $(modalInputPointValue).val(selectedAction.pointValue);
+      $(modalNotifCheck).prop('checked',selectedAction.useNotification);
+      $(modalNotifMessageInput).val(selectedAction.notificationMessage);
+      $(modalNotifMessageInput).prop('readonly',true);
+      if(selectedAction.useNotification){
+        $(modalNotifMessageInput).prop('readonly',false);
+      }
+      $("#modalactiondiv").modal('toggle');
+  }
+}
+
+function deleteButtonListener(actionId){
+  if(actionCollection){
+
+      actionAccess.deleteAction(
+        gameId,
+        notification,
+        function(data,type){
+          loadContent();
+        },
+        function(status,error){},
+        actionId);
+      $(".modal").modal('hide');
+
+  }
+}
+
+function addButtonListener(){
+    $(modalSubmitButton).html('Submit');
+    $(modalInputId).prop('readonly', false);
+    $(modalInputId).val('');
+    $(modalTitle).html('Add a New Action');
+    $(modalInputDescription).val('');
+    $(modalInputName).val('');
+    $(modalInputPointValue).val('');
+    $(modalNotifCheck).prop('checked',false);
+    $(modalNotifMessageInput).val('');
+    $("#modalactiondiv").modal('toggle');
+
+};
+
+function refreshButtonListener(){
+  sendIntentFetchGameId("action");
+}
 
 $(document).ready(function() {
   initIWC();
 
+   _.templateSettings = {
+      evaluate: /\{\{(.+?)\}\}/g,
+      interpolate: /\{\{=(.+?)\}\}/g,
+      escape: /\{\{-(.+?)\}\}/g
+    };
+   resetContent();
 });
 
-var actionModule = (function() {
+function resetContent(){
 
-  var actionAccess;
-  var modalSubmitButton;
-  var modalInputId;
-  var modalInputName;
-  var modalInputDescription;
-  var modalInputPointValue;
-  var modalTitle;
 
-  var modalNotifCheck;
-  var modalNotifMessageInput;
+  var loginTemplate = _.template($("#login-template").html());
+  var contentElmt = $(".content-wrapper");
+  contentElmt.html(loginTemplate);
+}
 
-  var actionCollection;
 
-  var initialize = function(){
-
-    actionAccess = new ActionDAO();
-    modalSubmitButton = $("#modalactionsubmit");
-    modalTitle = $("#modalactiondiv").find(".modal-title");
-      modalInputId = $("#modalactiondiv").find("#action_id_name");
-      modalInputName = $("#modalactiondiv").find("#action_name");
-      modalInputDescription = $("#modalactiondiv").find("#action_desc");
-      modalInputPointValue = $("#modalactiondiv").find("#action_point_value");
-    modalNotifCheck = $("#modalactiondiv").find("#action_notification_check");
-    modalNotifMessageInput = $("#modalactiondiv").find("#action_notification_message");
-  };
-
-  function renderActionTable(data){
-
-      $("table#list_actions").find("tbody").empty();
-    if(data.rows.length < 1){
-        var newRow = "<tr class='text-center'><td colspan='8'>No data Found !</td>";
-        $("table#list_actions").find("tbody").append(newRow);
-     }
-     else if(data.message){
-       var newRow = "<tr class='text-center'><td colspan='8'>"+data.message+"</td>";
-       $("table#list_actions").find("tbody").append(newRow);
-     }
-     else{
-        for(var i = 0; i < data.rows.length; i++){
-          var action = data.rows[i];
-          var newRow = "<tr><td class='text-center idclass'>" + action.id + "</td>";
-          newRow += "<td class='text-center nameclass'>" + action.name + "</td>";
-          newRow += "<td class='descclass'>" + action.description + "</td>";
-          newRow += "<td class='text-center pointvalueclass'>" + action.pointValue + "</td>";
-          newRow += "<td class='text-center usenotifclass''>" + action.useNotification + "</td>";
-          newRow += "<td class='messageclass''>" + action.notificationMessage + "</td>";
-          newRow += "<td class='text-center'>" + "<button type='button' class='btn btn-xs btn-warning updclass'>Edit</button></td> ";
-          newRow += "<td class='text-center'>" +"<button type='button' class='btn btn-xs btn-danger delclass'>Delete</button></td>";
-
-            $("table#list_actions").find("tbody").append(newRow);
-        }
-      }
-  }
-
-  var loadTable = function(){
-
-    //$("table#list_actions").find("tbody").empty();
+function loadContent(){
     actionAccess.getActionsData(
       gameId,
       notification,
       function(data,type){
+        
         $("#modalactiondiv").modal('hide');
-        actionCollection = data.rows;
-        renderActionTable(data);
+        console.log(JSON.stringify(data))
+          actionCollection = data.rows;
 
-          $("table#list_actions").find(".updclass").off("click");
-          $("table#list_actions").find(".updclass").on("click", function(event){
-            if(actionCollection){
+          if(actionCollection.length > 0){
+            var listTemplate = _.template($("#list-action").html());
+            var listGroupElmt = $(".list-group");
 
-                var selectedRow =  $(event.target).parent().parent()[0];
-                var selectedAction = actionCollection[selectedRow.rowIndex-1];
-
-                $(modalSubmitButton).html('Update');
-                $(modalTitle).html('Update an Action');
-                $(modalInputId).val(selectedAction.id);
-                $(modalInputId).prop('readonly', true);
-                $(modalInputName).val(selectedAction.name);
-                $(modalInputDescription).val(selectedAction.description);
-                $(modalInputPointValue).val(selectedAction.pointValue);
-                $(modalNotifCheck).prop('checked',selectedAction.useNotification);
-                $(modalNotifMessageInput).val(selectedAction.notificationMessage);
-                $(modalNotifMessageInput).prop('readonly',true);
-                if(selectedAction.useNotification){
-                  $(modalNotifMessageInput).prop('readonly',false);
-                }
-                $("#modalactiondiv").modal('toggle');
-            }
-        });
-
-        $("table#list_actions").find(".delclass").off("click");
-        $("table#list_actions").find(".delclass").on("click", function(event){
-          var selectedRow =  $(event.target).parent().parent()[0];
-            var selectedAction = actionCollection[selectedRow.rowIndex-1];
-
-            actionAccess.deleteAction(
-              gameId,
-              notification,
-              function(data,type){
-                loadTable();
-              },
-              function(status,error){},
-              selectedAction.id);
-          });
+            var htmlData = ""
+            listGroupElmt.empty();
+            _.forEach(actionCollection,function(action){
+              console.log(action)
+              htmlData += listTemplate(action);
+            });
+            listGroupElmt.append(htmlData);
+          }
+          else{
+            var listGroupElmt = $(".list-group");
+            listGroupElmt.html("<h4 class=\"text-center\">No Data</h4>")
+          }
         },
         function(status,error) {
           console.log(error);
         }
     );
-  };
-
-  var addNewButtonListener = function(){
-    $("button#addnewaction").off('click');
-    $("button#addnewaction").on('click', function(event) {
-      $(modalSubmitButton).html('Submit');
-      $(modalInputId).prop('readonly', false);
-      $(modalInputId).val('');
-      $(modalTitle).html('Add a New Action');
-      $(modalInputDescription).val('');
-      $(modalInputName).val('');
-      $(modalInputPointValue).val('');
-      $(modalNotifCheck).prop('checked',false);
-      $(modalNotifMessageInput).val('');
-      $("#modalactiondiv").modal('toggle');
-
-    });
-  };
-
-  var checkBoxListener = function(){
-      // Check boxes in modal
-  // check box for point flag
-    $('input[type="checkbox"]#action_notification_check').click(function(){
-          if($(this).prop("checked") == true){
-              $(modalNotifMessageInput).prop('readonly', false);
-          }
-          else if($(this).prop("checked") == false){
-              $(modalNotifMessageInput).prop('readonly', true);
-          }
-      });
-  }
+}
 
   var submitFormListener = function(){
     $("form#modalactionform").off();
@@ -315,9 +335,11 @@ var actionModule = (function() {
           notification,
           function(data,type){
             $("#modalactiondiv").modal('hide');
-            loadTable();
+            loadContent();
           },
-          function(status,error){},
+          function(status,error){
+            showErrorMessageInModal(error.message)
+          },
           actionId
         );
       }
@@ -328,9 +350,12 @@ var actionModule = (function() {
           notification,
           function(data,type){
             $("#modalactiondiv").modal('hide');
-            loadTable();
+            $("#contentModal").modal('hide');
+            loadContent();
           },
-          function(status,error){},
+          function(status,error){
+            showErrorMessageInModal(error.message)
+          },
           actionId
         );
       }
@@ -339,16 +364,19 @@ var actionModule = (function() {
     });
   };
 
-  return {
-    init : function(){
-      initialize();
-      loadTable();
-      addNewButtonListener();
-      checkBoxListener();
-      submitFormListener();
-    },
-    loadTable:loadTable
-  };
+var checkBoxListener = function(){
+      // Check boxes in modal
+  // check box for point flag
+    $('input[type="checkbox"]#action_notification_check').click(function(){
+          if($(this).prop("checked") == true){
+              $(modalNotifMessageInput).prop('readonly', false);
+          }
+          else if($(this).prop("checked") == false){
+              $(modalNotifMessageInput).prop('readonly', true);
+          }
+      });
+  }
 
-
-})();
+function showErrorMessageInModal(text){
+    $("#modalactionform").before("<div class=\"alert alert-danger alert-dismissible fade in\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>"+text+"</div>")
+}

@@ -243,7 +243,7 @@ BadgeDAO.prototype.getBadgeImage = function(currentGameId,badgeid){
 
 	if(!client.isAnonymous()){
 		console.log("Authenticated request");
-		var rurl = "http://gaudi.informatik.rwth-aachen.de:8081/gamification/badges/"+currentGameId+"/" + badgeid + "/img";
+		var rurl = "http://gaudi.informatik.rwth-aachen.de:8086/gamification/badges/"+currentGameId+"/" + badgeid + "/img";
 
 		return useAuthentication(rurl);
 	} else {

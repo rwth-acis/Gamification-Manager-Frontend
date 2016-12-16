@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- generated on Tue Sep 27 2016 18:18:50 -->
+<!-- generated on {{ grunt.template.today() %> -->
 <Module>
   <ModulePrefs
     title="Gamification Manager Point"
@@ -27,50 +27,49 @@
   </ModulePrefs>
   <Content type="html">
     <![CDATA[
-    <script src="https://dl.dropboxusercontent.com/u/57683747/widget_game/js/lib/jquery.js"></script>
-    <script src="https://dl.dropboxusercontent.com/u/57683747/widget_game/js/lib/bootstrap.js"></script>
-    <script src="https://dl.dropboxusercontent.com/u/57683747/widget_game/js/lib/iwc.js"></script>
-    <script src="https://dl.dropboxusercontent.com/u/57683747/widget_game/js/lib/las2peerWidgetLibrary.js"></script>
-    <link rel="stylesheet" href="https://dl.dropboxusercontent.com/u/57683747/widget_game/css/bootstrap.css">
-    <link rel="stylesheet" href="https://dl.dropboxusercontent.com/u/57683747/widget_game/css/style.css">
-    <script src="https://dl.dropboxusercontent.com/u/57683747/widget_game/js/gamificationelements.js"></script>
-<script src="https://dl.dropboxusercontent.com/u/57683747/widget_game/js/point.js"></script>
+    <script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/jquery.js"></script>
+    <script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/tether.js"></script>
+    <script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/bootstrap.js"></script>
+    <script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/iwc.js"></script>
+    <script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/las2peerWidgetLibrary.js"></script>
+    <script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/lib/lodash.js"></script>
+    <link rel="stylesheet" href="https://rwth-acis.github.io/Gamification-Manager-Frontend/css/bootstrap.css">
+    <link rel="stylesheet" href="https://rwth-acis.github.io/Gamification-Manager-Frontend/css/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/gamificationelements.js"></script>
+<script src="https://rwth-acis.github.io/Gamification-Manager-Frontend/js/point.js"></script>
 
 
-<div class="container-fluid text-center">
-  <div class="row">
-  <h4 id="title-widget">Game ID : - </h4>
-  </div>
-</div>     
-<div id="wrapper" class="container-fluid" >
-<div class="row">
-	<div class="col-md-12">
-		 	<div class="panel panel-default">
-				<div class="panel-heading"><b>Point Unit Name</b></div>
-				      <div class="panel-body">
-
-				      	 <form id="point_id_container">
-				      	 		<b><h4 class="form-control-static text-center" id="level_point_id_static"></h4></b>
-							    <br>
-							    <div class="form-group">
-									<div class="col-sm-12">
-							  			<div class="input-group">
-							      			<input type="text" class="form-control" placeholder="Unit name" id="level_point_id" name="levelpointid">
-											<span class="input-group-btn">
-							      				<button class="btn btn-secondary" type="button" id="select_point" data-toggle="collapse" data-target="#panel_point" aria-expanded="false" aria-controls="panel_point">Submit</button>
-							    			</span>
-
-						    			</div>
-								  	</div>
-								</div>
-						</form>
-			      </div>
-			</div>
-
-	</div>
-	<div class="col-md-0">
-	</div>
+<div class="container-fluid">
 </div>
+
+<script id="login-template" type="text/template">
+<div class="alert alert-info" role="alert">
+	<h5 class="text-xs-center">To use this widget, please select the Game ID in Game Widget.</h5>
+	</div>
+</script>
+
+<script id="content-template" type="text/template">
+
+<div class="text-xs-center">
+  <h6 id="title-widget">Game ID : - </h6>
+</div>     
+<div class="card">
+  <div class="card-header">
+    Point Unit Name
+  </div>
+  <div class="card-block">
+    	<h5 class="card-title text" id="level_point_id_static"></h5>
+    	 <div class="input-group">
+	      <input type="text" class="form-control" placeholder="Unit name" id="level_point_id" name="levelpointid">
+	      <span class="input-group-btn">
+	        <button class="btn btn-success" type="button" id="select_point">Update</button>
+	      </span>
+	    </div>
+  </div>
+</div>
+
+</script>
     ]]>
   </Content>
 </Module>

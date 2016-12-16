@@ -8,9 +8,9 @@ function setGameIDContext(gameId_){
   //$('#game-id-text').html(gameId);
   if(gameId){
     //gadgets.window.setTitle("Gamification Manager Point - " + gameId);
-    $("h4#title-widget").text("Game ID : " + gameId);
+    $("h6#title-widget").text("Game ID : " + gameId);
     if(gameId == ""){
-      $("#point_id_container").find("#level_point_id").val('');
+      $("#level_point_id").val('');
     }
     else{
       pointModule.init();
@@ -26,7 +26,7 @@ var initIWC = function(){
   iwcCallback = function(intent) {
     console.log(intent);
     if(intent.action == "REFRESH_APPID"){
-
+      initContent();
       setGameIDContext(intent.data);
     }
     if(intent.action == "FETCH_APPID_CALLBACK"){
@@ -37,15 +37,20 @@ var initIWC = function(){
         loggedIn(oidc_userinfo.preferred_username);
         if(data.receiver == "point"){
           if(data.gameId){
+
+            initContent();
             setGameIDContext(data.gameId);
           }
           else{
             miniMessageAlert(notification,"Game ID in Gamification Manager Game is not selected","danger")
+
+            resetContent();
           }
         }
       }
       else if(data.status == 401){
-        $("#point_id_container").find("#level_point_id").val('You are not logged in');
+        $("#level_point_id").val('You are not logged in');
+        resetContent();
 
       }
 
@@ -57,7 +62,8 @@ var initIWC = function(){
         loggedIn(oidc_userinfo.preferred_username);
       }
       else if(data.status == 401){
-        $("#point_id_container").find("#level_point_id").val('You are not logged in');
+        $("#level_point_id").val('You are not logged in');
+        resetContent();
 
       }
     }
@@ -79,7 +85,7 @@ var initIWC = function(){
 
 var loadLas2peerWidgetLibrary = function(){
   try{
-    client = new Las2peerWidgetLibrary("http://gaudi.informatik.rwth-aachen.de:8081/", iwcCallback);
+    client = new Las2peerWidgetLibrary("http://gaudi.informatik.rwth-aachen.de:8086/", iwcCallback);
   }
   catch(e){
     var msg =notification.createDismissibleMessage("Error loading Las2peerWidgetLibrary. Try refresh the page !." + e);
@@ -89,9 +95,12 @@ var loadLas2peerWidgetLibrary = function(){
 };
 
 var loggedIn = function(mId){
+
+
   memberId = mId;
   init();
-  // client = new Las2peerWidgetLibrary("http://gaudi.informatik.rwth-aachen.de:8081/", iwcCallback);
+
+  // client = new Las2peerWidgetLibrary("http://gaudi.informatik.rwth-aachen.de:8086/", iwcCallback);
 };
 
 var init = function() {
@@ -102,6 +111,12 @@ var init = function() {
   });
 }
 
+var initContent = function(){
+  var contentTemplate = _.template($("#content-template").html());
+  var contentElmt = $(".container-fluid");
+  contentElmt.html(contentTemplate);
+
+}
 
 // function signinCallback(result) {
 //     if(result === "success"){
@@ -140,8 +155,16 @@ function sendIntentFetchGameId(sender){
 
 $(document).ready(function() {
   initIWC();
+  resetContent();
 });
 
+function resetContent(){
+
+
+  var loginTemplate = _.template($("#login-template").html());
+  var contentElmt = $(".container-fluid");
+  contentElmt.html(loginTemplate);
+}
 
  var pointModule = (function() {
 
@@ -155,7 +178,7 @@ $(document).ready(function() {
         {},
         function(data, type){
           console.log(data.pointUnitName);
-          $("#point_id_container").find("#level_point_id_static").html(data.pointUnitName);
+          $("#level_point_id_static").html(data.pointUnitName);
           miniMessageAlert(notification,"Point unit name updated","success");
           return false;
         },
@@ -165,10 +188,10 @@ $(document).ready(function() {
           return false;
         }
       );
-      $("#point_id_container").find("#select_point").off("click");
-      $("#point_id_container").find("#select_point").on("click", function(e){
+      $("button#select_point").off("click");
+      $("button#select_point").on("click", function(e){
 
-        var unitName = $("#point_id_container").find("#level_point_id").val();
+        var unitName = $("#level_point_id").val();
         console.log(unitName);
         var endPointPath = "gamification/points/"+gameId+"/name/"+unitName;
         client.sendRequest(
@@ -179,8 +202,8 @@ $(document).ready(function() {
           {},
           function(data, type){
             console.log(data);
-            $("#point_id_container").find("#level_point_id").val('');
-            $("#point_id_container").find("#level_point_id_static").html(unitName);
+            $("#level_point_id").val('');
+            $("#level_point_id_static").html(unitName);
 
             miniMessageAlert(notification,"Unit name updated !","success");
             return false;
