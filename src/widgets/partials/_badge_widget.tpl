@@ -6,6 +6,7 @@
            <div class="card-header text-xs-left">
             <i class="fa fa-tag" aria-hidden="true"></i> {{= id}}
           </div> 
+          <p></p>
           <img class="card-img-top" src="{{= imgUrl}}" alt="Card image cap">
           <div class="card-block text-xs-left">
             <h4 class="card-title" title="Badge Name">{{= name}}</h4>

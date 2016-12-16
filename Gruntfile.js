@@ -169,7 +169,7 @@ module.exports = function (grunt) {
                                 title: "Gamification Manager Achievement",
                                 description: "",
                                 width: "1024",
-                                height: "440",
+                                height: "450",
                                 table_height: "360",
                             },
                             bodyPartial: '_achievement_widget.tpl'
@@ -187,7 +187,7 @@ module.exports = function (grunt) {
                                 title: "Gamification Manager Level",
                                 description: "",
                                 width: "650",
-                                height: "440",
+                                height: "450",
                                 table_height: "360",
                             },
                             bodyPartial: '_level_widget.tpl'
@@ -205,7 +205,7 @@ module.exports = function (grunt) {
                                 title: "Gamification Manager Quest",
                                 description: "",
                                 width: "1024",
-                                height: "440",
+                                height: "500",
                                 table_height: "360",
                             },
                             bodyPartial: '_quest_widget.tpl'
@@ -223,7 +223,7 @@ module.exports = function (grunt) {
                                 title: "Gamification Manager Action",
                                 description: "",
                                 width: "800",
-                                height: "440",
+                                height: "450",
                                 table_height: "360",
                             },
                             bodyPartial: '_action_widget.tpl'

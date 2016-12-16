@@ -8,6 +8,6 @@
     "endPointGamifier": "http://gaudi.informatik.rwth-aachen.de:8087/",
     "endPointLevel": "http://gaudi.informatik.rwth-aachen.de:8088/",
     "endPointPoint": "http://gaudi.informatik.rwth-aachen.de:8089/",
-    "endPointQuest": "http://gaudi.informatik.rwth-aachen.de:8089/",
-    "endPointVisualization": "http://gaudi.informatik.rwth-aachen.de:8086/"
+    "endPointQuest": "http://gaudi.informatik.rwth-aachen.de:8091/",
+    "endPointVisualization": "http://gaudi.informatik.rwth-aachen.de:8092/"
 }

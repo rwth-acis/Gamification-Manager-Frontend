@@ -164,13 +164,17 @@ var initContent = function(){
     modal.find('p.status').html("<i class=\"fa fa-ellipsis-h\"></i> "+questCollection[index].status)
     modal.find('p.ach').html("<i class=\"fa fa-star\"></i> "+questCollection[index].achievementId)
     if(questCollection[index].pointFlag){
+      modal.find('#pvalue').removeClass("text-danger")
       modal.find('#pvalue').addClass("text-success")
     }else{
+      modal.find('#pvalue').removeClass("text-success")
       modal.find('#pvalue').addClass("text-danger")
     }
     if(questCollection[index].questFlag){
+      modal.find('#questconstraint').removeClass("text-danger")
       modal.find('#questconstraint').addClass("text-success")
     }else{
+      modal.find('#questconstraint').removeClass("text-success")
       modal.find('#questconstraint').addClass("text-danger")
     }
     modal.find('#pvalue').html("<p><strong>Point</strong></p><p>"+questCollection[index].pointValue+"</p>")
@@ -354,7 +358,7 @@ function loadContent(){
           listGroupElmt.append(htmlData);
         }
         else{
-          var listGroupElmt = $(".list-group");
+          var listGroupElmt = $(".list-quest-group");
           listGroupElmt.html("<h4 class=\"text-center\">No Data</h4>")
         }
       },

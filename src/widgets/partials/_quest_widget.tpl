@@ -128,7 +128,7 @@
 	            </div>
 	            </li>
 
-	            <li class="list-group-item"><p class="card-text" title="Actions to complete"><i class="fa fa-chain"></i> <strong>Action(s)</strong></p>
+	            <li class="list-group-item"><p class="card-text" title="Actions to complete"><i class="fa fa-mouse-pointer"></i> <strong>Action(s)</strong></p>
 
 		            <ul class="list-group" id="action-list">
 		            </ul>
@@ -179,7 +179,7 @@
 		  <div class="form-group row">
 		    <label for="quest_desc" class="col-xs-2 col-form-label">Description</label>
 		    <div class="col-xs-10">
-		      <textarea class="form-control" maxlength="100" rows="3" id="quest_desc" name="questdescription" placeholder="This is the achievement description"></textarea>
+		      <textarea class="form-control" maxlength="100" rows="3" id="quest_desc" name="questdescription" placeholder="This is the quest description"></textarea>
 		    </div>
 		  </div>
 		  <div class="form-group row">
