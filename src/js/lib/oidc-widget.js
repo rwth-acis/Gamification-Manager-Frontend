@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2014 Dominik Renzel, Advanced Community Information Systems (ACIS) Group, 
+Copyright (c) 2014 Dominik Renzel, Advanced Community Information Systems (ACIS) Group,
 Chair of Computer Science 5 (Databases & Information Systems), RWTH Aachen University, Germany
 All rights reserved.
 
@@ -31,22 +31,22 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /**
 * OpenID Connect Button
-* 
-* This library realizes An OpenID Connect Button allowing arbitrary browser-based 
-* Web applications to authenticate and get access to user information using an 
-* external OpenID Connect Provider. The application itself must be registered as 
+*
+* This library realizes An OpenID Connect Button allowing arbitrary browser-based
+* Web applications to authenticate and get access to user information using an
+* external OpenID Connect Provider. The application itself must be registered as
 * client at the OpenID Connect provider. In ./index.html we demonstrate the use
-* of the OpenID Connect Button. Developers are advised to follow the included 
+* of the OpenID Connect Button. Developers are advised to follow the included
 * documentation until a full tutorial becomes available.
 */
 
-// Small modifications by Jukka Purma, to make button better fit limited space 
+// Small modifications by Jukka Purma, to make button better fit limited space
 // in navbar of LayersToolTemplate
 
 // Definition of variables relevant to OpenID Connect
-// These variables are available to developers for an easy and convenient 
+// These variables are available to developers for an easy and convenient
 // access to OpenID Connect related information.
- 
+
 var oidc_server; // OpenID Connect Provider URL
 var oidc_name; // OpenID Connect Provider Name
 var oidc_logo; // OpenID Connect Provider Logo URL
@@ -63,14 +63,14 @@ var google_server = "https://accounts.google.com/o/oauth2";
 var learning_layers_server = "https://api.learning-layers.eu/o/oauth2";
 
 // Exceptions and debug messages are logged to the console.
-try{
-	
-	(function() {
-		learningLayerLogin();
-	})();
-} catch (e){
-	console.log(e);
-}
+// try{
+
+// 	(function() {
+// 		//learningLayerLogin();
+// 	})();
+// } catch (e){
+// 	console.log(e);
+// }
 
 function learningLayerLogin(){
 	// Learning layer server
@@ -79,10 +79,10 @@ function learningLayerLogin(){
 	// with all necessary fields defined, retrieve OpenID Connect Server configuration
 	getProviderConfig(oidc_server,function(c){
 		if(c === "error"){
-			throw("Warning: could not retrieve OpenID Connect server configuration!"); 
+			throw("Warning: could not retrieve OpenID Connect server configuration!");
 		} else {
 			oidc_provider_config = c;
-			
+
 			// after successful retrieval of server configuration, check auth status
 
 			try{
@@ -92,23 +92,25 @@ function learningLayerLogin(){
 					getUserInfo(function(u){
 						if(u["sub"]){
 							oidc_userinfo = u;
-							signinCallback("success");
+							signInCallback("success");
 						} else {
-							signinCallback("Error: could not retrieve user info! Cause: " + u.error_description);
+							signInCallback("Error: could not retrieve user info! Cause: " + u.error_description);
 							console.log("Refreshing token...");
 
 							registerLearningLayer(function(resp,status){
 						    	console.log("New token...");
-						    	
+
 						    },function(resp,status){
 						    	console.log("failed");
 						    });
-														
+
 						}
 					});
 				});
 			}catch(e){
 				console.log("WARNING: " + e);
+				signInCallback("Error: could not retrieve user info!");
+
 			}
 		}
 	});
@@ -118,19 +120,19 @@ function googleLogin(){
 	oidc_server = google_server;
 	getProviderConfig(oidc_server,function(c){
 		if(c === "error"){
-			throw("Warning: could not retrieve OpenID Connect server configuration!"); 
+			throw("Warning: could not retrieve OpenID Connect server configuration!");
 		} else {
 			oidc_provider_config = c;
-			
+
 			// after successful retrieval of server configuration, check auth status
 
 			try{
 				getUserInfo(function(u){
 					if(u["sub"]){
 						oidc_userinfo = u;
-						signinCallback("success");
+						signInCallback("success");
 					} else {
-						signinCallback("Error: could not retrieve user info! Cause: " + u.error_description);
+						signInCallback("Error: could not retrieve user info! Cause: " + u.error_description);
 					}
 				});
 			}catch(e){
@@ -143,9 +145,9 @@ function googleLogin(){
 /**
 * renders OpenID Connect Button, including correct click behaviour.
 * The button can exist in two different states: "Sign in" and "Sign out"
-* In the "Sign in" state, a click brings the user to the 
+* In the "Sign in" state, a click brings the user to the
 *
-* @param signin boolean true for "Sign in" state, false else 
+* @param signin boolean true for "Sign in" state, false else
 **/
 // function renderButton(signin){
 // 	$(".oidc-signin").unbind( "click" );
@@ -154,7 +156,7 @@ function googleLogin(){
 // 	if(oidc_size === "xs" || oidc_size === "sm"){
 // 		size = 16;
 // 	}
-	
+
 // 	if(signin){
 // 		if (!nofill) {
 // 			$(".oidc-signin").removeClass("btn-success").addClass("btn-default")
@@ -185,7 +187,7 @@ function registerLearningLayer(successCallback,errorCallback){
 			var spacename = properties["http://purl.org/dc/terms/title"];
 			var returnURL = encodeURI("/spaces/"+spacename);
 			var oauth2Endpoint = "/o/oauth2/request?discovery=https://api.learning-layers.eu/o/oauth2/.well-known/openid-configuration&client_id=242c4084-353a-485d-9d3c-80f55ad73e20&client_secret=ALmWqWqzWzYSVvDlLIrIzVXdmxeCgwUjoayzT4kHA3PkQGkZqPisg_t5GZI8A1-_02eX3l1G_FQwhQDfh4OKPFk&return=" + returnURL;
-			
+
 			//window.location = oauth2Endpoint;
 			// $.ajax(
 			// 	oauth2Endpoint,
@@ -234,7 +236,7 @@ function getProviderConfig(provider,cb){
 * OpenID Connect access token in the browser's local storage ("access_token").
 *
 * @param cb function(obj) callback function retrieving user info or an error message in case retrieval failed
-**/	
+**/
 function getUserInfo(cb){
 	$.ajax(
 		oidc_provider_config.userinfo_endpoint,
@@ -259,11 +261,11 @@ function getUserInfo(cb){
 }
 /**
 * parses OpenID Connect ID token into human-readable JWS according to the OpenID Connect specification
-* (cf. http://openid.net/specs/openid-connect-core-1_0.html#IDToken). Requires the availability of a hashed 
+* (cf. http://openid.net/specs/openid-connect-core-1_0.html#IDToken). Requires the availability of a hashed
 * OpenID Connect ID token in the browser's local storage ("id_token"). Token validity is not checked.
 **/
 function getIdToken() {
-	
+
 	if(!KJUR.jws) {
 		throw("Cannot parse OpenID Connect ID token! KJUR.jws not available!");
 	} else {
@@ -292,10 +294,10 @@ function getAccessTokenFromROLE(){
 }
 
 /**
-* checks for the availability of OpenID Connect tokens (access token and ID token). 
+* checks for the availability of OpenID Connect tokens (access token and ID token).
 * Returns true, if both tokens are available from the browser's local storage ("access_token" and "id_token").
 * Token validity is not checked.
-**/		
+**/
 function checkAuth(successCallback){
 	var userRes = new openapp.oo.Resource(openapp.param.user());
 
@@ -319,7 +321,7 @@ function checkAuth(successCallback){
 /**
 * parses the current browser window's fragment identifier and its key-value pairs into an object.
 * This parsing is especially used for extracting tokens sent by the OpenID Connect provider as a
-* redirect to the client after successful authentication and expression of consent in the 
+* redirect to the client after successful authentication and expression of consent in the
 * OpenID Connect implicit flow.
 * (cf. http://openid.net/specs/openid-connect-core-1_0.html#ImplicitCallback)
 **/
