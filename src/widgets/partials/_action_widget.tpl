@@ -102,7 +102,7 @@
         <div class="card">
           <div class="card-header" title="Action ID">
             <i class="fa fa-tag" aria-hidden="true"></i> ID
-            <span class="tag tag-pill tag-success float-xs-right">5</span>
+            <span class="tag tag-pill tag-success pull-xs-right">5</span>
           </div>
           <div class="card-block">
             <h4 class="card-title" title="Action Name">Name</h4>

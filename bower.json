@@ -15,7 +15,7 @@
   ],
   "dependencies": {
     "iwc": "http://dbis.rwth-aachen.de/gadgets/iwc/lib/iwc.js",
-    "bootstrap": "~4.0.0",
+    "bootstrap": "#4.0.0-alpha.5",
     "jquery": "~2.0.3",
     "lodash": "~2.4.1",
     "tether": "^1.3.7"
