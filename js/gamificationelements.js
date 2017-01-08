@@ -185,6 +185,13 @@ QuestDAO.prototype.deleteQuest = function(currentGameId,notification,successCall
 	ClientHelper.deleteData(endPointURL,notification,successCallback, errorCallback,questid);
 }
 
+/*var BadgeModel = function(badge_id,name,description,image_path){
+	this.badge_id = badge_id;
+	this.name = name;
+	this.description = description;
+	this.image_path = image_path;
+}
+*/
 var BadgeDAO = function(){
 }
 
@@ -195,6 +202,7 @@ BadgeDAO.prototype.getBadgesData = function(currentGameId,notification, successC
 }
 
 BadgeDAO.prototype.getBadgeDataWithId = function(currentGameId,badgeid,notification,successCallback, errorCallback){
+	//currentGameId = window.localStorage["gameid"];
 	var endPointURL = "gamification/badges/"+currentGameId+"/"+badgeid;
 	client.sendRequest(
 		"GET",
@@ -213,21 +221,25 @@ BadgeDAO.prototype.getBadgeDataWithId = function(currentGameId,badgeid,notificat
 }
 
 BadgeDAO.prototype.createNewBadge = function(currentGameId,content, notification,successCallback, errorCallback, badgeid){
+	//currentGameId = window.localStorage["gameid"];
 	var endPointURL = "gamification/badges/"+currentGameId;
 	ClientHelper.postWithForm(endPointURL, content, notification,successCallback, errorCallback, badgeid);
 }
 
 BadgeDAO.prototype.updateBadge = function(currentGameId,content, notification,successCallback, errorCallback, badgeid){
+	//currentGameId = window.localStorage["gameid"];
 	var endPointURL = "gamification/badges/"+currentGameId+"/"+badgeid;
 	ClientHelper.putWithForm(endPointURL,content, notification,successCallback, errorCallback, badgeid);
 }
 
 BadgeDAO.prototype.deleteBadge = function(currentGameId,notification,successCallback, errorCallback, badgeid){
+	//currentGameId =window.localStorage["gameid"];
 	var endPointURL = "gamification/badges/"+currentGameId+"/" + badgeid;
 	ClientHelper.deleteData(endPointURL,notification,successCallback, errorCallback,badgeid);
 }
 
 BadgeDAO.prototype.getBadgeImage = function(currentGameId,badgeid){
+	//currentGameId = window.localStorage["gameid"];
 
 	if(!client.isAnonymous()){
 		console.log("Authenticated request");
@@ -239,6 +251,14 @@ BadgeDAO.prototype.getBadgeImage = function(currentGameId,badgeid){
 		return null;
 	}
 }
+
+/*var AchievementModel = function(achievement_id,name,description,point_value,badge_id){
+	this.achievement_id = achievement_id;
+	this.name = name;
+	this.description = description;
+	this.point_value = point_value;
+	this.badge_id = badge_id;
+}*/
 
 var AchievementDAO = function(endPointURL){
 }
@@ -263,6 +283,13 @@ AchievementDAO.prototype.deleteAchievement = function(currentGameId,notification
 	var endPointURL = "gamification/achievements/"+currentGameId+"/" + achievementid;
 	ClientHelper.deleteData(endPointURL,notification,successCallback, errorCallback,achievementid);
 }
+
+/*var ActionModel = function(action_id,name,description,point_value){
+	this.action_id = action_id;
+	this.name = name;
+	this.description = description;
+	this.point_value = point_value;
+}*/
 
 var ActionDAO = function(endPointURL){
 }

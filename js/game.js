@@ -25,12 +25,21 @@ var loadGameList = function(){
       else{
         gameListElmt.html("<h4 class=\"text-center\">No Data</h4>")
       }
+      //       _.forEach(games,function(v){
+      //   htmlData += tmpl(v);
+      //   this.$el.prop('id',this.model.get("id"));
+      // });
 
     },
     function(error) {
-      console.log(error);
+          // Notification failed to get game data
+    console.log(error);
      }
   );
+
+
+
+
 }
 
 
@@ -54,7 +63,9 @@ var gameContentView = function(){
   $('#buttonModal').on('show.bs.modal', function (event) {
     console.log($(this));
     var button = $(event.relatedTarget) // Button that triggered the modal
-    var gameid = button.data('gameid') 
+    var gameid = button.data('gameid') // Extract info from data-* attributes
+    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
     var modal = $(this)
     modal.find('.modal-title').text('What do you want to do with ' + gameid + '?')
     modal.find('.bselect').attr("onclick","selectGameHandler(\""+gameid+"\")")
@@ -66,7 +77,9 @@ var gameContentView = function(){
   $('#alertdeletegame').on('show.bs.modal', function (event) {
     console.log($(this));
     var button = $(event.relatedTarget) // Button that triggered the modal
-    var gameid = button.data('gameid')
+    var gameid = button.data('gameid') // Extract info from data-* attributes
+    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
     var modal = $(this)
     modal.find('.modal-body p').text('Are you sure you want to delete ' + gameid + '?')
     modal.find('button').attr("onclick","deleteGameAlertHandler(\""+gameid+"\")")
@@ -77,7 +90,9 @@ var gameContentView = function(){
   $('#alertremovegame').on('show.bs.modal', function (event) {
     console.log($(this));
     var button = $(event.relatedTarget) // Button that triggered the modal
-    var gameid = button.data('gameid')
+    var gameid = button.data('gameid') // Extract info from data-* attributes
+    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
     var modal = $(this)
     modal.find('.modal-body p').text('Are you sure you want to remove ' + gameid + '?')
     modal.find('button').attr("onclick","removeGameAlertHandler(\""+gameid+"\")")
@@ -92,11 +107,22 @@ var init = function() {
     if(intent.action == "FETCH_APPID"){
       sendIntentFetchGameIdCallback(gameId,intent.data);
     }
+    // if(intent.action == "FETCH_LOGIN"){
+    //   sendIntentFetchLoginCallback(statusLogin,oidc_userinfo,intent.data);
+    // }
   };
   client = new Las2peerWidgetLibrary("http://gaudi.informatik.rwth-aachen.de:8086/", iwcCallback);
   notification = new gadgets.MiniMessage("GAMEAPP");
   checkAndRegisterUserAgent();
 
+  // $('button#refreshbutton').off('click');
+  // $('button#refreshbutton').on('click', function() {
+  //   getGamesData();
+  // });
+
+
+// Handler when the form in "Create New Game" is submitted
+      // Game ID will be retrieved from the service and will be put on the id attribute in class maincontent
   $("form#createnewgameform").off();
   $("form#createnewgameform").submit(function(e){
     //disable the default form submission
@@ -125,6 +151,8 @@ var init = function() {
     );
     return false;
   });
+
+  
 }
 
 $(document).ready(function() {
@@ -134,10 +162,12 @@ $(document).ready(function() {
       interpolate: /\{\{=(.+?)\}\}/g,
       escape: /\{\{-(.+?)\}\}/g
     };
+
 });
 
 function startButtonListener(){
   learningLayerLogin();
+  
 };
 
 function signInCallback(result) {
@@ -178,6 +208,7 @@ function removeGameAlertHandler(selectedgameid){
       function(data,type){
         // opened game is the selected game
         if(selectedgameid == currentGameId){
+          //window.localStorage.removeItem("gameid");
           setGameIDContext("");
           loadGameList();
         }
@@ -207,7 +238,9 @@ function deleteGameAlertHandler(selectedgameid){
       function(data,type){
         // opened game is the selected game
         if(selectedgameid == currentGameId){
+          //window.localStorage.removeItem("gameid");
           setGameIDContext("");
+        // Notification delete success
         }
         loadGameList();
 
@@ -224,22 +257,23 @@ function deleteGameAlertHandler(selectedgameid){
 
 function checkAndRegisterUserAgent(){
   client.sendRequest("POST",
-    "gamification/games/validation",
-    "",
-    "application/json",
-    {},
-    function(data,type){
-      gameContentView();
-      sendIntentLogin();
-       $("button#addnewgame").off('click');
-        $("button#addnewgame").on('click', function(event) {
-            $("#createnewgame").modal('toggle');
-        });
-    },
-    function(error) {
-          $('#gameselection').before('<div class="alert alert-danger">Error connecting web services</div>');
-      }
-  );
+        "gamification/games/validation",
+        "",
+        "application/json",
+        {},
+        function(data,type){
+
+        gameContentView();
+        sendIntentLogin();
+         $("button#addnewgame").off('click');
+          $("button#addnewgame").on('click', function(event) {
+              $("#createnewgame").modal('toggle');
+          });
+      },
+        function(error) {
+              $('#gameselection').before('<div class="alert alert-danger">Error connecting web services</div>');
+          }
+      );
 }
 
   function addMemberToGame(currentGameId,memberId){
@@ -251,6 +285,8 @@ function checkAndRegisterUserAgent(){
       {},
       function(data,type){
         console.log(data);
+
+        //setGameIDContext(currentGameId);
         miniMessageAlert(notification,memberId + " is added to "+ currentGameId, "success");
 
         setGameIDContext(currentGameId);
@@ -258,9 +294,10 @@ function checkAndRegisterUserAgent(){
 
       },
       function(error) {
+           // Notification failed to add member to game
           miniMessageAlert(notification,"Failed to add " + memberId + " to "+ currentGameId, "danger");
           console.log(error);
-      }
+        }
     );
   }
 
@@ -269,10 +306,67 @@ function checkAndRegisterUserAgent(){
 
 function setGameIDContext(gameId_){
   gameId = gameId_;
+  //gadgets.window.setTitle("Game title : " + gameId);;
   $("h4#title-widget").text("Game ID : " + gameId);
   sendIntentRefreshGameId(gameId);
 
 }
+
+// var init = function() {
+//   var iwcCallback = function(intent) {
+//     if(intent.action == "FETCH_APPID"){
+//       sendIntentFetchGameIdCallback(gameId,intent.data);
+//     }
+//     // if(intent.action == "FETCH_LOGIN"){
+//     //   sendIntentFetchLoginCallback(statusLogin,oidc_userinfo,intent.data);
+//     // }
+//   };
+//   client = new Las2peerWidgetLibrary("http://gaudi.informatik.rwth-aachen.de:8081/", iwcCallback);
+//   notification = new gadgets.MiniMessage("GAMEAPP");
+//   checkAndRegisterUserAgent();
+
+//   $('button#refreshbutton').off('click');
+//   $('button#refreshbutton').on('click', function() {
+//     getGamesData();
+//   });
+
+
+// // Handler when the form in "Create New Game" is submitted
+//       // Game ID will be retrieved from the service and will be put on the id attribute in class maincontent
+//   $("form#createnewgameform").off();
+//   $("form#createnewgameform").submit(function(e){
+//     //disable the default form submission
+//     e.preventDefault();
+//     var formData = new FormData($(this)[0]);
+//     client.sendRequest(
+//       "POST",
+//       "gamification/games/data",
+//       formData,
+//       false,
+//       {},
+//       function(data, type){
+//         console.log(data);
+//         var selectedGameId = $("#createnewgame_gameid").val();
+//         // setGameIDContext(selectedGameId);
+//         $("#createnewgame").modal('toggle');
+//         miniMessageAlert(notification,"New game "+ selectedGameId +" is added !", "success");
+//         reloadActiveTab();
+//         getGamesData();
+//         return false;
+//       },
+//       function(error) {
+//         miniMessageAlert(notification,"Failed to create new game : "+ selectedGameId +" !", "danger");
+//       }
+//     );
+//     return false;
+//   });
+// }
+
+
+
+
+
+
 
 var gameListener = function(){
   $("table#list_global_games_table").find(".bglobgameclass").off("click");
@@ -315,14 +409,77 @@ var gameListener = function(){
 
 };
 
+// function getGamesData(){
+//   client.sendRequest("GET",
+//       "gamification/games/list/separated",
+//       "",
+//       "application/json",
+//       {},
+//       function(data,type){
+
+//         console.log(data);
+//         //Global games
+//         $("#globalgamestbody").empty();
+//         for(var i = 0; i < data[0].length; i++){
+//           var gameData = data[0][i];
+//           var newRow = "<tr><td class='text-center'>" + "<button type='button' class='btn btn-xs btn-success bglobgameclass'>Register</button></td> ";
+//           newRow += "<td id='gameidid'>" + gameData.id + "</td>";
+//           newRow += "<td id='gamedescid'>" + gameData.description + "</td>";
+//         newRow += "<td id='gamecommtypeid'>" + gameData.commType + "</td>";
+
+//           $("#list_global_games_table tbody").append(newRow);
+//         }
+
+//         //User games
+//         $("#registeredgamestbody").empty();
+//         for(var i = 0; i < data[1].length; i++){
+//           var gameData = data[1][i];
+//           var newRow = "<tr><td class='text-center'>" + "<button type='button' class='btn btn-xs btn-success breggameclass'>Select</button></td> ";
+//           newRow += "<td id='gameidid'>" + gameData.id + "</td>";
+//           newRow += "<td id='gamedescid'>" + gameData.description + "</td>";
+//         newRow += "<td id='gamecommtypeid'>" + gameData.commType + "</td>";
+//         newRow += "<td><button type='button' onclick='removeGameHandler(this)' data-dismiss='modal' data-toggle='modal' data-target='#alertremovegame' class='btn btn-xs btn-danger '>Remove</button></td>";
+//         newRow += "<td><button type='button' onclick='deleteGameHandler(this)' data-dismiss='modal' data-toggle='modal' data-target='#alertdeletegame' class='btn btn-xs btn-danger '>Delete</button></td>";
+
+//           $("#list_registered_games_table tbody").append(newRow);
+//         }
+
+//         gameListener();
+
+//       },
+//       function(error) {
+//             // Notification failed to get game data
+//       console.log(error);
+//        }
+//     );
+
+// }
+
 var useAuthentication = function(rurl){
-  if(rurl.indexOf("\?") > 0){
-    rurl += "&access_token=" + window.localStorage["access_token"];
-  } else {
-    rurl += "?access_token=" + window.localStorage["access_token"];
+    if(rurl.indexOf("\?") > 0){
+      rurl += "&access_token=" + window.localStorage["access_token"];
+    } else {
+      rurl += "?access_token=" + window.localStorage["access_token"];
+    }
+    return rurl;
   }
-  return rurl;
-}
+
+
+ 
+
+
+// function removeGameHandler(element){
+//   var selectedgameid =  $(element).parent().parent().find("td#gameidid")[0].textContent;
+//   $('#alertremovegame').find('button.btn').attr('id',selectedgameid);
+//   $('#alertremovegame_text').text('Are you sure you want to remove ' + selectedgameid +"?");
+// }
+// function deleteGameHandler(element){
+//   var selectedgameid =  $(element).parent().parent().find("td#gameidid")[0].textContent;
+//   $('#alertdeletegame').find('button.btn').attr('id',selectedgameid);
+//   $('#alertdeletegame_text').text('Are you sure you want to delete ' + selectedgameid +"?");
+// }
+
+
 
 
 function reloadActiveTab(){
@@ -354,6 +511,18 @@ function sendIntentFetchGameIdCallback(gameId,receiver){
   );
 }
 
+// function sendIntentFetchLoginCallback(loginStatus,oidc_userinfo,receiver){
+//   var dataObj = {
+//         status: loginStatus,
+//         member: oidc_userinfo,
+//       receiver: receiver
+//     };
+//     console.log(JSON.stringify(dataObj));
+//   client.sendIntent(
+//     "FETCH_LOGIN_CALLBACK",
+//     JSON.stringify(dataObj)
+//   );
+// }
 
 function sendIntentLogin(){
   var dataObj = {
