@@ -5,6 +5,10 @@
     "name": "Muhammad Abduh Arifin",
     "email": "arifin@dbis.rwth-aachen.de"
   },
+  "repository" :
+  { "type" : "git"
+  , "url" : "https://github.com/rwth-acis/Gamification-Manager-Frontend.git"
+  },
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-clean": "~0.5.0",
