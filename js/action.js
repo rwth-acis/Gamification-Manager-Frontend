@@ -4,34 +4,32 @@
 var client, gameId,memberId, notification, actionAccess;
 var oidc_userinfo;
 var iwcCallback;
-  var actionAccess;
-  var modalSubmitButton;
-  var modalInputId;
-  var modalInputName;
-  var modalInputDescription;
-  var modalInputPointValue;
-  var modalTitle;
+var actionAccess;
+var modalSubmitButton;
+var modalInputId;
+var modalInputName;
+var modalInputDescription;
+var modalInputPointValue;
+var modalTitle;
 
-  var modalNotifCheck;
-  var modalNotifMessageInput;
+var modalNotifCheck;
+var modalNotifMessageInput;
 
-  var actionCollection;
+var actionCollection;
 
- var modalSubmitButton;
-    var modalTitle;
-     var modalInputId;
-      var modalInputName;
-      var modalInputDescription;
-      var modalInputPointValue;
-    var modalNotifCheck;
-    var modalNotifMessageInput;
+var modalSubmitButton;
+var modalTitle;
+var modalInputId;
+var modalInputName;
+var modalInputDescription;
+var modalInputPointValue;
+var modalNotifCheck;
+var modalNotifMessageInput;
 
 
 function setGameIDContext(gameId_){
   gameId = gameId_;
-  //$('#game-id-text').html(gameId);
   if(gameId){
-    //gadgets.window.setTitle("Gamification Manager Action - " + gameId);
     if(gameId == ""){
       resetContent()
     }
@@ -85,20 +83,8 @@ var initIWC = function(){
             resetContent();
       }
     }
-    // if(intent.action == "FETCH_LOGIN_CALLBACK"){
-    //   var data = JSON.parse(intent.data);
-    //   if(data.receiver == "action"){
-    //     if(data.status == 200){
-    //       oidc_userinfo = data.member;
-    //         loggedIn(oidc_userinfo.preferred_username);
-    //     }
-    //   }
-    // }
   };
   loadLas2peerWidgetLibrary();
-  // $('button#refreshbutton').on('click', function() {
-  //     sendIntentFetchLogin("action");
-  // });
 
   // Init modal element
     modalSubmitButton = $("#modalactionsubmit");
@@ -124,12 +110,9 @@ var loadLas2peerWidgetLibrary = function(){
 
 var loggedIn = function(mId){
   memberId = mId;
-  init();
   $("#login-alert h5").before("<h5>Welcome " + memberId + " !");
 };
 
-var init = function() {
-};
 
 var initContent = function(){
 
@@ -149,10 +132,7 @@ var initContent = function(){
   $('#contentModal').on('show.bs.modal', function (event) {
     console.log($(this));
     var button = $(event.relatedTarget) // Button that triggered the modal
-    var actionid = button.data('actionid') // Extract info from data-* attributes
-    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-
+    var actionid = button.data('actionid')
     var index = _.map(actionCollection,function(e) { return e.id; }).indexOf(actionid);
     var modal = $(this)
     modal.find('.card-header').html("<i class=\"fa fa-tag\" aria-hidden=\"true\"></i> "+actionCollection[index].id+"<span class=\"tag tag-pill tag-success pull-xs-right\">"+actionCollection[index].pointValue+"</span>")
@@ -174,23 +154,6 @@ var initContent = function(){
   submitFormListener();
   checkBoxListener();
 }
-
-
-// function signinCallback(result) {
-//     if(result === "success"){
-//       memberId = oidc_userinfo.preferred_username;
-//
-//         console.log(oidc_userinfo);
-//         init();
-//
-//     } else {
-//
-//
-//         console.log(result);
-//         console.log(window.localStorage["access_token"]);
-//
-//     }
-// }
 
 var useAuthentication = function(rurl){
     if(rurl.indexOf("\?") > 0){
