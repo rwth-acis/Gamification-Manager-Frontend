@@ -6,7 +6,7 @@
 
         <h6 class="list-group-item-heading"><i class="fa fa-tag" aria-hidden="true"></i> Level {{= number}} - {{= name}}</h6>
         <h6 class="list-group-item-heading"> </h6>
-            <span class="tag tag-pill tag-success pull-xs-right">{{= pointValue}}</span>
+            <span class="tag tag-pill tag-success float-xs-right">{{= pointValue}}</span>
         <p  class="{{ if(useNotification){ }}
                   text-success
                 {{ } else{ }}
