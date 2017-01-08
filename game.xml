@@ -76,7 +76,7 @@
 <script id="existing-game-template" type="text/template">
       <a class="list-group-item list-group-item-action" data-toggle="modal" data-target="#buttonModal" data-gameid="{{= game_id}}">
         {{ if(memberHas){ }}
-        <span class="pull-xs-right text-warning"><i class="fa fa-star"></i></span>
+        <span class="float-xs-right text-warning"><i class="fa fa-star"></i></span>
         {{ } }}
         <h5 class="list-group-item-heading"><i class="fa fa-gamepad" aria-hidden="true"></i> {{= game_id}}</h5>
         <h6 class="list-group-item-heading text-primary"><i class="fa fa-users" aria-hidden="true"></i> {{= community_type}}</h6>
